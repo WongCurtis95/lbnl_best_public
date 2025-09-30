@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files_latest/Page3_ProductionInput_qwidget.ui'
+# Form implementation generated from reading ui file '.\ui_files_latest\Page3_ProductionInput_qwidget.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -7,10 +7,6 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
-from resources_rc import *
-main_page_image = ":images/BEST_landing_abstract.png"
-side_page_image = ":images/BEST_side_abstract.png"       
 
 
 class Ui_Page3_ProductionInput(object):
@@ -373,15 +369,13 @@ class Ui_Page3_ProductionInput(object):
         self.formLayout_cement_production_2.setWidget(2, QtWidgets.QFormLayout.ItemRole.FieldRole, self.blended_cement_production_input)
         self.progressBar = QtWidgets.QProgressBar(parent=Page3_ProductionInput)
         self.progressBar.setGeometry(QtCore.QRect(200, 20, 1001, 23))
-        self.progressBar.setFixedHeight(12)
-        self.progressBar.setTextVisible(False)
         self.progressBar.setStyleSheet("QProgressBar {\n"
 "    background-color: #F0F0F0;\n"
 "    border: none;\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "}\n"
 "QProgressBar::chunk {\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "    background: QLinearGradient(\n"
 "        x1: 0, y1: 0, x2: 1, y2: 0,\n"
 "        stop: 0 #33bef0,   /* Light Blue */\n"
@@ -393,10 +387,10 @@ class Ui_Page3_ProductionInput(object):
         self.side_image = QtWidgets.QLabel(parent=Page3_ProductionInput)
         self.side_image.setGeometry(QtCore.QRect(0, -30, 171, 761))
         self.side_image.setText("")
-        self.side_image.setPixmap(QtGui.QPixmap(side_page_image))
+        self.side_image.setPixmap(QtGui.QPixmap(".\\ui_files_latest\\../images/BEST_side_abstract.png"))
         self.side_image.setObjectName("side_image")
         self.layoutWidget_6 = QtWidgets.QWidget(parent=Page3_ProductionInput)
-        self.layoutWidget_6.setGeometry(QtCore.QRect(200, 40, 1001, 16))
+        self.layoutWidget_6.setGeometry(QtCore.QRect(200, 40, 1001, 22))
         self.layoutWidget_6.setObjectName("layoutWidget_6")
         self.gridLayout_11 = QtWidgets.QGridLayout(self.layoutWidget_6)
         self.gridLayout_11.setContentsMargins(0, 0, 0, 0)
@@ -470,7 +464,7 @@ class Ui_Page3_ProductionInput(object):
         self.backBtn.setText(_translate("Page3_ProductionInput", "Back"))
         self.saveBtn.setText(_translate("Page3_ProductionInput", "Save Progress"))
         self.nextBtn.setText(_translate("Page3_ProductionInput", "Next"))
-        self.clinker_material_group.setTitle(_translate("Page3_ProductionInput", "Clinker Material Produced per Year (tonnes/year)"))
+        self.clinker_material_group.setTitle(_translate("Page3_ProductionInput", "Raw Material Consumption (metric tons/year)"))
         self.gypsum_label.setText(_translate("Page3_ProductionInput", "Gypsum"))
         self.calcined_clay_label.setText(_translate("Page3_ProductionInput", "Calcined Clay"))
         self.blast_furnace_slag_label.setText(_translate("Page3_ProductionInput", "Blast Furnace Slag"))
@@ -478,12 +472,12 @@ class Ui_Page3_ProductionInput(object):
         self.other_slag_label.setText(_translate("Page3_ProductionInput", "Other Slag"))
         self.fly_ash_label.setText(_translate("Page3_ProductionInput", "Fly Ash"))
         self.natural_pozzolans_label.setText(_translate("Page3_ProductionInput", "Other Natural Pozzolans"))
-        self.kiln_clinker_production_group.setTitle(_translate("Page3_ProductionInput", "Kiln - Clinker Production"))
+        self.kiln_clinker_production_group.setTitle(_translate("Page3_ProductionInput", "Clinker Production (metric tons/year)"))
         self.type_1_label.setText(_translate("Page3_ProductionInput", "Type 1 Name"))
         self.type_2_label.setText(_translate("Page3_ProductionInput", "Type 2 Name"))
-        self.production_1_label.setText(_translate("Page3_ProductionInput", "Production (tonnes/year)"))
-        self.production_2_label.setText(_translate("Page3_ProductionInput", "Production (tonnes/year)"))
-        self.cement_production_group.setTitle(_translate("Page3_ProductionInput", "Cement Production (tonnes/year)"))
+        self.production_1_label.setText(_translate("Page3_ProductionInput", "Production (metric tons/year)"))
+        self.production_2_label.setText(_translate("Page3_ProductionInput", "Production (metric tons/year)"))
+        self.cement_production_group.setTitle(_translate("Page3_ProductionInput", "Cement Production (metric tons/year)"))
         self.pure_portland_label.setText(_translate("Page3_ProductionInput", "Pure Portland"))
         self.common_portland_label.setText(_translate("Page3_ProductionInput", "Common Portland"))
         self.slag_cement_label.setText(_translate("Page3_ProductionInput", "Slag Cement"))

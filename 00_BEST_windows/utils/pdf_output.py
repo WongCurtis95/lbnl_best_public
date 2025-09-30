@@ -48,27 +48,27 @@ def get_auto_text(df: pd.DataFrame):
     excel_file_path_1 = json_folder / "key_values_in_excel.xlsx"
     key_values_in_excel = pd.read_excel(excel_file_path_1, sheet_name=None)
 
-    final_energy_before = key_values_in_excel["values"].iloc[0, 1]
-    final_energy_after = key_values_in_excel["values"].iloc[0, 2]
-    final_energy_ibp = key_values_in_excel["values"].iloc[0, 3]
+    final_energy_before = key_values_in_excel["values"].iloc[2, 1]
+    final_energy_after = key_values_in_excel["values"].iloc[2, 2]
+    final_energy_ibp = key_values_in_excel["values"].iloc[2, 3]
     final_energy_reduction = final_energy_before - final_energy_after
     final_energy_difference_ibp = final_energy_ibp - final_energy_after
 
-    cement_intensity_before = key_values_in_excel["values"].iloc[1, 1]
-    cement_intensity_after = key_values_in_excel["values"].iloc[1, 2]
-    cement_intensity_ibp = key_values_in_excel["values"].iloc[1, 3]
+    cement_intensity_before = key_values_in_excel["values"].iloc[3, 1]
+    cement_intensity_after = key_values_in_excel["values"].iloc[3, 2]
+    cement_intensity_ibp = key_values_in_excel["values"].iloc[3, 3]
     cement_intensity_reduction = cement_intensity_before - cement_intensity_after
     cement_intensity_difference_ibp = cement_intensity_ibp - cement_intensity_after
 
-    total_emissions_before = key_values_in_excel["values"].iloc[2, 1]
-    total_emissions_after = key_values_in_excel["values"].iloc[2, 2]
-    total_emissions_ibp = key_values_in_excel["values"].iloc[2, 3]
+    total_emissions_before = key_values_in_excel["values"].iloc[6, 1]
+    total_emissions_after = key_values_in_excel["values"].iloc[6, 2]
+    total_emissions_ibp = key_values_in_excel["values"].iloc[6, 3]
     total_emissions_reduction = total_emissions_before - total_emissions_after
     total_emissions_difference_ibp = total_emissions_ibp - total_emissions_after
 
-    cement_emissions_intensity_before = key_values_in_excel["values"].iloc[3, 1]
-    cement_emissions_intensity_after = key_values_in_excel["values"].iloc[3, 2]
-    cement_emissions_intensity_ibp = key_values_in_excel["values"].iloc[3, 3]
+    cement_emissions_intensity_before = key_values_in_excel["values"].iloc[7, 1]
+    cement_emissions_intensity_after = key_values_in_excel["values"].iloc[7, 2]
+    cement_emissions_intensity_ibp = key_values_in_excel["values"].iloc[7, 3]
     cement_emissions_intensity_reduction = cement_emissions_intensity_before - cement_emissions_intensity_after
     cement_emissions_intensity_difference_ibp = cement_emissions_intensity_ibp - cement_emissions_intensity_after
 
@@ -262,77 +262,77 @@ def generate_part1_report(self):
     elements = []
 
     elements.append(Paragraph("Part 1 BEST Report ", styles['Title']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Energy Benchmark", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph("The international best practice value refers to the energy cpnsumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps, but using the best energy efficiency internationally for each step.", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_1, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Direct Energy CO2 Emissions Benchmark", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_2, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Indirect Energy CO2 Emissions Benchmark", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_3, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Total CO2 Emissions Benchmark", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_4, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Energy Benchmark by Process", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_5, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Energy Benchmark by Process Normalized", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_6, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Final Energy Consumption", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_7, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Primary Energy Consumption", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_8, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Energy Cost", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_9, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Final Energy by Process", styles['Heading2']))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
-    elements.append(Image(graph_10, width=usable_width, height=usable_width*0.56))
+    elements.append(Image(graph_10, width=usable_width, height=usable_width*0.44)) # it is 0.44, because figure size is (9, 4), which means height to width ratio should be 1:0.44
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Primary Energy by Process", styles['Heading2']))
-    elements.append(Image(graph_11, width=usable_width, height=usable_width*0.56))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Image(graph_11, width=usable_width, height=usable_width*0.44))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Share of Energy Cost by Process Step", styles['Heading2']))
-    elements.append(Image(graph_12, width=usable_width, height=usable_width*0.56))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Image(graph_12, width=usable_width, height=usable_width*0.44))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     try:
@@ -367,14 +367,17 @@ def generate_part_2_report(self):
     graph_2 = graphs_dir / "direct energy co2 emissions benchmark after measures.png"
     graph_3 = graphs_dir / "indirect energy co2 emissions benchmark after measures.png"
     graph_4 = graphs_dir / "total co2 emissions benchmark after measures.png"
-    graph_5 = graphs_dir / "emissions waterfall.png"
-    graph_6 = graphs_dir / "energy waterfall.png"
+    graph_5 = graphs_dir / "energy waterfall.png"
+    graph_6 = graphs_dir / "emissions waterfall.png"
     graph_7 = graphs_dir / "abatement cost.png"
 
 
     # Load Excel (all sheets)
     excel_file_path_1 = json_folder / "key_values_in_excel.xlsx"
     key_values_in_excel = pd.read_excel(excel_file_path_1, sheet_name=None)
+    
+    excel_file_path_2 = json_folder / "finance_key_values_in_excel.xlsx"
+    finance_key_values_in_excel = pd.read_excel(excel_file_path_2, sheet_name=None)
 
     # Create PDF with ReportLab
     doc = SimpleDocTemplate(OUTPUT_FILE, pagesize=LETTER)
@@ -401,53 +404,60 @@ def generate_part_2_report(self):
         elements.extend(df_to_table_part2(df, ""))
         elements.append(Spacer(1, 12))
 
+    for sheet_name, df in finance_key_values_in_excel.items():
+        df.columns = ["Financial Metric", "Values"]
+
+        elements.extend(df_to_table_part2(df, ""))
+        elements.append(Spacer(1, 12))
+
+    
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Energy Benchmark", styles['Heading2']))
     elements.append(Image(graph_1, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph("The international best practice value refers to the energy cpnsumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps, but using the best energy efficiency internationally for each step.", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Direct Energy CO2 Emissions Benchmark", styles['Heading2']))
     elements.append(Image(graph_2, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Indirect Energy CO2 Emissions Benchmark", styles['Heading2']))
 
     elements.append(Image(graph_3, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Total CO2 Emissions Benchmark", styles['Heading2']))
 
     elements.append(Image(graph_4, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Final Energy Reduction by Measurement Category", styles['Heading2']))
 
     elements.append(Image(graph_5, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Total Carbon Dioxide Emissions Reduction by Measurement Category", styles['Heading2']))
 
     elements.append(Image(graph_6, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Marginal Abatement Cost Curve", styles['Heading2']))
 
     elements.append(Image(graph_7, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph("The cumulative carbon dioxide emission reduction in the marginal abatement cost graph does not equal to the calculated carbon dioxide emission reduction above, because in the calculations above, the energy and emissions available for reduction decrease with every measure applied. Meanwhile, in the marginal abatement cost graph, each measure's abatement cost is evaluated individually without any other measure applied", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     try:
@@ -482,7 +492,7 @@ def generate_report_reportlab(self):
     elements.append(Paragraph("BEST Report ", styles['Title']))
     elements.append(Spacer(1, 12))
     # add paragraph below
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("User Input Summary", styles['Heading2']))
@@ -495,19 +505,19 @@ def generate_report_reportlab(self):
         elements.extend(df_to_table_input_summary(df, sheet_name))
         elements.append(Spacer(1, 12))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     # add table from excel
     # elements.extend(df_to_table(sheets_2, "Measures Output in Excel"))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     # add table from excel
     # elements.extend(df_to_table(sheets_3, "Measures DT Output in Excel"))
 
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
     #elements.append(Image(graph_path_process_co2_emissions_benchmark, width=600, height=300))
 
@@ -516,7 +526,7 @@ def generate_report_reportlab(self):
     elements.append(Paragraph("Calculations", styles['Heading2']))
     elements.append(Spacer(1, 12))
     # elements.append(Image(graph_path_process_co2_emissions_benchmark_normalized, width=600, height=300))
-    elements.append(Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec elementum lacinia, eros sem dictum est, in fringilla justo sapien non eros. Quisque ultrices turpis vel nibh fermentum, vel scelerisque nulla dictum. Morbi dapibus, lorem vel consequat volutpat, sapien sem facilisis velit, at pulvinar lorem mauris a metus. Fusce vel magna sit amet neque aliquam pulvinar sed non leo. Donec viverra, magna sed hendrerit bibendum, ligula erat posuere purus, vitae luctus velit ipsum in nisl. Sed eget ipsum justo. Pellentesque euismod, mauris id sodales bibendum, nisl nunc volutpat magna, a euismod magna orci vitae elit.", styles['Normal']))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     try:

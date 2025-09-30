@@ -125,7 +125,7 @@ QPushButton#saveBtn:hover {
 myLineEdit-&gt;setFixedSize(200, 30)</string>
    </property>
    <property name="title">
-    <string>Other Measures - SCM &amp; Fillers, CCUS, Alternative Cements</string>
+    <string>DT Measures - SCM &amp; Fillers, CCUS, Alternative Cements</string>
    </property>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
@@ -766,7 +766,7 @@ QProgressBar::chunk {
      <x>200</x>
      <y>40</y>
      <width>1001</width>
-     <height>16</height>
+     <height>22</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_12">

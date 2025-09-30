@@ -1,3 +1,4 @@
+## Calculations
 import json
 import pandas as pd
 import numpy as np
@@ -11,7 +12,7 @@ import os
 import subprocess
 import plotly.graph_objects as go
 import plotly.io as pio
-pio.renderers.default = 'svg'
+pio.renderers.default = 'png'
 
 import textwrap
 from PyQt6.QtWidgets import QMessageBox
@@ -129,7 +130,7 @@ def Page2_Costs_and_Emissions_Input_Default_Update_Fields(self):
             "municipal wastes": "$/metric ton"
         },
         "Carbon price ($/tCO2)": 20.0,
-        "Grid CO2 emission intensity (tCO2/MWh)": 0.5,
+        "Grid CO2 emission intensity (tCO2/MWh)": 0.8,
         "Fuel CO2 intensity (tCO2/TJ)": {
             "coal": 93,
             "coke": 95,
@@ -230,7 +231,7 @@ def Page3_Production_Input_Default_Update_Fields(self):
     json_folder = data_dir / "Saved Progress"
     json_folder.mkdir(parents=True, exist_ok=True)
     filepath = json_folder / "Production_Input.json"
-
+    """
     production_input_dict = {
     "name": "Production Input",
     "Amount of limestone used per year (tonnes/year)": 150000.0,
@@ -265,9 +266,45 @@ def Page3_Production_Input_Default_Update_Fields(self):
     },
     "Total cement production (tonnes/year)": 0,
     "Clinker to cement ratio": 0.8
+    }
+    """
+    production_input_dict = {
+    "name": "Production Input",
+    "Amount of limestone used per year (tonnes/year)": 0,
+    "Amount of gypsum used per year (tonnes/year)": 0,
+    "Amount of calcined clay used per year (tonnes/year)": 0,
+    "Amount of blast furnace slag used per year (tonnes/year)": 0,
+    "Amount of other slag used per year (tonnes/year)": 0,
+    "Amount of fly ash used per year (tonnes/year)": 0,
+    "Amount of other natural pozzolans used per year (tonnes/year)": 0,
+    "Amount of raw materials preblended": 0,
+    "Amount of raw materials crushed": 0,
+    "Amount of additives dried": 0,
+    "Amount of additives ground": 0,
+    "Kiln - Clinker Production": {
+        "Type 1": {
+            "Type": "NSP",
+            "Production (tonnes/year)": 0
+        },
+        "Type 2": {
+            "Type": "pre-heater",
+            "Production (tonnes/year)": 0
+        }
+    },
+    "Total clinker production": 0,
+    "Cement production": {
+        "Pure Portland cement production (tonnes/year)": 0,
+        "Common Portland cement production (tonnes/year)": 0,
+        "Slag cement production (tonnes/year)": 0,
+        "Fly ash cement production (tonnes/year)": 0,
+        "Pozzolana cement production (tonnes/year)": 0,
+        "Blended cement production (tonnes/year)": 0
+    },
+    "Total cement production (tonnes/year)": 0,
+    "Clinker to cement ratio": 0
 }
     
-    # Clinker Material Produced per Year
+    # Raw material and additive
     if self.ui.limestone_input.text() != "":
         production_input_dict["Amount of limestone used per year (tonnes/year)"] = _f(self.ui.limestone_input.text())
     if self.ui.gypsum_input.text() != "":
@@ -282,9 +319,9 @@ def Page3_Production_Input_Default_Update_Fields(self):
         production_input_dict["Amount of fly ash used per year (tonnes/year)"] = _f(self.ui.fly_ash_input.text())
     if self.ui.natural_pozzolans_input.text() != "":
         production_input_dict["Amount of other natural pozzolans used per year (tonnes/year)"] = _f(self.ui.natural_pozzolans_input.text())
-        
-        
-    # Kiln - Clinker Production
+    
+      
+    # Clinker Production
     if self.ui.type_1_input.text() != "":
         production_input_dict["Kiln - Clinker Production"]["Type 1"]["Type"] = self.ui.type_1_input.text()
     if self.ui.type_2_input.text() != "":
@@ -314,7 +351,10 @@ def Page3_Production_Input_Default_Update_Fields(self):
         production_input_dict["Cement production"]["Blended cement production (tonnes/year)"] = _f(self.ui.blended_cement_production_input.text())
 
     Total_raw_material_and_additive = production_input_dict["Amount of limestone used per year (tonnes/year)"] + production_input_dict["Amount of gypsum used per year (tonnes/year)"] + production_input_dict["Amount of calcined clay used per year (tonnes/year)"] + production_input_dict["Amount of blast furnace slag used per year (tonnes/year)"] + production_input_dict["Amount of other slag used per year (tonnes/year)"] + production_input_dict["Amount of fly ash used per year (tonnes/year)"] + production_input_dict["Amount of other natural pozzolans used per year (tonnes/year)"]
-
+    
+    if Total_raw_material_and_additive <= 0:
+        print("Total raw material and additive must be greater than zero")
+    
     production_input_dict["Amount of raw materials preblended"] = Total_raw_material_and_additive
     production_input_dict["Amount of raw materials crushed"] = Total_raw_material_and_additive
     production_input_dict["Amount of additives dried"] = production_input_dict["Amount of blast furnace slag used per year (tonnes/year)"] + production_input_dict["Amount of other slag used per year (tonnes/year)"]
@@ -324,13 +364,23 @@ def Page3_Production_Input_Default_Update_Fields(self):
     for kiln_type in production_input_dict["Kiln - Clinker Production"].keys():
         Total_clinker += production_input_dict["Kiln - Clinker Production"][kiln_type]["Production (tonnes/year)"]
     production_input_dict["Total clinker production"] = Total_clinker
-
+    
+    if Total_clinker <= 0:
+        print("Total clinker must be greater than zero")
+    
     Total_cement = 0
     for cement_type in production_input_dict["Cement production"].keys():
         Total_cement += production_input_dict["Cement production"][cement_type]
-
-    production_input_dict["Clinker to cement ratio"] = Total_clinker/Total_cement
+    
     production_input_dict["Total cement"] = Total_cement
+    
+    if Total_cement <= 0:
+        print("Total cement must be greater than zero")
+        
+    if Total_cement > 0:
+        production_input_dict["Clinker to cement ratio"] = Total_clinker/Total_cement
+    else:
+        production_input_dict["Clinker to cement ratio"] = 0
 
     # Save the updated dictionary
     with open(filepath, "w") as f:
@@ -371,7 +421,8 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     json_folder = data_dir / "Saved Progress"
     json_folder.mkdir(parents=True, exist_ok=True)
     filepath = json_folder / "Electricity_Generation_Input.json"
-
+    
+    """
     electricity_generation_input_dict = {
     "name": "Electricity Generation Input",
     "Total electricity purchased (kWh/year)": 18040000.0,
@@ -388,7 +439,26 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     },
     "Energy used for electricity generation (kWh/year) - onsite renewables": 0.0,
     "Subtotal final energy (MJ/year)": 10000000.0
-}
+    }
+    """
+    
+    electricity_generation_input_dict = {
+    "name": "Electricity Generation Input",
+    "Total electricity purchased (kWh/year)": 0,
+    "Total electricity generated onsite (kWh/year)": 0,
+    "Electricity generated and sold to the grid or offsite (kWh/year)": 0,
+    "Electricity generated and used at cement plant (kWh/year)": 0,
+    "Energy used for electricity generation (MJ/year)": {
+        "waste heat": 0.0,
+        "coal": 0.0,
+        "coke": 0.0,
+        "natural gas": 0.0,
+        "biomass": 0.0,
+        "municipal wastes": 0.0
+    },
+    "Energy used for electricity generation (kWh/year) - onsite renewables": 0.0,
+    "Subtotal final energy (MJ/year)": 0.0
+    }
     
     # Electricity Generation Input
     if self.ui.total_energy_purchased_input.text() != "":
@@ -397,6 +467,7 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
         electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"] = _f(self.ui.total_electricity_generated_onsite_input.text())
     if self.ui.electricity_generated_input.text() != "":
         electricity_generation_input_dict["Electricity generated and sold to the grid or offsite (kWh/year)"] = _f(self.ui.electricity_generated_input.text())
+    
 
         
     # Energy used for electricity generation
@@ -436,15 +507,21 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     Total_electricity_fuel = sum(electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"].values())
 
     electricity_generation_input_dict["Subtotal final energy (MJ/year)"] = Total_electricity_fuel + electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - onsite renewables"]*3.6
-
-    electricity_fuel_emission_intensity = (electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['waste heat']*0+ electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coal']*coal_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coke']*coke_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['natural gas']*natural_gas_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['biomass']*biomass_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['municipal wastes']*msw_emission_intensity) / Total_electricity_fuel
-
+    
+    if Total_electricity_fuel >0:
+        electricity_fuel_emission_intensity = (electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['waste heat']*0+ electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coal']*coal_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coke']*coke_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['natural gas']*natural_gas_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['biomass']*biomass_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['municipal wastes']*msw_emission_intensity) / Total_electricity_fuel
+    else:
+        electricity_fuel_emission_intensity = 0
+    
     electricity_generation_emissions = electricity_fuel_emission_intensity * Total_electricity_fuel
 
     onsite_RE_electricity_generation = electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - onsite renewables"]
-
-    onsite_electricity_generation_efficiency = (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"] - onsite_RE_electricity_generation)/(Total_electricity_fuel/3.6) # this is just for generation from combustion and waste heat
-
+    
+    if Total_electricity_fuel >0:
+        onsite_electricity_generation_efficiency = (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"] - onsite_RE_electricity_generation)/(Total_electricity_fuel/3.6) # this is just for generation from combustion and waste heat
+    else:
+        onsite_electricity_generation_efficiency = 0
+    
     # electricity_emission_intensity = ((cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000)*electricity_generation_input_dict["Total electricity purchased (kWh/year)"] + (electricity_fuel_emission_intensity*3.6/0.305)*electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"])/(electricity_generation_input_dict["Total electricity purchased (kWh/year)"]+electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"]) # this electricity emission intensity combines both emission intensities from purchased and self-generated electricity
 
     ## There seems to be soem issues with the waste heat calculation. I do not trust the initial formula, which uses the waste heat of thermal electricity generation systems for waste heat for electricity generation
@@ -452,7 +529,12 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     electricity_generation_input_dict["Electricity Generation Emissions"] = electricity_generation_emissions
     electricity_generation_input_dict["Onsite Renewable Electricity Generation"] = onsite_RE_electricity_generation
     electricity_generation_input_dict["Electricity Fuel Emission Intensity"] = electricity_fuel_emission_intensity
-    electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] = onsite_electricity_generation_efficiency
+    electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] = onsite_electricity_generation_efficiency # thermal
+    
+    share_of_electricity_from_purchase = electricity_generation_input_dict["Total electricity purchased (kWh/year)"] / (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"]+electricity_generation_input_dict["Total electricity purchased (kWh/year)"])
+    
+    electricity_generation_input_dict["Share of electricity from electricity purchase"] = share_of_electricity_from_purchase
+    
     # Save the updated dictionary
     with open(filepath, "w") as f:
         json.dump(electricity_generation_input_dict, f, indent=4)
@@ -467,7 +549,8 @@ def Page6_Energy_Input_Default_Update_Fields(self):
     json_folder = data_dir / "Saved Progress"
     json_folder.mkdir(parents=True, exist_ok=True)
     filepath = json_folder / "Energy_Input.json"
-
+        
+    """
     energy_input_dict = {
     "name": "Energy Input",
     "Raw material grinding (%)": {
@@ -761,7 +844,303 @@ def Page6_Energy_Input_Default_Update_Fields(self):
     "Total Final Energy Consumption (MJ/year)": 488544000.0,
     "Total Primary Energy Consumption (MJ/year)": 644734426.2295082,
     "message": "N/A"
-}
+    }
+    """
+    energy_input_dict = {
+    "name": "Energy Input",
+    "Raw material grinding (%)": {
+        "ball mill": 0,
+        "vertical roller mill": 0.0,
+        "high pressure roller press/horizontal roller mill": 0.0
+    },
+    "Fuel grinding (%)": {
+        "ball mill": 0,
+        "vertical rolelr mill": 0.0
+    },
+    "Cement grinding (%)": {
+        "ball mill": 0,
+        "vertical rolelr mill": 0.0,
+        "high pressure roller press/horizontal roller mill": 0.0
+    },
+    "Energy input": {
+        "Raw material conveying and quarraying": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0.0,
+            "% Electricity Consumption at production stage": 0.0,
+            "Final Electricity Consumption by Process (kWh/year)": 0.0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0.0,
+            "Total Primary Energy Consumption (MJ/year)": 0.0
+        },
+        "Preblending": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Crushing": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Grinding": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Additive prepration": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Additive drying": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0.0,
+            "% Electricity Consumption at production stage": 0.0,
+            "Final Electricity Consumption by Process (kWh/year)": 0.0,
+            "Final Fuel Consumption by Process (MJ/year)": 0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Fuel preparation": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Homogenization": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Kiln system - preheater": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Kiln system - precalciner": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0.0,
+            "% Electricity Consumption at production stage": 0.0,
+            "Final Electricity Consumption by Process (kWh/year)": 0.0,
+            "Final Fuel Consumption by Process (MJ/year)": 0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Kiln system - kiln": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0.0,
+            "% Electricity Consumption at production stage": 0.0,
+            "Final Electricity Consumption by Process (kWh/year)": 0.0,
+            "Final Fuel Consumption by Process (MJ/year)": 0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Kiln system - cooler": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Cement grinding": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Other conveying, auxilaries": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Non-production energy use": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0,
+            "% Electricity Consumption at production stage": 0,
+            "Final Electricity Consumption by Process (kWh/year)": 0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0,
+            "Total Primary Energy Consumption (MJ/year)": 0
+        },
+        "Air pollution flue-gas mitigation": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0.0,
+            "% Electricity Consumption at production stage": 0.0,
+            "Final Electricity Consumption by Process (kWh/year)": 0.0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0.0,
+            "Total Primary Energy Consumption (MJ/year)": 0.0
+        },
+        "CCUS": {
+            "Production Per Process (tonnes/year)": 0,
+            "fuel": {
+                "coal": 0.0,
+                "coke": 0.0,
+                "natural gas": 0.0,
+                "biomass": 0.0,
+                "municipal wastes": 0.0
+            },
+            "electricity": 0.0,
+            "% Electricity Consumption at production stage": 0.0,
+            "Final Electricity Consumption by Process (kWh/year)": 0.0,
+            "Final Fuel Consumption by Process (MJ/year)": 0.0,
+            "Total Final Energy Consumption (MJ/year)": 0.0,
+            "Total Primary Energy Consumption (MJ/year)": 0.0
+        }
+    },
+    "Total Final Energy Consumption (MJ/year)": 0,
+    "Total Primary Energy Consumption (MJ/year)": 0,
+    "message": "N/A"
+    }
+    
     
     if self.ui.ball_mill_raw_input.text() != "":
         energy_input_dict["Raw material grinding (%)"]["ball mill"] = _f(self.ui.ball_mill_raw_input.text())
@@ -769,12 +1148,21 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         energy_input_dict["Raw material grinding (%)"]["vertical roller mill"] = _f(self.ui.vert_roller_mill_raw_input.text())
     if self.ui.horizontal_roller_mill_raw_input.text() != "":
         energy_input_dict["Raw material grinding (%)"]["high pressure roller press/horizontal roller mill"] = _f(self.ui.horizontal_roller_mill_raw_input.text())
-
+        
+    raw_material_grinding_total_share = energy_input_dict["Raw material grinding (%)"]["ball mill"] + energy_input_dict["Raw material grinding (%)"]["vertical roller mill"] + energy_input_dict["Raw material grinding (%)"]["high pressure roller press/horizontal roller mill"]
+    if raw_material_grinding_total_share != 100:
+        print("Raw material grinding share is not 100%")
+    
     if self.ui.vert_roller_mill_fuel_input.text() != "":
         energy_input_dict["Fuel grinding (%)"]["ball mill"] = _f(self.ui.vert_roller_mill_fuel_input.text())
     if self.ui.horizontal_roller_mill_fuel_input.text() != "":
         energy_input_dict["Fuel grinding (%)"]["vertical rolelr mill"] = _f(self.ui.horizontal_roller_mill_fuel_input.text())
-
+    
+    fuel_grinding_total_share = energy_input_dict["Fuel grinding (%)"]["ball mill"] + energy_input_dict["Fuel grinding (%)"]["vertical rolelr mill"]
+    if fuel_grinding_total_share != 100:
+        print("Fuel grinding share is not 100%")
+            
+    
     if self.ui.ball_mill_cement_input.text() != "":
         energy_input_dict["Cement grinding (%)"]["ball mill"] = _f(self.ui.ball_mill_cement_input.text())
     if self.ui.vert_roller_mill_cement_input.text() != "":
@@ -782,7 +1170,10 @@ def Page6_Energy_Input_Default_Update_Fields(self):
     if self.ui.horizontal_roller_mill_cement_input.text() != "":
         energy_input_dict["Cement grinding (%)"]["high pressure roller press/horizontal roller mill"] = _f(self.ui.horizontal_roller_mill_cement_input.text())
 
-
+    cement_grinding_total_share = energy_input_dict["Cement grinding (%)"]["ball mill"] + energy_input_dict["Cement grinding (%)"]["vertical rolelr mill"] + energy_input_dict["Cement grinding (%)"]["high pressure roller press/horizontal roller mill"]
+    if cement_grinding_total_share != 100:
+        print("Cement grinding share is not 100%")
+    
     with open(filepath, "w") as f:
         json.dump(energy_input_dict, f, indent=4)
 
@@ -869,7 +1260,7 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
         "electricity": 0
     }}
     
-
+    """
     energy_input_quick_dict = {
     "Energy input": {
         "fuel": {
@@ -884,15 +1275,38 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     "Total Final Energy Consumption (MJ/year)": 488544000.0,
     "Total Primary Energy Consumption (MJ/year)": 644734426.2295082,
     "message": "N/A"
-}
-
+    }
+    """
+    
+    energy_input_quick_dict = {
+    "Energy input": {
+        "fuel": {
+            "coal": 0,
+            "coke": 0.0,
+            "natural gas": 0.0,
+            "biomass": 0.0,
+            "municipal wastes": 0.0
+        },
+        "electricity": 0
+    },
+    "Total Final Energy Consumption (MJ/year)": 0,
+    "Total Primary Energy Consumption (MJ/year)": 0,
+    "message": "N/A"
+    }
+    
+    # Electricity Generation Data
+    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
+        electricity_generation_input_dict = json.load(f)
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
+    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]    
+    
     for process in energy_input_dict["Energy input"].keys():
         for fuel in energy_input_dict["Energy input"][process]["fuel"].keys():
             energy_input_dict["Energy input"][process]["fuel"][fuel] = energy_input_quick_dict["Energy input"]["fuel"][fuel] * energy_share_default_dict[process]["fuel"]
         energy_input_dict["Energy input"][process]["electricity"] = energy_input_quick_dict["Energy input"]["electricity"] * energy_share_default_dict[process]["electricity"]
 
     energy_input_quick_dict["Total Final Energy Consumption (MJ/year)"] = sum(energy_input_quick_dict["Energy input"]["fuel"].values()) + energy_input_quick_dict["Energy input"]["electricity"] * 3.6
-    energy_input_quick_dict["Total Primary Energy Consumption (MJ/year)"] = sum(energy_input_quick_dict["Energy input"]["fuel"].values()) + energy_input_quick_dict["Energy input"]["electricity"] * 3.6 / 0.305
+    energy_input_quick_dict["Total Primary Energy Consumption (MJ/year)"] = sum(energy_input_quick_dict["Energy input"]["fuel"].values()) + energy_input_quick_dict["Energy input"]["electricity"] * 3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency)
 
 
     # Energy Input
@@ -993,13 +1407,17 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     energy_input_dict["Energy input"]["Cement grinding"]["Production Per Process (tonnes/year)"] = Total_cement
     energy_input_dict["Energy input"]["Other conveying, auxilaries"]["Production Per Process (tonnes/year)"] = Total_cement
     energy_input_dict["Energy input"]["Non-production energy use"]["Production Per Process (tonnes/year)"] = Total_cement
-
+    
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
+    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]
+    
+    
     for process in energy_input_dict["Energy input"].keys():
         energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = energy_input_dict["Energy input"][process]["electricity"] / Total_process_electricity
         energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"] = energy_input_dict["Energy input"][process]["electricity"]
         energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"] = sum(energy_input_dict["Energy input"][process]["fuel"].values())
         energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6 + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
-        energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6/0.305 + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
+        energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency) + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
 
     Total_final_energy = 0
     Total_primary_energy = 0
@@ -1368,13 +1786,16 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     energy_input_dict["Energy input"]["Cement grinding"]["Production Per Process (tonnes/year)"] = Total_cement
     energy_input_dict["Energy input"]["Other conveying, auxilaries"]["Production Per Process (tonnes/year)"] = Total_cement
     energy_input_dict["Energy input"]["Non-production energy use"]["Production Per Process (tonnes/year)"] = Total_cement
-
+    
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
+    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]
+    
     for process in energy_input_dict["Energy input"].keys():
         energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = energy_input_dict["Energy input"][process]["electricity"] / Total_process_electricity
         energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"] = energy_input_dict["Energy input"][process]["electricity"]
         energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"] = sum(energy_input_dict["Energy input"][process]["fuel"].values())
         energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6 + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
-        energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6/0.305 + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
+        energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency) + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
 
     Total_final_energy = 0
     Total_primary_energy = 0
@@ -1408,6 +1829,7 @@ def Page7_Target_Default_Update_Fields(self):
     json_folder = data_dir / "Saved Progress"
 
     # Energy Billing Input
+    """
     energy_billing_input_dict = {
     "name": "Energy Billing Input",
     "Energy Billing Data (USD/year)": {
@@ -1420,7 +1842,23 @@ def Page7_Target_Default_Update_Fields(self):
         "electricity": 3608000.0
     },
     "Total (USD/year)": 18893333.333333336,
-    "Total Energy Bill (USD/year) - [user entered, for reference only]": 0.0}
+    "Total Energy Bill (USD/year) - [user entered, for reference only]": 0.0
+    }
+    """
+    energy_billing_input_dict = {
+    "name": "Energy Billing Input",
+    "Energy Billing Data (USD/year)": {
+        "coal": 0,
+        "coke": 0.0,
+        "natural gas": 0.0,
+        "biomass": 0.0,
+        "municipal wastes": 0.0,
+        "purchased electricity": 0,
+        "electricity": 0
+    },
+    "Total (USD/year)": 0,
+    "Total Energy Bill (USD/year) - [user entered, for reference only]": 0.0
+    }
 
     # Energy Billing Input Data
     with open(json_folder / "Energy_Billing_Input.json", "w") as f:
@@ -1473,7 +1911,7 @@ def Page7_Target_Default_Update_Fields(self):
     energy_billing_input_dict["Energy Billing Data (USD/year)"]["municipal wastes"] = Total_msw_with_generation_and_process*msw_price
 
     energy_billing_input_dict["Total (USD/year)"] = sum(energy_billing_input_dict["Energy Billing Data (USD/year)"].values())
-
+    """
     target_dict = {
     "name": "Target",
     "Annual energy use (GJ)": 488544.0,
@@ -1491,7 +1929,28 @@ def Page7_Target_Default_Update_Fields(self):
     "Direct CO2 emissions percentage reduction": 20.0,
     "Indirect CO2 emissions percentage reduction": 20.0,
     "Overall (including process) CO2 emissions percentage reduction": 20.0,
-    "Absolute CO2 emissions reduction (million metric ton CO2)": 0.199}
+    "Absolute CO2 emissions reduction (million metric ton CO2)": 0.199
+    }
+    """
+    target_dict = {
+    "name": "Target",
+    "Annual energy use (GJ)": 0,
+    "Energy percentage reduction": 0,
+    "Absolute (final energy) reduction": 0,
+    "Annual direct CO2 emissions before CCUS (million metric ton CO2)": {
+        "coal": 0,
+        "coke": 0.0,
+        "natural gas": 0.0
+    },
+    "Total annual direct CO2 emissions before CCUS (million metric ton CO2)": 0,
+    "Annual direct CO2 emissions with CCUS (million metric ton CO2)": 0,
+    "Annual indirect CO2 emissions (million metric ton CO2)": 0,
+    "Annual CO2 emissions (million metric ton CO2)": 0,
+    "Direct CO2 emissions percentage reduction": 0,
+    "Indirect CO2 emissions percentage reduction": 0,
+    "Overall (including process) CO2 emissions percentage reduction": 0,
+    "Absolute CO2 emissions reduction (million metric ton CO2)": 0
+    }
 
     if self.ui.energy_percent_reduction_input.text() != "":
         target_dict["Energy percentage reduction"] = _f(self.ui.energy_percent_reduction_input.text())
@@ -1547,58 +2006,58 @@ def Part_1_Detailed_Output(self):
     detailed_output_dict = {
     "name": "Detailed Output",
     "Preblending": {
-        "Your Facility": 350000.0,
-        "International Best Practice Facility": 270000.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Raw Materials Preparation",
         "unit": "kWh/year"
     },
     "Crushing": {
-        "Your Facility": 150000.0,
-        "International Best Practice Facility": 102600.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Raw Materials Preparation",
         "unit": "kWh/year"
     },
     "Grinding": {
-        "Your Facility": 3240000.0,
-        "International Best Practice Facility": 3091500.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Raw Materials Preparation",
         "unit": "kWh/year"
     },
     "Homogenization": {
-        "Your Facility": 400000.0,
-        "International Best Practice Facility": 27000.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Raw Materials Preparation",
         "unit": "kWh/year"
     },
     "Fuel preparation": {
         "name": "Fuel grinding and preparation",
-        "Your Facility": 450000.0,
-        "International Best Practice Facility": 163017.77777777775,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Fuel Preparation",
         "unit": "kWh/year"
     },
     "Additive prepration": {
         "name": "Additive grinding and blending",
-        "Your Facility": 1000000.0,
-        "International Best Practice Facility": 2400000.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Additives Preparation",
         "unit": "kWh/year"
     },
     "Additive drying": {
-        "Your Facility": 15000000.0,
-        "International Best Practice Facility": 7500000.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Additives Preparation",
         "unit": "MJ/year"
     },
     "Kiln system - preheater": {
-        "Your Facility": 1000000.0,
+        "Your Facility": 0,
         "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Machinery Use",
@@ -1606,36 +2065,36 @@ def Part_1_Detailed_Output(self):
     },
     "Kiln system - cooler": {
         "name": "Kiln system - clinker cooler",
-        "Your Facility": 4500000.0,
+        "Your Facility": 0,
         "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Machinery Use",
         "unit": "kWh/year"
     },
     "Total kiln mechanical electricity": {
-        "Your Facility": 5500000.0,
-        "International Best Practice Facility": 2250000.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Machinery Use",
         "unit": "kWh/year"
     },
     "Kiln system - precalciner": {
-        "Your Facility": 15000000.0,
+        "Your Facility": 0,
         "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Clinker Making",
         "unit": "MJ/year"
     },
     "Kiln system - kiln": {
-        "Your Facility": 390000000.0,
+        "Your Facility": 0,
         "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Clinker Making",
         "unit": "MJ/year"
     },
     "Total for clinker making fuel": {
-        "Your Facility": 405000000.0,
-        "International Best Practice Facility": 285000000.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Clinker Making",
         "unit": "MJ/year"
@@ -1684,8 +2143,8 @@ def Part_1_Detailed_Output(self):
     },
     "Cement grinding": {
         "name": "Total finish grinding energy",
-        "Your Facility": 6500000.0,
-        "International Best Practice Facility": 4550000.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Cement Grinding - Finished Product",
         "unit": "kWh/year"
@@ -1693,36 +2152,36 @@ def Part_1_Detailed_Output(self):
     "Raw material conveying and quarraying": {
         "name": "Quarrying",
         "Your Facility": 0.0,
-        "International Best Practice Facility": 190400.0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Production Energy",
         "unit": "kWh/year"
     },
     "Auxiliaries": {
-        "Your Facility": 1250000.0,
-        "International Best Practice Facility": 1000000.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Production Energy",
         "unit": "kWh/year"
     },
     "Conveyors": {
         "Your Facility": float("nan"),
-        "International Best Practice Facility": 187500.0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Production Energy",
         "unit": "kWh/year"
     },
     "Total Electricity - Production - other": {
-        "Your Facility": 1250000.0,
-        "International Best Practice Facility": 1377900.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Production Energy",
         "unit": "kWh/year"
     },
     "Non-production energy use": {
         "name": "Total Electricity - Non-production - other",
-        "Your Facility": 200000.0,
-        "International Best Practice Facility": 228480.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Non-production Energy",
         "unit": "kWh/year"
@@ -1829,6 +2288,10 @@ def Part_1_Detailed_Output(self):
     # Energy Input Data
     with open(json_folder / "Energy_Input.json", "r") as f:
         energy_input_dict = json.load(f)
+        
+    # Electricity Generation Data
+    with open(json_folder / "Electricity_Generation.json", "r") as f:
+        electricity_generation_input_dict = json.load(f)
 
     for process in detailed_output_dict.keys():
         try: 
@@ -1891,9 +2354,13 @@ def Part_1_Detailed_Output(self):
             IBP_total_electricity += detailed_output_dict[process]["International Best Practice Facility"] # be careful of double counting values from the grouped categories
         elif detailed_output_dict[process]["unit"] == "MJ/year":
             IBP_total_fuel += detailed_output_dict[process]["International Best Practice Facility"]
-
+    
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
+    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]
+    
     IBP_total_final_energy = IBP_total_electricity*3.6 + IBP_total_fuel
-    IBP_total_primary_energy = IBP_total_electricity*3.6/0.305 + IBP_total_fuel
+    IBP_total_primary_energy = IBP_total_electricity*3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency) + IBP_total_fuel
+    
 
     detailed_output_dict["IBP total final energy"] = IBP_total_final_energy
     detailed_output_dict["IBP total primary energy"] = IBP_total_primary_energy
@@ -1907,58 +2374,58 @@ def Part_1_Detailed_Output(self):
     detailed_output_emissions_dict = {
     "name": "Detailed Output Emissions",
     "Preblending": {
-        "Your Facility": 175.0,
-        "International Best Practice Facility": 135.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Raw Materials Preparation",
         "unit": "kWh/year"
     },
     "Crushing": {
-        "Your Facility": 75.0,
-        "International Best Practice Facility": 51.3,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Raw Materials Preparation",
         "unit": "kWh/year"
     },
     "Grinding": {
-        "Your Facility": 1620.0,
-        "International Best Practice Facility": 1545.75,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Raw Materials Preparation",
         "unit": "kWh/year"
     },
     "Homogenization": {
-        "Your Facility": 200.0,
-        "International Best Practice Facility": 13.5,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Raw Materials Preparation",
         "unit": "kWh/year"
     },
     "Fuel preparation": {
         "name": "Fuel grinding and preparation",
-        "Your Facility": 225.0,
-        "International Best Practice Facility": 81.50888888888888,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Fuel Preparation",
         "unit": "kWh/year"
     },
     "Additive prepration": {
         "name": "Additive grinding and blending",
-        "Your Facility": 500.0,
-        "International Best Practice Facility": 1200.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Additives Preparation",
         "unit": "kWh/year"
     },
     "Additive drying": {
-        "Your Facility": 1395.0,
-        "International Best Practice Facility": 697.5,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Additives Preparation",
         "unit": "MJ/year"
     },
     "Kiln system - preheater": {
-        "Your Facility": 500.0,
+        "Your Facility": 0,
         "International Best Practice Facility": 0.0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Machinery Use",
@@ -1966,15 +2433,15 @@ def Part_1_Detailed_Output(self):
     },
     "Kiln system - cooler": {
         "name": "Kiln system - clinker cooler",
-        "Your Facility": 2250.0,
+        "Your Facility": 0,
         "International Best Practice Facility": 0.0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Machinery Use",
         "unit": "kWh/year"
     },
     "Total kiln mechanical electricity": {
-        "Your Facility": 2750.0,
-        "International Best Practice Facility": 1125.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Machinery Use",
         "unit": "kWh/year"
@@ -1994,8 +2461,8 @@ def Part_1_Detailed_Output(self):
         "unit": "MJ/year"
     },
     "Total for clinker making fuel": {
-        "Your Facility": 37665.0,
-        "International Best Practice Facility": 26505.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Kiln - Clinker Making",
         "unit": "MJ/year"
@@ -2044,8 +2511,8 @@ def Part_1_Detailed_Output(self):
     },
     "Cement grinding": {
         "name": "Total finish grinding energy",
-        "Your Facility": 3250.0,
-        "International Best Practice Facility": 2275.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Cement Grinding - Finished Product",
         "unit": "kWh/year"
@@ -2053,36 +2520,36 @@ def Part_1_Detailed_Output(self):
     "Raw material conveying and quarraying": {
         "name": "Quarrying",
         "Your Facility": 0.0,
-        "International Best Practice Facility": 95.2,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Production Energy",
         "unit": "kWh/year"
     },
     "Auxiliaries": {
-        "Your Facility": 625.0,
-        "International Best Practice Facility": 500.0,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Production Energy",
         "unit": "kWh/year"
     },
     "Conveyors": {
         "Your Facility": 0,
-        "International Best Practice Facility": 93.75,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Production Energy",
         "unit": "kWh/year"
     },
     "Total Electricity - Production - other": {
-        "Your Facility": 625.0,
-        "International Best Practice Facility": 688.95,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Production Energy",
         "unit": "kWh/year"
     },
     "Non-production energy use": {
         "name": "Total Electricity - Non-production - other",
-        "Your Facility": 100.0,
-        "International Best Practice Facility": 114.24,
+        "Your Facility": 0,
+        "International Best Practice Facility": 0,
         "National Best Practice Facility": 0,
         "category": "Other-Non-production Energy",
         "unit": "kWh/year"
@@ -2492,8 +2959,9 @@ def Part_1_Detailed_Output(self):
     benchmarking_results_primary_dict["Target carbon direct"] = Target_carbon_direct
     benchmarking_results_primary_dict["Target carbon all"] = Target_carbon_all
 
-    IBP_carbon_indirect = benchmarking_results_primary_dict["International Benchmarking"]["Electricity Consumption (kWh/year)"]["International Best Practice Facility"] * cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000 * (purchased_electricity/Total_process_electricity) # for IBP, assume it uses the same share of purchased electricity
-    IBP_carbon_direct = benchmarking_results_primary_dict["International Benchmarking"]["Fuel Consumption (MJ/year)"]["International Best Practice Facility"] * fuel_emission_intensity + benchmarking_results_primary_dict["International Benchmarking"]["Electricity Consumption (kWh/year)"]["International Best Practice Facility"]* (1 - ((purchased_electricity+onsite_RE_electricity_generation)/Total_process_electricity)) * (electricity_fuel_emission_intensity*3.6/0.305)
+    IBP_carbon_indirect = benchmarking_results_primary_dict["International Benchmarking"]["Electricity Consumption (kWh/year)"]["International Best Practice Facility"] * cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000 * (share_of_electricity_from_purchase) # for IBP, assume it uses the same share of purchased electricity # repalce purchased_electricity/Total_process_electricity with share_of_electricity_from_purchase
+    IBP_carbon_direct = benchmarking_results_primary_dict["International Benchmarking"]["Fuel Consumption (MJ/year)"]["International Best Practice Facility"] * fuel_emission_intensity + benchmarking_results_primary_dict["International Benchmarking"]["Electricity Consumption (kWh/year)"]["International Best Practice Facility"]*3.6*electricity_fuel_emission_intensity*(1-share_of_electricity_from_purchase)   
+    #IBP_carbon_direct = benchmarking_results_primary_dict["International Benchmarking"]["Fuel Consumption (MJ/year)"]["International Best Practice Facility"] * fuel_emission_intensity + benchmarking_results_primary_dict["International Benchmarking"]["Electricity Consumption (kWh/year)"]["International Best Practice Facility"]* (1 - ((purchased_electricity+onsite_RE_electricity_generation)/Total_process_electricity)) * (electricity_fuel_emission_intensity*3.6/0.305)
     IBP_carbon_all = IBP_carbon_indirect + IBP_carbon_direct + Total_clinker*cost_and_emissions_dict["Process emission per metric ton of clinker (tCO2/t clinker)"]
 
     benchmarking_results_primary_dict["IBP carbon indirect"] = IBP_carbon_indirect
@@ -2606,6 +3074,8 @@ def Part_1_Detailed_Output(self):
     with open(json_folder / "Benchmarking_Results_CO2.json", 'w') as f:
         json.dump(benchmarking_results_co2_dict, f, indent=4)
 
+    
+    # json load
     with open(json_folder / "Carbon_Capture_Input.json", 'r') as f:
         carbon_capture_dict = json.load(f)
 
@@ -2745,7 +3215,14 @@ def Part_1_Detailed_Output(self):
     fig, ax = plt.subplots(figsize=(11, 7), constrained_layout=True)
     own_facility_array = np.array(own_facility)
     IBP_facility_array = np.array(IBP_facility)
-    normalized_array = own_facility_array / IBP_facility_array
+    print("Own facility array:")
+    print(own_facility_array)
+    print("IBP facility array:")
+    print(IBP_facility_array)
+           
+    # normalized_array = own_facility_array / IBP_facility_array
+    normalized_array = np.where(IBP_facility_array != 0, np.true_divide(own_facility_array, IBP_facility_array), 0) # eliminate the case when the IBP_facility_array is zero
+    
     normalized_list = list(normalized_array)
 
     processes = ["Raw Material Preparation", "Fuel Preparation", "Additives Preparation", "Kiln - Machinery Use", "Kiln - Clinker Making", "Cement Grinding", "Other Production Energy", "Other Non-Prodution Energy"]
@@ -2797,7 +3274,7 @@ def Part_1_Detailed_Output(self):
     # plt.show() 
 
     # Share of final energy by process step
-    fig, ax = plt.subplots(figsize=(7, 4))
+    fig, ax = plt.subplots(figsize=(9, 4))
     process_energy = process_energy_group("Your Facility", "final")
     processes = ["Raw Material Preparation", "Fuel Preparation", "Additives Preparation", "Kiln - Machinery Use", "Kiln - Clinker Making", "Cement Grinding", "Other Production Energy", "Other Non-Prodution Energy"]
 
@@ -2810,7 +3287,7 @@ def Part_1_Detailed_Output(self):
     # plt.show() 
 
     # Share of primary energy by process step
-    fig, ax = plt.subplots(figsize=(7, 4))
+    fig, ax = plt.subplots(figsize=(9, 4))
     process_energy = process_energy_group("Your Facility", "primary")
     processes = ["Raw Material Preparation", "Fuel Preparation", "Additives Preparation", "Kiln - Machinery Use", "Kiln - Clinker Making", "Cement Grinding", "Other Production Energy", "Other Non-Prodution Energy"]
 
@@ -2824,7 +3301,7 @@ def Part_1_Detailed_Output(self):
 
 
     # Share of energy costs by process step
-    fig, ax = plt.subplots(figsize=(7, 4))
+    fig, ax = plt.subplots(figsize=(9, 4))
     process_energy = process_energy_group("Your Facility", "cost")
     processes = ["Raw Material Preparation", "Fuel Preparation", "Additives Preparation", "Kiln - Machinery Use", "Kiln - Clinker Making", "Cement Grinding", "Other Production Energy", "Other Non-Prodution Energy"]
 
@@ -2870,29 +3347,29 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Wash Mills with Closed Circuit Classifier (Wet Process)": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.40516206482593037,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 6,
             "Typical Investment per mass": 0,
             "Typical Investments": 0.0,
             "Total Energy Savings": 0.0,
-            "Total Energy Savings - Absolute": 1620000.0,
+            "Total Energy Savings - Absolute": 0,
             "Total Costs": 0.0,
             "Payback Period": "immediate",
             "Energy Type": "Electricity",
             "Process": "Grinding",
-            "Abatement cost": 400.0,
-            "Total Emissions Reduction": 846.5861344537816,
-            "Total Emissions Reduction - indirect": 767.4579831932773,
-            "Total Emissions Reduction - direct": 79.12815126050425
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "Raw Meal Process Control (Dry process - Vertical Mill)": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.06077430972388956,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 0.9,
             "Typical Investment per mass": 0.3,
-            "Typical Investments": 0.3333333333333333,
-            "Total Energy Savings": 0.06077430972388956,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
             "Payback Period": "-",
@@ -2904,13 +3381,13 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - direct": 0.0
         },
         "High-efficiency classifiers/separators (Dry process)": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.2194627851140456,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 3.25,
-            "Typical Investment per mass": 2.2000000000000006,
-            "Typical Investments": 0.6769230769230771,
-            "Total Energy Savings": 0.2194627851140456,
+            "Typical Investment per mass": 2.2,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
             "Payback Period": "-",
@@ -2924,10 +3401,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Use of Roller Mills (Dry Process)": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.4389255702280912,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 6.5,
             "Typical Investment per mass": 5.5,
-            "Typical Investments": 0.8461538461538461,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -2940,12 +3417,12 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - direct": 0.0
         },
         "Efficient transport systems (Dry process)": {
-            "Do you want to apply this measure?": "Yes, Partially",
+            "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0.0,
-            "Energy Consumption Share of Process": 0.13505402160864347,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 2,
             "Typical Investment per mass": 3,
-            "Typical Investments": 1.5,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -2960,10 +3437,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Raw Meal Blending (Homogenizing) Systems (Dry Process)": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 1,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 1.5,
             "Typical Investment per mass": 3.7,
-            "Typical Investments": 2.466666666666667,
+            "Typical Investments": 0,
             "Total Energy Savings": 0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -2996,40 +3473,40 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - indirect": "tCO2/year"
         },
         "New Efficient Coal Separator for Fuel Preparation": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.08532435883860975,
-            "Typical Energy Savings": 2.98969072164948,
-            "Typical Investment per mass": 0.010666666666666663,
-            "Typical Investments": 0.003567816091954027,
-            "Total Energy Savings": 0.08532435883860975,
-            "Total Energy Savings - Absolute": 48737.27376861389,
-            "Total Costs": 173.88562962962953,
-            "Payback Period": 0.017839080459770135,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 3,
+            "Typical Investment per mass": 0.01,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
             "Process": "Fuel preparation",
-            "Abatement cost": 400.35678160919537,
-            "Total Emissions Reduction": 25.469321113325016,
-            "Total Emissions Reduction - indirect": 23.088771501727802,
-            "Total Emissions Reduction - direct": 2.3805496115972136
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "Conversion to efficient roller mills": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.2425859788359788,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 8.5,
             "Typical Investment per mass": 0.25,
-            "Typical Investments": 0.029411764705882353,
-            "Total Energy Savings": 0.2425859788359788,
-            "Total Energy Savings - Absolute": 126742.13184815482,
-            "Total Costs": 3727.7097602398476,
-            "Payback Period": 0.14705882352941174,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
             "Process": "Fuel preparation",
-            "Abatement cost": 402.94117647058823,
-            "Total Emissions Reduction": 66.23341448997589,
-            "Total Emissions Reduction - indirect": 60.04275363814899,
-            "Total Emissions Reduction - direct": 6.190660851826894
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         }
     },
     "EE-Kiln": {
@@ -3052,30 +3529,30 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - indirect": "tCO2/year"
         },
         "Fan modifications": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.0011936592818945762,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 0.05,
             "Typical Investment per mass": 0.0003,
-            "Typical Investments": 0.005999999999999999,
-            "Total Energy Savings": 0.0011936592818945762,
-            "Total Energy Savings - Absolute": 5000.000000000001,
-            "Total Costs": 30.0,
-            "Payback Period": 0.029999999999999995,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
             "Process": "Kiln mechanical",
-            "Abatement cost": 400.6,
-            "Total Emissions Reduction": 2.6129201680672276,
-            "Total Emissions Reduction - indirect": 2.368697478991597,
-            "Total Emissions Reduction - direct": 0.24422268907563044
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "Improved refractories ": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.12276133844692337,
-            "Typical Energy Savings": 500.12969283276584,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 500,
             "Typical Investment per mass": 0.25,
-            "Typical Investments": 0.0004998703407989723,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3091,9 +3568,9 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
             "Energy Consumption Share of Process": 0.05,
-            "Typical Energy Savings": 203.7,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": 0.35,
-            "Typical Investments": 0.001718213058419244,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3108,10 +3585,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Adjustable speed drive for kiln fan": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.14562643239113826,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 6.1,
             "Typical Investment per mass": 1.1875,
-            "Typical Investments": 0.194672131147541,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3124,30 +3601,30 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - direct": 0.0
         },
         "Seal replacement": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
             "Energy Consumption Share of Process": 0.004,
-            "Typical Energy Savings": 16.296,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": "NaN",
-            "Typical Investments": 0.008532423208191127,
-            "Total Energy Savings": 0.004,
-            "Total Energy Savings - Absolute": 1629600.0,
-            "Total Costs": 13904.43686006826,
-            "Payback Period": 0.2559726962457338,
+            "Typical Investments": 0.0011,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Fuel",
             "Process": "Kiln thermal",
-            "Abatement cost": 363.0102633735795,
-            "Total Emissions Reduction": 151.5528,
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
             "Total Emissions Reduction - indirect": 0,
-            "Total Emissions Reduction - direct": 151.5528
+            "Total Emissions Reduction - direct": 0
         },
         "Grate cooler optimization": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
             "Energy Consumption Share of Process": 0.035,
-            "Typical Energy Savings": 142.59000000000003,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": 0.22,
-            "Typical Investments": 0.0015428851953152392,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3162,10 +3639,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Optimize heat recovery in clinker cooler": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.01964181415150769,
-            "Typical Energy Savings": 80.02075085324232,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 80,
             "Typical Investment per mass": 0.22,
-            "Typical Investments": 0.002749286874394355,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3181,9 +3658,9 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
             "Energy Consumption Share of Process": 0.06,
-            "Typical Energy Savings": 244.44,
-            "Typical Investment per mass": 1.0000000000000002,
-            "Typical Investments": 0.0040909834724267725,
+            "Typical Energy Savings": 0,
+            "Typical Investment per mass": 1,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3196,31 +3673,31 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - direct": 0.0
         },
         "Low temperature heat recovery for power generation": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 1,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 45,
             "Typical Investment per mass": "NaN",
-            "Typical Investments": 0.83,
-            "Total Energy Savings": 1,
-            "Total Energy Savings - Absolute": 4183800.0,
-            "Total Costs": 3472554.0,
-            "Payback Period": 4.1499999999999995,
+            "Typical Investments": 0.11,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
             "Process": "Kiln mechanical",
-            "Abatement cost": 483.0,
-            "Total Emissions Reduction": 2186.387079831933,
-            "Total Emissions Reduction - indirect": 1982.0313025210085,
-            "Total Emissions Reduction - direct": 204.35577731092448
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "High temperature heat recovery for power generation": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.5252100840336135,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 22,
             "Typical Investment per mass": 3.3,
-            "Typical Investments": 0.15,
-            "Total Energy Savings": 0.5252100840336135,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
             "Payback Period": "-",
@@ -3232,30 +3709,30 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - direct": 0.0
         },
         "Conversion to reciprocating grate cooler": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
             "Energy Consumption Share of Process": 0.08,
-            "Typical Energy Savings": 325.92,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": 3,
-            "Typical Investments": 0.009204712812960236,
-            "Total Energy Savings": 0.08,
-            "Total Energy Savings - Absolute": 32461632.0,
-            "Total Costs": 298800.0,
-            "Payback Period": 0.2761413843888071,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Fuel",
             "Process": "Kiln thermal",
-            "Abatement cost": 363.3717093976489,
-            "Total Emissions Reduction": 3018.931776,
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
             "Total Emissions Reduction - indirect": 0,
-            "Total Emissions Reduction - direct": 3018.931776
+            "Total Emissions Reduction - direct": 0
         },
         "Efficient kiln drives": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.013130252100840338,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 0.55,
             "Typical Investment per mass": 0.2,
-            "Typical Investments": 0.36363636363636365,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3270,10 +3747,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Conversion of long dry kilns to preheater/precalciner kiln": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.3437317476513845,
-            "Typical Energy Savings": 1400.3631399317403,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 1400,
             "Typical Investment per mass": 28,
-            "Typical Investments": 0.01999481363195895,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3288,10 +3765,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Upgrading the preheater from 5 to 6 stages": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.02621859697645403,
-            "Typical Energy Savings": 106.81456408207372,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 106.79,
             "Typical Investment per mass": 2.54,
-            "Typical Investments": 0.023779528773326508,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3306,10 +3783,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Dry process upgrade to multi-stage preheater kiln": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.22097040920446184,
-            "Typical Energy Savings": 900.2334470989775,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 900,
             "Typical Investment per mass": 30,
-            "Typical Investments": 0.03332468938659819,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3324,10 +3801,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Upgrading of a preheater to a preheater/precalciner kiln": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.09820907075753843,
-            "Typical Energy Savings": 400.1037542662116,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 400,
             "Typical Investment per mass": 16.5,
-            "Typical Investments": 0.04123930311591533,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3342,10 +3819,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Low pressure drop cyclones": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.02100840336134454,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 0.88,
             "Typical Investment per mass": 3,
-            "Typical Investments": 3.409090909090909,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3360,10 +3837,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Indirect firing ": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.00454216952253615,
-            "Typical Energy Savings": 18.504798634812275,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 18.50,
             "Typical Investment per mass": 7.4,
-            "Typical Investments": 0.3998962726391792,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3378,10 +3855,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Conversion to new suspension preheater/precalciner kiln": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.5892544245452305,
-            "Typical Energy Savings": 2400.622525597269,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 2400,
             "Typical Investment per mass": 28,
-            "Typical Investments": 0.011663641285309388,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3416,9 +3893,9 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
             "Energy Consumption Share of Process": 0.05,
-            "Typical Energy Savings": 3.19872,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": 0.18,
-            "Typical Investments": 0.056272509003601444,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3430,29 +3907,29 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - direct": 0.0
         },
         "Improved grinding mill (horozontal mill)": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.1750700280112045,
-            "Typical Energy Savings": 11.200000000000001,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 11.2,
             "Typical Investment per mass": 4,
-            "Typical Investments": 0.3571428571428571,
-            "Total Energy Savings": 0.1750700280112045,
-            "Total Energy Savings - Absolute": 1400000.0000000002,
-            "Total Costs": 500000.0,
-            "Payback Period": 1.7857142857142854,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
-            "Abatement cost": 435.7142857142857,
-            "Total Emissions Reduction": 731.6176470588238,
-            "Total Emissions Reduction - indirect": 663.2352941176472,
-            "Total Emissions Reduction - direct": 68.38235294117653
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "Improved grinding media (ball mills)": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.0625250100040016,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 4,
             "Typical Investment per mass": 1.8,
-            "Typical Investments": 0.45,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3464,21 +3941,21 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - direct": 0.0
         },
         "High efficiency classifiers": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.0547093837535014,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 3.5,
             "Typical Investment per mass": 2,
-            "Typical Investments": 0.5714285714285714,
-            "Total Energy Savings": 0.0547093837535014,
-            "Total Energy Savings - Absolute": 360906.862745098,
-            "Total Costs": 206232.49299719886,
-            "Payback Period": 2.8571428571428568,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
-            "Abatement cost": 457.1428571428572,
-            "Total Emissions Reduction": 188.60416409210742,
-            "Total Emissions Reduction - indirect": 170.97583518701597,
-            "Total Emissions Reduction - direct": 17.62832890509146
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         }
     },
     "EE-Product&Feedstock Changes": {
@@ -3500,29 +3977,29 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - indirect": "tCO2/year"
         },
         "Low alkali cement": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.005155976214770771,
-            "Typical Energy Savings": 21.00544709897612,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 21,
             "Typical Investment per mass": 0,
             "Typical Investments": 0.0,
-            "Total Energy Savings": 0.005155976214770771,
-            "Total Energy Savings - Absolute": 1924771.12857338,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
             "Total Costs": 0.0,
             "Payback Period": "immediate",
             "Energy Type": "Fuel",
-            "Abatement cost": 358.4229390681004,
-            "Total Emissions Reduction": 179.00371495732432,
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
             "Total Emissions Reduction - indirect": 0,
-            "Total Emissions Reduction - direct": 179.00371495732432
+            "Total Emissions Reduction - direct": 0
         },
         "Blended cements": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.3437317476513845,
-            "Typical Energy Savings": 1400.3631399317403,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 1400,
             "Typical Investment per mass": 0.72,
-            "Typical Investments": 0.0005141523505360873,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3536,10 +4013,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Use of waste-derived fuels": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.14731360613630762,
-            "Typical Energy Savings": 600.1556313993173,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 600,
             "Typical Investment per mass": 1.1,
-            "Typical Investments": 0.001832857916262904,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3554,9 +4031,9 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
             "Energy Consumption Share of Process": 0.05,
-            "Typical Energy Savings": 203.7,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": 0.72,
-            "Typical Investments": 0.0035346097201767305,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3570,10 +4047,10 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
         "Use of steel slag in kiln (CemStar)": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
-            "Energy Consumption Share of Process": 0.046637211585665195,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 190,
             "Typical Investment per mass": "NaN",
-            "Typical Investments": 0.02631578947368421,
+            "Typical Investments": 0,
             "Total Energy Savings": 0.0,
             "Total Energy Savings - Absolute": 0.0,
             "Total Costs": 0.0,
@@ -3604,112 +4081,112 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Total Emissions Reduction - indirect": "tCO2/year"
         },
         "High efficiency fans": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.0026260504201680674,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 0.4,
             "Typical Investment per mass": 0.009333333333333334,
-            "Typical Investments": 0.023333333333333334,
-            "Total Energy Savings": 0.0026260504201680674,
-            "Total Energy Savings - Absolute": 29660.750345688368,
-            "Total Costs": 692.0841747327286,
-            "Payback Period": 0.11666666666666667,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
-            "Abatement cost": 402.3333333333334,
-            "Total Emissions Reduction": 15.500234555651222,
-            "Total Emissions Reduction - indirect": 14.051468913766232,
-            "Total Emissions Reduction - direct": 1.4487656418849895
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "High efficiency motors": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.03174894957983194,
-            "Typical Energy Savings": 4.836,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
+            "Typical Energy Savings": 5,
             "Typical Investment per mass": 0.22,
-            "Typical Investments": 0.045492142266335814,
-            "Total Energy Savings": 0.03174894957983194,
-            "Total Energy Savings - Absolute": 357656.77401214716,
-            "Total Costs": 16270.572845879316,
-            "Payback Period": 0.22746071133167906,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
-            "Abatement cost": 404.5492142266336,
-            "Total Emissions Reduction": 186.90571961244035,
-            "Total Emissions Reduction - indirect": 169.436139789368,
-            "Total Emissions Reduction - direct": 17.469579823072326
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "Variable speed drives in fan systems": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
-            "Energy Consumption Share of Process": 0.026260504201680673,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
+            "Energy Consumption Share of Process": 0,
             "Typical Energy Savings": 4,
             "Typical Investment per mass": 1,
-            "Typical Investments": 0.25,
-            "Total Energy Savings": 0.026260504201680673,
-            "Total Energy Savings - Absolute": 286436.3499811002,
-            "Total Costs": 71609.08749527505,
-            "Payback Period": 1.25,
+            "Typical Investments": 0,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
-            "Abatement cost": 425.0,
-            "Total Emissions Reduction": 149.68706314663586,
-            "Total Emissions Reduction - indirect": 135.69621201835733,
-            "Total Emissions Reduction - direct": 13.990851128278537
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "Reduce leaks": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
             "Energy Consumption Share of Process": 0.2,
-            "Typical Energy Savings": 1.52,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": "NaN",
             "Typical Investments": 0.04,
-            "Total Energy Savings": 0.2,
-            "Total Energy Savings - Absolute": 190000.0,
-            "Total Costs": 7600.0,
-            "Payback Period": 0.19999999999999998,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
-            "Abatement cost": 404.0,
-            "Total Emissions Reduction": 99.29096638655463,
-            "Total Emissions Reduction - indirect": 90.01050420168067,
-            "Total Emissions Reduction - direct": 9.280462184873956
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "Maintenance of compressed air systems": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
             "Energy Consumption Share of Process": 0.15,
-            "Typical Energy Savings": 1.14,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": "NaN",
             "Typical Investments": 0.06,
-            "Total Energy Savings": 0.15,
-            "Total Energy Savings - Absolute": 142500.0,
-            "Total Costs": 8550.0,
-            "Payback Period": 0.3,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
-            "Abatement cost": 406.0,
-            "Total Emissions Reduction": 74.46822478991596,
-            "Total Emissions Reduction - indirect": 67.5078781512605,
-            "Total Emissions Reduction - direct": 6.9603466386554675
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "Heat recovery for water preheating": {
-            "Do you want to apply this measure?": "Yes (100%)",
-            "Potential Application": 1,
+            "Do you want to apply this measure?": "No (0%)",
+            "Potential Application": 0,
             "Energy Consumption Share of Process": 0.2,
-            "Typical Energy Savings": 1.52,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": "NaN",
             "Typical Investments": 0.13333333333333333,
-            "Total Energy Savings": 0.2,
-            "Total Energy Savings - Absolute": 190000.0,
-            "Total Costs": 25333.333333333332,
-            "Payback Period": 0.6666666666666666,
+            "Total Energy Savings": 0,
+            "Total Energy Savings - Absolute": 0,
+            "Total Costs": 0,
+            "Payback Period": 0,
             "Energy Type": "Electricity",
-            "Abatement cost": 413.33333333333337,
-            "Total Emissions Reduction": 99.29096638655463,
-            "Total Emissions Reduction - indirect": 90.01050420168067,
-            "Total Emissions Reduction - direct": 9.280462184873956
+            "Abatement cost": 0,
+            "Total Emissions Reduction": 0,
+            "Total Emissions Reduction - indirect": 0,
+            "Total Emissions Reduction - direct": 0
         },
         "Reducing inlet air temperature": {
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
             "Energy Consumption Share of Process": 0.02,
-            "Typical Energy Savings": 0.152,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": "NaN",
             "Typical Investments": 0.17333333333333334,
             "Total Energy Savings": 0.0,
@@ -3726,7 +4203,7 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
             "Energy Consumption Share of Process": 0.12,
-            "Typical Energy Savings": 0.9119999999999999,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": "NaN",
             "Typical Investments": 0.25,
             "Total Energy Savings": 0.0,
@@ -3743,7 +4220,7 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
             "Do you want to apply this measure?": "No (0%)",
             "Potential Application": 0,
             "Energy Consumption Share of Process": 0.03,
-            "Typical Energy Savings": 0.22799999999999998,
+            "Typical Energy Savings": 0,
             "Typical Investment per mass": "NaN",
             "Typical Investments": 0.5,
             "Total Energy Savings": 0.0,
@@ -3841,7 +4318,7 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
 
             if choice in ["Yes (100%)", "No (0%)"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes" in choice else 0
+                all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
                 all_measures_dict[unit][measure]["Potential Application"] = input_value
@@ -3928,7 +4405,7 @@ def Page8_All_Measures_2a_Default_Update_Fields(self):
 
             if choice in ["Yes (100%)", "No (0%)"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes" in choice else 0
+                all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
                 all_measures_dict[unit][measure]["Potential Application"] = input_value
@@ -4006,7 +4483,7 @@ def Page8_All_Measures_2b_Default_Update_Fields(self):
 
             if choice in ["Yes (100%)", "No (0%)"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes" in choice else 0
+                all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
                 all_measures_dict[unit][measure]["Potential Application"] = input_value
@@ -4108,7 +4585,7 @@ def Page8_All_Measures_3_Default_Update_Fields(self):
 
             if choice in ["Yes (100%)", "No (0%)"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes" in choice else 0
+                all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
                 all_measures_dict[unit][measure]["Potential Application"] = input_value
@@ -4138,8 +4615,28 @@ def EE_measure(self):
 
     # Automatically generate typical investments and potential applications
     def EE_measure_table(measures_data):   
+        for measure_cateogry in measures_data.keys():
+            for measure in measures_data[measure_cateogry].keys():
+                if measure != "unit":
+                                   
+                    if measures_data[measure_cateogry][measure]["Do you want to apply this measure?"] == "yes, completely (=100%)":
+                        measures_data[measure_cateogry][measure]["Potential Application"] = 1
+                    elif measures_data[measure_cateogry][measure]["Do you want to apply this measure?"] == "no (=0%)":
+                        measures_data[measure_cateogry][measure]["Potential Application"] = 0
+                    else:
+                        measures_data[measure_cateogry][measure]["Potential Application"] = measures_data[measure_cateogry][measure]["Potential Application"]
+                    
+                    if measure_cateogry != "EE-Utility Systems":
+                        exception_measures = ["Use of steel slag in kiln (CemStar)", "Seal replacement", "Low temperature heat recovery for power generation"]
+                        if measure not in exception_measures:
+                            if measures_data[measure_cateogry][measure]["Typical Energy Savings"] != 0:
+                                measures_data[measure_cateogry][measure]["Typical Investments"] = measures_data[measure_cateogry][measure]['Typical Investment per mass'] / measures_data[measure_cateogry][measure]["Typical Energy Savings"]
+                            else: 
+                                measures_data[measure_cateogry][measure]["Typical Investments"] = 0
+        
+        
 
-        exception_measures = ["unit", "Use of steel slag in kiln (CemStar)", "Seal replacement", "Low temperature heat recovery for power generation"]
+        """
         for measure_cateogry in measures_data.keys():
             if measure_cateogry != "EE-Utility Systems":
                 print(measure_cateogry)
@@ -4176,6 +4673,7 @@ def EE_measure(self):
                         #         measures_data[measure_cateogry][measure]["Typical Investments"] = measures_data[measure_cateogry][measure]['Typical Investment per mass'] / measures_data[measure_cateogry][measure]["Typical Energy Savings"]
                         #     else: 
                         #         measures_data[measure_cateogry][measure]["Typical Investments"] = 0
+        """
                         
         return measures_data
 
@@ -4258,8 +4756,10 @@ def EE_measure(self):
             all_measures_dict["EE-RM Preparation"][measure]["Energy Consumption Share of Process"] = all_measures_dict["EE-RM Preparation"][measure]["Typical Energy Savings"] / (grinding_energy_initial / Total_raw_material_and_additive)
         else:
             all_measures_dict["EE-RM Preparation"][measure]["Energy Consumption Share of Process"] = 0
-        all_measures_dict["EE-RM Preparation"][measure]["Total Energy Savings - Absolute"] = all_measures_dict["EE-RM Preparation"][measure]["Total Energy Savings"] * grinding_energy
         all_measures_dict["EE-RM Preparation"][measure]["Total Energy Savings"] = all_measures_dict["EE-RM Preparation"][measure]["Energy Consumption Share of Process"]*all_measures_dict["EE-RM Preparation"][measure]["Potential Application"]
+        all_measures_dict["EE-RM Preparation"][measure]["Total Energy Savings - Absolute"] = EE_measure_table_total_energy_savings(all_measures_dict, "EE-RM Preparation", measure, grinding_energy, Total_raw_material_and_additive)
+        #all_measures_dict["EE-RM Preparation"][measure]["Total Energy Savings - Absolute"] = all_measures_dict["EE-RM Preparation"][measure]["Total Energy Savings"] * grinding_energy
+        
         
         # for ordering measures
         if apply_ordering == True:
@@ -4323,8 +4823,8 @@ def EE_measure(self):
     for measure in list_dummy_kiln_exception:
         all_measures_dict["EE-Kiln"][measure]["Typical Energy Savings"] = all_measures_dict["EE-Kiln"][measure]["Energy Consumption Share of Process"] * kiln_thermal_energy_initial / Total_clinker
 
-    all_measures_dict["EE-Kiln"]["Seal replacement"]["Typical Investments"] = 0.25/29.3
-    all_measures_dict["EE-Kiln"]["Low temperature heat recovery for power generation"]["Typical Investments"] = 0.83
+    all_measures_dict["EE-Kiln"]["Seal replacement"]["Typical Investments"] = (0.25/7.5)/29.3 # 0.25 RMB/kgce
+    all_measures_dict["EE-Kiln"]["Low temperature heat recovery for power generation"]["Typical Investments"] = 0.11 # 0.11 USD/kWh
 
     for measure in list_dummy_kiln:
         if all_measures_dict["EE-Kiln"][measure]["Energy Type"] == "Electricity":
@@ -4497,13 +4997,20 @@ def EE_measure(self):
             dummy = pd.DataFrame.from_dict(all_measures_dict[sheet], orient = 'index')
             dummy.to_excel(writer, sheet_name=sheet)
             dummy = dummy.reset_index() # so the measures can also be shown
-
+    # Electricity Generation Data
+    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
+        electricity_generation_input_dict = json.load(f)
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
+    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]   
+    
     # Calculate the energy and emission reduction by measure category
     energy_reduction_by_measure_cat = {}
     emission_reduction_by_measure_cat = {}
     primary_energy_reduction_by_measure_cat = {}
     direct_carbon_reduction_by_measure_cat = {}
     indirect_carbon_reduction_by_measure_cat = {}
+    total_investment_by_measure_cat = {}
+    energy_cost_savings_by_measure_cat = {}
 
 
     for measure_cateogry in all_measures_dict.keys():
@@ -4512,23 +5019,30 @@ def EE_measure(self):
         dummy_primary_energy = 0
         dummy_direct_carbon = 0
         dummy_indirect_carbon = 0
+        dummy_investment = 0
+        dummy_energy_cost_savings = 0
         for measure in all_measures_dict[measure_cateogry].keys():
             if measure != "unit":
                 if all_measures_dict[measure_cateogry][measure]['Energy Type'] == 'Electricity':
                     dummy_final_energy += all_measures_dict[measure_cateogry][measure]['Total Energy Savings - Absolute']*3.6
-                    dummy_primary_energy += all_measures_dict[measure_cateogry][measure]['Total Energy Savings - Absolute']*3.6/0.305
+                    dummy_primary_energy += all_measures_dict[measure_cateogry][measure]['Total Energy Savings - Absolute']*3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency)
                     dummy_indirect_carbon += all_measures_dict[measure_cateogry][measure]['Total Emissions Reduction - indirect']
-                    dummy_direct_carbon += all_measures_dict[measure_cateogry][measure]['Total Emissions Reduction - direct'] 
+                    dummy_direct_carbon += all_measures_dict[measure_cateogry][measure]['Total Emissions Reduction - direct']
+                    dummy_energy_cost_savings += all_measures_dict[measure_cateogry][measure]['Total Energy Savings - Absolute']*3.6 * electricity_price
                 else:
                     dummy_final_energy += all_measures_dict[measure_cateogry][measure]['Total Energy Savings - Absolute']
                     dummy_primary_energy += all_measures_dict[measure_cateogry][measure]['Total Energy Savings - Absolute']
                     dummy_direct_carbon += all_measures_dict[measure_cateogry][measure]['Total Emissions Reduction']
+                    dummy_energy_cost_savings += all_measures_dict[measure_cateogry][measure]['Total Energy Savings - Absolute']*fuel_price
                 dummy_emission += all_measures_dict[measure_cateogry][measure]['Total Emissions Reduction']
+                dummy_investment += all_measures_dict[measure_cateogry][measure]['Total Costs']
         energy_reduction_by_measure_cat[measure_cateogry] = dummy_final_energy
         emission_reduction_by_measure_cat[measure_cateogry] = dummy_emission
         primary_energy_reduction_by_measure_cat[measure_cateogry] = dummy_primary_energy
         direct_carbon_reduction_by_measure_cat[measure_cateogry] = dummy_direct_carbon
         indirect_carbon_reduction_by_measure_cat[measure_cateogry] = dummy_indirect_carbon
+        total_investment_by_measure_cat[measure_cateogry] = dummy_investment
+        energy_cost_savings_by_measure_cat[measure_cateogry] = dummy_energy_cost_savings
 
     EE_measure_direct_emission_reduction = sum(direct_carbon_reduction_by_measure_cat.values()) # there is no process carbon emissions
     EE_measure_indirect_emission_reduction = sum(indirect_carbon_reduction_by_measure_cat.values())
@@ -4553,6 +5067,12 @@ def EE_measure(self):
 
     with open(json_folder / "indirect_carbon_reduction_by_measure_cat.json", "w") as f:
         json.dump(indirect_carbon_reduction_by_measure_cat, f, indent=4)
+    
+    with open(json_folder / "total_investment_by_measure_cat.json", "w") as f:
+        json.dump(total_investment_by_measure_cat, f, indent=4)
+    
+    with open(json_folder / "energy_cost_savings_by_measure_cat.json", "w") as f:
+        json.dump(energy_cost_savings_by_measure_cat, f, indent=4)
 
     with open(json_folder / "Detailed_Output.json", "w") as f:
         json.dump(detailed_output_dict, f, indent=4)
@@ -4601,11 +5121,11 @@ def Page9_Share_Default_Update_Fields(self):
     # Fuel Switching
     new_fuel_share_dict = {
     "FS-Fuel Switching": {
-        "coal": 0.75,
+        "coal": 100,
         "coke": 0.0,
-        "natural gas": 0.05,
-        "biomass": 0.15,
-        "municipal wastes": 0.05
+        "natural gas": 0,
+        "biomass": 0,
+        "municipal wastes": 0
         }
     }
 
@@ -4628,7 +5148,11 @@ def Page9_Share_Default_Update_Fields(self):
         cost_and_emissions_dict = json.load(f)
 
     fuel_emission_intensity = cost_and_emissions_dict["Fuel Emission Intensity"]
-
+    
+    Total_new_fuel_share = new_fuel_share_dict["FS-Fuel Switching"]["coal"] + new_fuel_share_dict["FS-Fuel Switching"]["coke"] + new_fuel_share_dict["FS-Fuel Switching"]["natural gas"] + new_fuel_share_dict["FS-Fuel Switching"]["biomass"] + new_fuel_share_dict["FS-Fuel Switching"]["municipal wastes"]
+    if Total_new_fuel_share != 100:
+        print("Total fuel share is not 100%")
+    
     electricity_emission_intensity = cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000 # convert to kWh # need to add emissions from electricity generation fuel, so do it later # decided to use this variable only for purchased electricity to aid indirect emissions calculations
     coal_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['coal']/10**6 # convert to MJ
     coke_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['coke']/10**6
@@ -4666,7 +5190,8 @@ def Page9_Share_Default_Update_Fields(self):
         direct_carbon_reduction_by_measure_cat = json.load(f)   
 
     with open(json_folder / "indirect_carbon_reduction_by_measure_cat.json", "r") as f:
-        indirect_carbon_reduction_by_measure_cat = json.load(f)
+        indirect_carbon_reduction_by_measure_cat = json.load(f)       
+    
 
     # Target Input Data
     with open(json_folder / "Target_Input.json", "r") as f:
@@ -4692,7 +5217,7 @@ def Page9_Share_Default_Update_Fields(self):
         print('FS measures are not evaluated') # where is the partial application?
     else:
         
-        new_fuel_emission_intensity = coal_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coal"] + coke_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coke"] + natural_gas_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["natural gas"] + biomass_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["biomass"] + msw_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["municipal wastes"]
+        new_fuel_emission_intensity = coal_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coal"]/100 + coke_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coke"]/100 + natural_gas_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["natural gas"]/100 + biomass_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["biomass"]/100 + msw_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["municipal wastes"]/100
         cost_and_emissions_dict["New fuel emission intensity"] = new_fuel_emission_intensity
         direct_emission_before_fs = Total_carbon_direct - EE_measure_direct_emission_reduction
         fs_emission_reduction = direct_emission_before_fs * (1 - new_fuel_emission_intensity/fuel_emission_intensity)
@@ -4711,7 +5236,7 @@ def Page9_Share_Default_Update_Fields(self):
     ## Purchase/generate renewable energy
     new_re_share_dict = {
     "RE-Renewable Energy": {
-        "share of electricity from purchased or self-generated renewable energy": 0.75
+        "share of electricity from purchased or self-generated renewable energy": 0
         }
     }
 
@@ -4737,6 +5262,9 @@ def Page9_Share_Default_Update_Fields(self):
 
     with open(json_folder / "new_re_share.json", 'w') as f:
         json.dump(new_re_share_dict, f, indent=4)
+        
+    with open(json_folder / "emission_reduction_by_measure_cat.json", "w") as f:
+        json.dump(emission_reduction_by_measure_cat, f, indent=4)
 
     
 
@@ -4762,6 +5290,8 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     primary_energy_reduction_by_measure_cat = jload(json_folder / "primary_energy_reduction_by_measure_cat.json")
     direct_carbon_reduction_by_measure_cat = jload(json_folder / "direct_carbon_reduction_by_measure_cat.json")
     indirect_carbon_reduction_by_measure_cat = jload(json_folder / "indirect_carbon_reduction_by_measure_cat.json")
+    total_investment_by_measure_cat = jload(json_folder / "total_investment_by_measure_cat.json")
+    energy_cost_savings_by_measure_cat = jload(json_folder / "energy_cost_savings_by_measure_cat.json")
     target_dict = jload(json_folder / "Target_Input.json")
     electricity_generation_input_dict = jload(json_folder / "Electricity_Generation_Input.json")
     all_measures_dict = jload(json_folder / "all_measures.json")
@@ -4790,22 +5320,22 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                 "CO2 impacts (direct process) - initial": "tCO2/tonne cement"
             },
             "Use of granulated last furnace slag": {
-                "Do you want to apply this measure?": "Yes (100%)",
-                "Potential Application": 1.0,
+                "Do you want to apply this measure?": "No (0%)",
+                "Potential Application": 0,
                 "Energy Impacts (electricity)": 19,
                 "Energy Impacts (thermal)": -2514,
-                "CO2 impacts (indirect)": 0.003350167468424886,
-                "CO2 impacts (direct energy)": -0.1663769207013374,
+                "CO2 impacts (indirect)": 0,
+                "CO2 impacts (direct energy)": 0,
                 "CO2 impacts (direct process)": -0.3962036,
                 "Typical Investments": 5.205479452054794,
-                "Total Investments": 650684.9315068492,
-                "Total Emissions Reduction": 69903.79415411406,
+                "Total Investments": 0,
+                "Total Emissions Reduction": 0,
                 "Equipment Lifetime": 20,
-                "Abatement cost": -133.2330158904135,
-                "Payback Period with carbon price": -0.0818682545688344,
-                "Energy Impacts (thermal) - initial": -2514,
-                "Energy Impacts (electricity) - initial": 19,
-                "CO2 impacts (direct process) - initial": -0.3962036
+                "Abatement cost": 0,
+                "Payback Period with carbon price": 0,
+                "Energy Impacts (thermal) - initial": 0,
+                "Energy Impacts (electricity) - initial": 0,
+                "CO2 impacts (direct process) - initial": 0
             },
             "Use of fly ash": {
                 "Do you want to apply this measure?": "No (0%)",
@@ -4814,16 +5344,16 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                 "Energy Impacts (thermal)": -1000,
                 "CO2 impacts (indirect)": 0.0,
                 "CO2 impacts (direct energy)": 0.0,
-                "CO2 impacts (direct process)": -0.15739999999999998,
+                "CO2 impacts (direct process)": -0.1574,
                 "Typical Investments": 6.2465753424657535,
                 "Total Investments": 0.0,
                 "Total Emissions Reduction": -0.0,
                 "Equipment Lifetime": 20,
                 "Abatement cost": "error",
-                "Payback Period with carbon price": "N/A",
-                "Energy Impacts (thermal) - initial": -1000,
-                "Energy Impacts (electricity) - initial": 8,
-                "CO2 impacts (direct process) - initial": -0.15739999999999998
+                "Payback Period with carbon price": 0,
+                "Energy Impacts (thermal) - initial": 0,
+                "Energy Impacts (electricity) - initial": 0,
+                "CO2 impacts (direct process) - initial": 0
             },
             "Use of calcined clay": {
                 "Do you want to apply this measure?": "No (0%)",
@@ -4838,10 +5368,10 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                 "Total Emissions Reduction": -0.0,
                 "Equipment Lifetime": 20,
                 "Abatement cost": "error",
-                "Payback Period with carbon price": "N/A",
-                "Energy Impacts (thermal) - initial": -1500,
-                "Energy Impacts (electricity) - initial": 15,
-                "CO2 impacts (direct process) - initial": -0.2361
+                "Payback Period with carbon price": 0,
+                "Energy Impacts (thermal) - initial": 0,
+                "Energy Impacts (electricity) - initial": 0,
+                "CO2 impacts (direct process) - initial": 0
             },
             "Use of recycled concrete fines as filler": {
                 "Do you want to apply this measure?": "No (0%)",
@@ -4850,34 +5380,34 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                 "Energy Impacts (thermal)": -550,
                 "CO2 impacts (indirect)": 0.0,
                 "CO2 impacts (direct energy)": 0.0,
-                "CO2 impacts (direct process)": -0.15406999999999998,
+                "CO2 impacts (direct process)": -0.15407,
                 "Typical Investments": 10.3,
                 "Total Investments": 0.0,
                 "Total Emissions Reduction": -0.0,
                 "Equipment Lifetime": 20,
                 "Abatement cost": "error",
-                "Payback Period with carbon price": "N/A",
-                "Energy Impacts (thermal) - initial": -550,
-                "Energy Impacts (electricity) - initial": 15,
-                "CO2 impacts (direct process) - initial": -0.15406999999999998
+                "Payback Period with carbon price": 0,
+                "Energy Impacts (thermal) - initial": 0,
+                "Energy Impacts (electricity) - initial": 0,
+                "CO2 impacts (direct process) - initial": 0
             },
             "Use of limestone as fillers": {
-                "Do you want to apply this measure?": "Yes (100%)",
-                "Potential Application": 1.0,
+                "Do you want to apply this measure?": "No (0%)",
+                "Potential Application": 0,
                 "Energy Impacts (electricity)": 0,
                 "Energy Impacts (thermal)": -144.72,
                 "CO2 impacts (indirect)": 0.0,
-                "CO2 impacts (direct energy)": -0.0024181763912832304,
-                "CO2 impacts (direct process)": -0.035558928000000004,
+                "CO2 impacts (direct energy)": 0,
+                "CO2 impacts (direct process)": -0.035558928,
                 "Typical Investments": 0,
                 "Total Investments": 0.0,
-                "Total Emissions Reduction": 405.2447779104041,
+                "Total Emissions Reduction": 0,
                 "Equipment Lifetime": 20,
-                "Abatement cost": -342.706144575437,
+                "Abatement cost": 0,
                 "Payback Period with carbon price": "immediate",
-                "Energy Impacts (thermal) - initial": -144.72,
+                "Energy Impacts (thermal) - initial": 0,
                 "Energy Impacts (electricity) - initial": 0,
-                "CO2 impacts (direct process) - initial": -0.035558928000000004
+                "CO2 impacts (direct process) - initial": 0
             }
         },
         "DT-Alternative Cements": {
@@ -4900,20 +5430,20 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                 "CO2 impacts (direct process) - initial": "tCO2/tonne cement"
             },
             "Use of belite cement": {
-                "Do you want to apply this measure?": "Yes (100%)",
-                "Potential Application": 1.0,
+                "Do you want to apply this measure?": "No (0%)",
+                "Potential Application": 0,
                 "Energy Impacts (electricity)": 0,
                 "Energy Impacts (thermal)": -216,
                 "CO2 impacts (indirect)": 0.0,
-                "CO2 impacts (direct energy)": -0.003453764297870089,
+                "CO2 impacts (direct energy)": 0,
                 "CO2 impacts (direct process)": 0,
                 "Typical Investments": 0,
                 "Total Investments": 0.0,
-                "Total Emissions Reduction": 431.72053723376115,
+                "Total Emissions Reduction": 0,
                 "Equipment Lifetime": 20,
-                "Abatement cost": -459.4532506317482,
+                "Abatement cost": 0,
                 "Payback Period with carbon price": "immediate",
-                "Energy Impacts (thermal) - initial": -216,
+                "Energy Impacts (thermal) - initial": 0,
                 "Energy Impacts (electricity) - initial": 0,
                 "CO2 impacts (direct process) - initial": 0
             },
@@ -4932,7 +5462,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                 "Abatement cost": "error",
                 "Payback Period with carbon price": "N/A",
                 "Energy Impacts (thermal) - initial": 0,
-                "Energy Impacts (electricity) - initial": -26,
+                "Energy Impacts (electricity) - initial": 0,
                 "CO2 impacts (direct process) - initial": 0
             }
         },
@@ -4956,21 +5486,21 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                 "CO2 impacts (direct process) - initial": "tCO2/tonne cement"
             },
             "Absorption": {
-                "Do you want to apply this measure?": "Yes (100%)",
-                "Potential Application": 1.0,
+                "Do you want to apply this measure?": "No (0%)",
+                "Potential Application": 0,
                 "Energy Impacts (electricity)": 129,
                 "Energy Impacts (thermal)": 3500,
-                "CO2 impacts (indirect)": 0.025583134916478175,
-                "CO2 impacts (direct energy)": 0.05588307418558598,
+                "CO2 impacts (indirect)": 0,
+                "CO2 impacts (direct energy)": 0,
                 "CO2 impacts (direct process)": 0,
                 "Typical Investments": 143.15068493150685,
-                "Total Investments": 17893835.616438355,
-                "Total Emissions Reduction": -10183.276137758021,
+                "Total Investments": 0,
+                "Total Emissions Reduction": 0,
                 "Equipment Lifetime": 20,
                 "Abatement cost": "error",
-                "Payback Period with carbon price": 3.8866766028007858,
-                "Energy Impacts (thermal) - initial": 3500,
-                "Energy Impacts (electricity) - initial": 129,
+                "Payback Period with carbon price": 0,
+                "Energy Impacts (thermal) - initial": 0,
+                "Energy Impacts (electricity) - initial": 0,
                 "CO2 impacts (direct process) - initial": 0
             },
             "Calcium looping": {
@@ -4986,9 +5516,9 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                 "Total Emissions Reduction": -0.0,
                 "Equipment Lifetime": 20,
                 "Abatement cost": "error",
-                "Payback Period with carbon price": "N/A",
-                "Energy Impacts (thermal) - initial": 2450,
-                "Energy Impacts (electricity) - initial": 50,
+                "Payback Period with carbon price": 0,
+                "Energy Impacts (thermal) - initial": 0,
+                "Energy Impacts (electricity) - initial": 0,
                 "CO2 impacts (direct process) - initial": 0
             }
         }
@@ -5019,26 +5549,31 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     },
     "DT-Alternative Cements": {
         "Use of belite cement": {
-            "comboBox": "page_10_comboBox_6",
-            "input": "page_10_input_6",
+            "comboBox": "page_10_comboBox_8",
+            "input": "page_10_input_8",
         },
         "Use of CSA cement": {
-            "comboBox": "page_10_comboBox_7",
-            "input": "page_10_input_7",
+            "comboBox": "page_10_comboBox_9",
+            "input": "page_10_input_9",
         },
     },
     "DT-CCUS": {
         "Absorption": {
-            "comboBox": "page_10_comboBox_8",
-            "input": "page_10_input_8",
+            "comboBox": "page_10_comboBox_6",
+            "input": "page_10_input_6",
         },
         "Calcium looping": {
-            "comboBox": "page_10_comboBox_9",
-            "input": "page_10_input_9",
+            "comboBox": "page_10_comboBox_7",
+            "input": "page_10_input_7",
         },
         }
     }
-
+    # Electricity Generation Data
+    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
+        electricity_generation_input_dict = json.load(f)
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
+    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]   
+    
     for unit, measures in page10_all_measures_map.items():
         for measure, widgets in measures.items():
 
@@ -5053,7 +5588,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
 
             if choice in ["Yes (100%)", "No (0%)"]:
                 all_DT_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_DT_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes" in choice else 0
+                all_DT_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_DT_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
                 all_DT_measures_dict[unit][measure]["Potential Application"] = input_value
@@ -5166,7 +5701,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                     overall_fuel = overall_fuel + measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"] * Total_cement 
                     overall_electricity = overall_electricity + measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"] * Total_cement 
                     
-                    measures_data[measure_cateogry][measure]["CO2 impacts (indirect)"] = measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_emission_intensity * (purchased_electricity/Total_process_electricity) * new_re_share_dict["RE-Renewable Energy"]["share of electricity from purchased or self-generated renewable energy"]
+                    measures_data[measure_cateogry][measure]["CO2 impacts (indirect)"] = measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_emission_intensity * (share_of_electricity_from_purchase) * new_re_share_dict["RE-Renewable Energy"]["share of electricity from purchased or self-generated renewable energy"]
                     measures_data[measure_cateogry][measure]["CO2 impacts (direct energy)"] = measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"]*new_fuel_emission_intensity + measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*(electricity_fuel_emission_intensity*3.6/onsite_electricity_generation_efficiency)*(1-((purchased_electricity+onsite_RE_electricity_generation)/Total_process_electricity)) # changed after fossil switch # added emissions from onsite generation
                     
                     measures_data[measure_cateogry][measure]["CO2 impacts (direct process)"] = measures_data[measure_cateogry][measure]["CO2 impacts (direct process)"] * (overall_process_carbon/Total_process_carbon) * measures_data[measure_cateogry][measure]["Potential Application"] # I set CCUS's process emissions at zero, and I will handle separately
@@ -5207,6 +5742,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
 
     if evaluate_EE_only == "Yes":
         print('DT measures are not evaluated')
+
     else:
         DT_measure_direct_emission_reduction = 0    
         for measure_cateogry in all_DT_measures_dict.keys():
@@ -5215,13 +5751,18 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
             dummy_primary_energy = 0
             dummy_direct_carbon = 0
             dummy_indirect_carbon = 0
+            dummy_investment = 0
+            dummy_energy_cost_savings = 0
             for measure in all_DT_measures_dict[measure_cateogry].keys():
                 if measure != "unit":
                     dummy_final_energy += -(all_DT_measures_dict[measure_cateogry][measure]['Energy Impacts (electricity)']*3.6 + all_DT_measures_dict[measure_cateogry][measure]['Energy Impacts (thermal)'])*Total_cement
-                    dummy_primary_energy += -(all_DT_measures_dict[measure_cateogry][measure]['Energy Impacts (electricity)']*3.6/0.305 + all_DT_measures_dict[measure_cateogry][measure]['Energy Impacts (thermal)'])*Total_cement
+                    dummy_primary_energy += -(all_DT_measures_dict[measure_cateogry][measure]['Energy Impacts (electricity)']*3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency) + all_DT_measures_dict[measure_cateogry][measure]['Energy Impacts (thermal)'])*Total_cement
                     dummy_emission += all_DT_measures_dict[measure_cateogry][measure]['Total Emissions Reduction']
                     dummy_direct_carbon += -(all_DT_measures_dict[measure_cateogry][measure]['CO2 impacts (direct energy)']*all_DT_measures_dict[measure_cateogry][measure]['Potential Application']*Total_cement)
                     dummy_indirect_carbon += -(all_DT_measures_dict[measure_cateogry][measure]['CO2 impacts (indirect)']*all_DT_measures_dict[measure_cateogry][measure]['Potential Application']*Total_cement)
+                    dummy_investment += all_DT_measures_dict[measure_cateogry][measure]['Total Investments']
+                    dummy_energy_cost_savings += -(all_DT_measures_dict[measure_cateogry][measure]['Energy Impacts (electricity)']*3.6*electricity_price + all_DT_measures_dict[measure_cateogry][measure]['Energy Impacts (thermal)']*fuel_price)*Total_cement
+                    
                     
                     DT_measure_direct_emission_reduction += -((all_DT_measures_dict[measure_cateogry][measure]['CO2 impacts (direct energy)']+all_DT_measures_dict[measure_cateogry][measure]['CO2 impacts (direct process)'])*all_DT_measures_dict[measure_cateogry][measure]['Potential Application']*Total_cement)          
             energy_reduction_by_measure_cat[measure_cateogry] = dummy_final_energy
@@ -5229,6 +5770,8 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
             primary_energy_reduction_by_measure_cat[measure_cateogry] = dummy_primary_energy
             direct_carbon_reduction_by_measure_cat[measure_cateogry] = dummy_direct_carbon
             indirect_carbon_reduction_by_measure_cat[measure_cateogry] = dummy_indirect_carbon
+            total_investment_by_measure_cat[measure_cateogry] = dummy_investment
+            energy_cost_savings_by_measure_cat[measure_cateogry] = dummy_energy_cost_savings
 
         # Handle CCUS
         emission_reduction_by_measure_cat["DT-CCUS"] = direct_carbon_reduction_by_measure_cat["DT-CCUS"] + ((Total_carbon_all-Total_carbon_indirect)-EE_measure_direct_emission_reduction-DT_measure_direct_emission_reduction-FS_measure_direct_emission_reduction-RE_measure_direct_emission_reduction)*(CCUS_emission_reduction_percentage)
@@ -5292,7 +5835,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     plt.savefig(data_dir / "Graphs/abatement cost.png")
     plt.close()
     # plt.show()
-
+    
     # Plot waterfall chart
     # Final Energy
     list_of_measure_categories = list(energy_reduction_by_measure_cat.keys())
@@ -5311,13 +5854,15 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
         xaxis_title='Measures',
         yaxis_title='Final Energy (MJ)'
         )
-
     fig.write_image(data_dir / "Graphs/energy waterfall.png")
-
+    fig.write_html(data_dir / "Graphs/energy waterfall.html")
+    
     # Emissions
     list_of_measure_categories = list(emission_reduction_by_measure_cat.keys())
     list_of_emission_reduction = []
-
+    
+    print("list_of_measure_categories:")
+    print(list_of_measure_categories)
     for measure_cateogry in emission_reduction_by_measure_cat.keys():
         list_of_emission_reduction.append(-emission_reduction_by_measure_cat[measure_cateogry])
 
@@ -5332,9 +5877,10 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
         yaxis_title='Emissions (tCO2)'
         )
 
-    fig.show()
+    #fig.show()
     fig.write_image(data_dir / "Graphs/emissions waterfall.png")
-
+    fig.write_html(data_dir / "Graphs/emissions waterfall.html")
+   
     # Benchmarking Results Primary and Final Energy
     Total_primary_energy_after_measures = Total_primary_energy - sum(primary_energy_reduction_by_measure_cat.values())
     Total_final_energy_after_measures = Total_final_energy - sum(energy_reduction_by_measure_cat.values())
@@ -5419,8 +5965,19 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
 
     Cement_energy_intensity_after_measure = Total_final_energy_after_measures / Total_cement
     Cement_carbon_intensity_after_measure = Total_carbon_all_after_measures / Total_cement
-
+    
+    
     key_values_dict = {
+        'Electricity consumption (GWh)': {
+            'Your facility before measures': round(Total_process_electricity/10**6),
+            'Your facility after measures': round(overall_electricity/10**6),
+            'International Best Practice': round(IBP_total_electricity/10**6)
+            },
+        'Fuel consumption energy (TJ)': {
+            'Your facility before measures': round(Total_process_fuel/10**6),
+            'Your facility after measures': round(overall_fuel/10**6),
+            'International Best Practice': round(IBP_total_fuel/10**6)
+            },
         'Final energy (TJ)': {
             'Your facility before measures': round(Total_final_energy/10**6),
             'Your facility after measures': round(Total_final_energy_after_measures/10**6),
@@ -5431,7 +5988,17 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
             'Your facility after measures': round(Cement_energy_intensity_after_measure, 2),
             'International Best Practice': round(IBP_cement_energy_intensity, 2)
             },
-        'Total emissions (tCO2)': {
+        'Direct energy carbon dioxide emissions (tCO2)': {
+            'Your facility before measures': round(Total_carbon_direct),
+            'Your facility after measures': round(Total_carbon_direct_after_measures),
+            'International Best Practice': round(IBP_carbon_direct)
+            },
+        'Indirect carbon dioxide emissions (tCO2)': {
+            'Your facility before measures': round(Total_carbon_indirect),
+            'Your facility after measures': round(Total_carbon_indirect_after_measures),
+            'International Best Practice': round(IBP_carbon_indirect)
+            },
+        'Total carbon dioxide emissions (tCO2)': {
             'Your facility before measures': round(Total_carbon_all),
             'Your facility after measures': round(Total_carbon_all_after_measures),
             'International Best Practice': round(IBP_carbon_all)
@@ -5448,6 +6015,26 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     with pd.ExcelWriter(json_folder / "key_values_in_excel.xlsx") as writer:
             key_values_df.to_excel(writer, sheet_name='values')        
             key_values_df = key_values_df.reset_index()
+    
+    Total_investment = sum(total_investment_by_measure_cat.values())
+    Total_energy_cost_savings = sum(energy_cost_savings_by_measure_cat.values())
+    Overall_payback_period = Total_investment/Total_energy_cost_savings
+    
+    key_values_dict_finance = {
+        'Value': {
+            'Total investment (million $USD)': round(Total_investment/10**6),
+            'Total energy cost savings per year (million $USD/year)': round(Total_energy_cost_savings/10**6),
+            'Overall payback period (years)': round(Overall_payback_period, 2)
+        }        
+    }
+    
+    key_values_df_finance = pd.DataFrame.from_dict(key_values_dict_finance, orient = 'index')
+    key_values_df_finance = key_values_df_finance.T
+
+    with pd.ExcelWriter(json_folder / "finance_key_values_in_excel.xlsx") as writer:
+            key_values_df_finance.to_excel(writer, sheet_name='values')        
+            key_values_df_finance = key_values_df.reset_index()
+            
 
     # Retore initial energy and CO2 impacts before dumping back
     for measure_cateogry in all_DT_measures_dict.keys():
@@ -5456,10 +6043,67 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
             all_DT_measures_dict[measure_cateogry][measure]["Energy Impacts (thermal)"] = all_DT_measures_dict[measure_cateogry][measure]["Energy Impacts (thermal) - initial"]
             all_DT_measures_dict[measure_cateogry][measure]["Energy Impacts (electricity)"] = all_DT_measures_dict[measure_cateogry][measure]["Energy Impacts (electricity) - initial"]
             all_DT_measures_dict[measure_cateogry][measure]["CO2 impacts (direct process)"] = all_DT_measures_dict[measure_cateogry][measure]["CO2 impacts (direct process) - initial"]
-
+            
+    # Json dump            
+    with open(json_folder / "emission_reduction_by_measure_cat.json", "w") as f:
+        json.dump(emission_reduction_by_measure_cat, f, indent=4)
+    
+    with open(json_folder / "energy_reduction_by_measure_cat.json", "w") as f:
+        json.dump(energy_reduction_by_measure_cat, f, indent=4)
+    
     with open(json_folder / 'all_DT_measures.json', 'w') as f:
         json.dump(all_DT_measures_dict, f, indent=4)
     all_dt_measures_dict = {}
+    
+    # Load other json files
+    with open(json_folder / "Carbon_Capture_Input.json", "r") as f:
+        carbon_capture_dict = json.load(f)
+    
+    with open(json_folder / "Energy_Billing_Input.json", 'r') as f:
+         energy_billing_input_dict = json.load(f)
+
+    with open(json_folder / "Detailed_Output_Emissions.json", 'r') as f:
+        detailed_output_emissions_dict = json.load(f)
+
+    with open(json_folder / "Benchmarking_Results_Final.json", 'r') as f:
+        benchmarking_results_final_dict = json.load(f)
+        
+    with open(json_folder / "Benchmarking_Results_CO2.json", 'r') as f:
+        benchmarking_results_co2_dict = json.load(f)
+    
+    
+    def convert_dict_to_excel(name_of_dict, name_of_sheet):
+        df = pd.json_normalize(name_of_dict, sep='-').T
+        df.name = 'index'
+        return df
+
+
+    sheets_dict = {
+        'Cost and Emission Input': cost_and_emissions_dict,
+        'Production Input': production_input_dict,
+        'Carbon Capture': carbon_capture_dict,
+        'Electricity Generation Input': electricity_generation_input_dict,
+        'Energy Input': energy_input_dict,
+        'Energy Billing Input': energy_billing_input_dict,
+        'Target': target_dict,
+        'Detailed Output': detailed_output_dict,
+        'Detailed Output Emissions': detailed_output_emissions_dict,
+        'Benchmarking Results Primary': benchmarking_results_primary_dict,
+        'Benchmarking Results Final': benchmarking_results_final_dict,
+        'Benchmarking Results CO2': benchmarking_results_co2_dict,
+        'EE-measures': all_measures_dict,
+        'New Fuel Share': new_fuel_share_dict, 
+        'Use of RE': new_re_share_dict,
+        'DT-measures': all_DT_measures_dict
+        
+        }
+
+    with pd.ExcelWriter(json_folder / "report_in_excel.xlsx") as writer:
+        for sheet in sheets_dict.keys():
+            dummy = convert_dict_to_excel(sheets_dict[sheet], sheet)
+            dummy.to_excel(writer, sheet_name=sheet)
+            
+
 
     print("page 10 completed")
 

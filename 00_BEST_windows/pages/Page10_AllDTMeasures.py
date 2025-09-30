@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files_latest/Page10_AllDTMeasures_qwidget.ui'
+# Form implementation generated from reading ui file 'ui_files_latest\Page10_AllDTMeasures_qwidget.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -7,10 +7,6 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
-from resources_rc import *
-main_page_image = ":images/BEST_landing_abstract.png"
-side_page_image = ":images/BEST_side_abstract.png"
 
 
 class Ui_Page10_AllDTMeasures(object):
@@ -353,19 +349,17 @@ class Ui_Page10_AllDTMeasures(object):
         self.side_image = QtWidgets.QLabel(parent=Page10_AllDTMeasures)
         self.side_image.setGeometry(QtCore.QRect(0, -30, 171, 761))
         self.side_image.setText("")
-        self.side_image.setPixmap(QtGui.QPixmap(side_page_image))
+        self.side_image.setPixmap(QtGui.QPixmap("ui_files_latest\\../images/BEST_side_abstract.png"))
         self.side_image.setObjectName("side_image")
         self.progressBar = QtWidgets.QProgressBar(parent=Page10_AllDTMeasures)
         self.progressBar.setGeometry(QtCore.QRect(200, 20, 1001, 23))
-        self.progressBar.setFixedHeight(12)
-        self.progressBar.setTextVisible(False)
         self.progressBar.setStyleSheet("QProgressBar {\n"
 "    background-color: #F0F0F0;\n"
 "    border: none;\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "}\n"
 "QProgressBar::chunk {\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "    background: QLinearGradient(\n"
 "        x1: 0, y1: 0, x2: 1, y2: 0,\n"
 "        stop: 0 #33bef0,   /* Light Blue */\n"
@@ -375,7 +369,7 @@ class Ui_Page10_AllDTMeasures(object):
         self.progressBar.setProperty("value", 95)
         self.progressBar.setObjectName("progressBar")
         self.layoutWidget_3 = QtWidgets.QWidget(parent=Page10_AllDTMeasures)
-        self.layoutWidget_3.setGeometry(QtCore.QRect(200, 40, 1001, 16))
+        self.layoutWidget_3.setGeometry(QtCore.QRect(200, 40, 1001, 22))
         self.layoutWidget_3.setObjectName("layoutWidget_3")
         self.gridLayout_12 = QtWidgets.QGridLayout(self.layoutWidget_3)
         self.gridLayout_12.setContentsMargins(0, 0, 0, 0)
@@ -470,7 +464,7 @@ class Ui_Page10_AllDTMeasures(object):
         self.backBtn.setText(_translate("Page10_AllDTMeasures", "Back"))
         self.saveBtn.setText(_translate("Page10_AllDTMeasures", "Save Progress"))
         self.pdfBtn.setText(_translate("Page10_AllDTMeasures", "Generate Report"))
-        self.page_10_group_1.setTitle(_translate("Page10_AllDTMeasures", "Other Measures - SCM & Fillers, CCUS, Alternative Cements"))
+        self.page_10_group_1.setTitle(_translate("Page10_AllDTMeasures", "DT Measures - SCM & Fillers, CCUS, Alternative Cements"))
         self.page_10_comboBox_6.setItemText(0, _translate("Page10_AllDTMeasures", "Select"))
         self.page_10_comboBox_6.setItemText(1, _translate("Page10_AllDTMeasures", "Yes (100%)"))
         self.page_10_comboBox_6.setItemText(2, _translate("Page10_AllDTMeasures", "No (0%)"))
