@@ -125,7 +125,7 @@ QPushButton#saveBtn:hover {
 myLineEdit-&gt;setFixedSize(200, 30)</string>
    </property>
    <property name="title">
-    <string>Electricity Generation (kWh/year)</string>
+    <string>Electricity (kWh/year)</string>
    </property>
    <widget class="QWidget" name="layoutWidget_5">
     <property name="geometry">
@@ -215,7 +215,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
     </font>
    </property>
    <property name="title">
-    <string>Energy used for electricity generation (MJ/year)</string>
+    <string>Fuel used for electricity generation (MJ/year)</string>
    </property>
    <widget class="QWidget" name="layoutWidget_4">
     <property name="geometry">
@@ -390,7 +390,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
     </font>
    </property>
    <property name="title">
-    <string>Energy used for electricity generation (kWh/year)</string>
+    <string>Renewable electricity generation (kWh/year)</string>
    </property>
    <widget class="QWidget" name="layoutWidget_6">
     <property name="geometry">
@@ -475,7 +475,7 @@ QProgressBar::chunk {
      <x>200</x>
      <y>40</y>
      <width>1001</width>
-     <height>16</height>
+     <height>22</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_11">

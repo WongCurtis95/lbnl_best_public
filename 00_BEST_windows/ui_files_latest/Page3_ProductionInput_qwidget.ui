@@ -125,7 +125,7 @@ QPushButton#saveBtn:hover {
 myLineEdit-&gt;setFixedSize(200, 30)</string>
    </property>
    <property name="title">
-    <string>Clinker Material Produced per Year (tonnes/year)</string>
+    <string>Raw Material Consumption (metric tons/year)</string>
    </property>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
@@ -344,7 +344,7 @@ QPushButton#saveBtn:hover {
 myLineEdit-&gt;setFixedSize(200, 30)</string>
    </property>
    <property name="title">
-    <string>Kiln - Clinker Production</string>
+    <string>Clinker Production (metric tons/year)</string>
    </property>
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
@@ -411,7 +411,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="0" column="0">
       <widget class="QLabel" name="production_1_label">
        <property name="text">
-        <string>Production (tonnes/year)</string>
+        <string>Production (metric tons/year)</string>
        </property>
       </widget>
      </item>
@@ -431,7 +431,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="1" column="0">
       <widget class="QLabel" name="production_2_label">
        <property name="text">
-        <string>Production (tonnes/year)</string>
+        <string>Production (metric tons/year)</string>
        </property>
       </widget>
      </item>
@@ -466,7 +466,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
     </font>
    </property>
    <property name="title">
-    <string>Cement Production (tonnes/year)</string>
+    <string>Cement Production (metric tons/year)</string>
    </property>
    <widget class="QWidget" name="layoutWidget_4">
     <property name="geometry">
@@ -663,7 +663,7 @@ QProgressBar::chunk {
      <x>200</x>
      <y>40</y>
      <width>1001</width>
-     <height>16</height>
+     <height>22</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_11">

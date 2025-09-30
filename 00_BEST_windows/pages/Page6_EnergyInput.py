@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files_latest/Page6_EnergyInput_qwidget.ui'
+# Form implementation generated from reading ui file 'ui_files_latest\Page6_EnergyInput_qwidget.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -7,10 +7,6 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
-from resources_rc import *
-main_page_image = ":images/BEST_landing_abstract.png"
-side_page_image = ":images/BEST_side_abstract.png"
 
 
 class Ui_Page6_EnergyInput(object):
@@ -50,7 +46,7 @@ class Ui_Page6_EnergyInput(object):
         self.grinding_group1.setFont(font)
         self.grinding_group1.setObjectName("grinding_group1")
         self.layoutWidget1 = QtWidgets.QWidget(parent=self.grinding_group1)
-        self.layoutWidget1.setGeometry(QtCore.QRect(150, 40, 723, 132))
+        self.layoutWidget1.setGeometry(QtCore.QRect(150, 40, 747, 132))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.gridLayout = QtWidgets.QGridLayout(self.layoutWidget1)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
@@ -161,19 +157,17 @@ class Ui_Page6_EnergyInput(object):
         self.side_image = QtWidgets.QLabel(parent=Page6_EnergyInput)
         self.side_image.setGeometry(QtCore.QRect(0, -30, 171, 761))
         self.side_image.setText("")
-        self.side_image.setPixmap(QtGui.QPixmap(side_page_image))
+        self.side_image.setPixmap(QtGui.QPixmap("ui_files_latest\\../images/BEST_side_abstract.png"))
         self.side_image.setObjectName("side_image")
         self.progressBar = QtWidgets.QProgressBar(parent=Page6_EnergyInput)
         self.progressBar.setGeometry(QtCore.QRect(200, 20, 1001, 23))
-        self.progressBar.setFixedHeight(12)
-        self.progressBar.setTextVisible(False)
         self.progressBar.setStyleSheet("QProgressBar {\n"
 "    background-color: #F0F0F0;\n"
 "    border: none;\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "}\n"
 "QProgressBar::chunk {\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "    background: QLinearGradient(\n"
 "        x1: 0, y1: 0, x2: 1, y2: 0,\n"
 "        stop: 0 #33bef0,   /* Light Blue */\n"
@@ -183,7 +177,7 @@ class Ui_Page6_EnergyInput(object):
         self.progressBar.setProperty("value", 41)
         self.progressBar.setObjectName("progressBar")
         self.layoutWidget_2 = QtWidgets.QWidget(parent=Page6_EnergyInput)
-        self.layoutWidget_2.setGeometry(QtCore.QRect(200, 40, 1001, 16))
+        self.layoutWidget_2.setGeometry(QtCore.QRect(200, 40, 1001, 22))
         self.layoutWidget_2.setObjectName("layoutWidget_2")
         self.gridLayout_11 = QtWidgets.QGridLayout(self.layoutWidget_2)
         self.gridLayout_11.setContentsMargins(0, 0, 0, 0)
@@ -258,7 +252,7 @@ class Ui_Page6_EnergyInput(object):
         self.saveBtn.setText(_translate("Page6_EnergyInput", "Save Progress"))
         self.nextBtn.setText(_translate("Page6_EnergyInput", "Next"))
         self.grinding_group1.setTitle(_translate("Page6_EnergyInput", "Grinding"))
-        self.grinding_raw_label.setText(_translate("Page6_EnergyInput", "Raw (%)"))
+        self.grinding_raw_label.setText(_translate("Page6_EnergyInput", "Raw Material (%)"))
         self.grinding_fuel_label.setText(_translate("Page6_EnergyInput", "Fuel (%)"))
         self.grinding_cement_label.setText(_translate("Page6_EnergyInput", "Cement (%)"))
         self.ball_mill_label.setText(_translate("Page6_EnergyInput", "Ball Mill"))

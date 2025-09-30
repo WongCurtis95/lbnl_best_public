@@ -95,7 +95,7 @@
      <rect>
       <x>150</x>
       <y>40</y>
-      <width>723</width>
+      <width>747</width>
       <height>132</height>
      </rect>
     </property>
@@ -108,7 +108,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Raw (%)</string>
+        <string>Raw Material (%)</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -326,7 +326,7 @@ QProgressBar::chunk {
      <x>200</x>
      <y>40</y>
      <width>1001</width>
-     <height>16</height>
+     <height>22</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_11">

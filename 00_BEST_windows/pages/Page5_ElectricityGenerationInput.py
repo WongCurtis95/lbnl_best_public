@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files_latest/Page5_ElectricityGenerationInput_qwidget.ui'
+# Form implementation generated from reading ui file 'ui_files_latest\Page5_ElectricityGenerationInput_qwidget.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -7,10 +7,6 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
-from resources_rc import *
-main_page_image = ":images/BEST_landing_abstract.png"
-side_page_image = ":images/BEST_side_abstract.png"
 
 
 class Ui_Page5_ElectricityGenerationInput(object):
@@ -245,15 +241,13 @@ class Ui_Page5_ElectricityGenerationInput(object):
         self.formLayout_carbon_electricity_gen_4.setWidget(0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.onsite_renewables_input_page5)
         self.progressBar = QtWidgets.QProgressBar(parent=Page5_ElectricityGenerationInput)
         self.progressBar.setGeometry(QtCore.QRect(200, 20, 1001, 23))
-        self.progressBar.setFixedHeight(12)
-        self.progressBar.setTextVisible(False)
         self.progressBar.setStyleSheet("QProgressBar {\n"
 "    background-color: #F0F0F0;\n"
 "    border: none;\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "}\n"
 "QProgressBar::chunk {\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "    background: QLinearGradient(\n"
 "        x1: 0, y1: 0, x2: 1, y2: 0,\n"
 "        stop: 0 #33bef0,   /* Light Blue */\n"
@@ -265,10 +259,10 @@ class Ui_Page5_ElectricityGenerationInput(object):
         self.side_image = QtWidgets.QLabel(parent=Page5_ElectricityGenerationInput)
         self.side_image.setGeometry(QtCore.QRect(0, -30, 171, 761))
         self.side_image.setText("")
-        self.side_image.setPixmap(QtGui.QPixmap(side_page_image))
+        self.side_image.setPixmap(QtGui.QPixmap("ui_files_latest\\../images/BEST_side_abstract.png"))
         self.side_image.setObjectName("side_image")
         self.layoutWidget_2 = QtWidgets.QWidget(parent=Page5_ElectricityGenerationInput)
-        self.layoutWidget_2.setGeometry(QtCore.QRect(200, 40, 1001, 16))
+        self.layoutWidget_2.setGeometry(QtCore.QRect(200, 40, 1001, 22))
         self.layoutWidget_2.setObjectName("layoutWidget_2")
         self.gridLayout_11 = QtWidgets.QGridLayout(self.layoutWidget_2)
         self.gridLayout_11.setContentsMargins(0, 0, 0, 0)
@@ -342,11 +336,11 @@ class Ui_Page5_ElectricityGenerationInput(object):
         self.backBtn.setText(_translate("Page5_ElectricityGenerationInput", "Back"))
         self.saveBtn.setText(_translate("Page5_ElectricityGenerationInput", "Save Progress"))
         self.nextBtn.setText(_translate("Page5_ElectricityGenerationInput", "Next"))
-        self.electricity_generation_group_1.setTitle(_translate("Page5_ElectricityGenerationInput", "Electricity Generation (kWh/year)"))
+        self.electricity_generation_group_1.setTitle(_translate("Page5_ElectricityGenerationInput", "Electricity (kWh/year)"))
         self.total_energy_purchased_label.setText(_translate("Page5_ElectricityGenerationInput", "Total electricity purchased from the grid"))
         self.total_electricity_generated_onsite_label.setText(_translate("Page5_ElectricityGenerationInput", "Total Electricty Generated Onsite"))
         self.electricity_generated_label.setText(_translate("Page5_ElectricityGenerationInput", "Electricity generated and sold to the grid or offsite"))
-        self.electricity_generation_group_2.setTitle(_translate("Page5_ElectricityGenerationInput", "Energy used for electricity generation (MJ/year)"))
+        self.electricity_generation_group_2.setTitle(_translate("Page5_ElectricityGenerationInput", "Fuel used for electricity generation (MJ/year)"))
         self.waste_heat_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Waste Heat"))
         self.coal_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Coal"))
         self.coke_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Coke"))
@@ -354,7 +348,7 @@ class Ui_Page5_ElectricityGenerationInput(object):
         self.biomass_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Biomass"))
         self.municipal_wastes_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Municipal Wastes"))
         self.checkBox.setText(_translate("Page5_ElectricityGenerationInput", "Use Default Waste Heat"))
-        self.electricity_generation_group_3.setTitle(_translate("Page5_ElectricityGenerationInput", "Energy used for electricity generation (kWh/year)"))
+        self.electricity_generation_group_3.setTitle(_translate("Page5_ElectricityGenerationInput", "Renewable electricity generation (kWh/year)"))
         self.onsite_renewables_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Onsite Renewables"))
         self.label.setText(_translate("Page5_ElectricityGenerationInput", "Cost and Emission"))
         self.label_2.setText(_translate("Page5_ElectricityGenerationInput", "Production"))
