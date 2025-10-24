@@ -272,7 +272,7 @@ def generate_part1_report(self):
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Direct Energy CO2 Emissions Benchmark", styles['Heading2']))
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step.", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_2, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
@@ -416,13 +416,13 @@ def generate_part_2_report(self):
     elements.append(Paragraph("Energy Benchmark", styles['Heading2']))
     elements.append(Image(graph_1, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("The international best practice value refers to the energy cpnsumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps, but using the best energy efficiency internationally for each step.", styles['Normal']))
+    elements.append(Paragraph("The international best practice value refers to the energy cpnsumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any mitigation measures applied", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Direct Energy CO2 Emissions Benchmark", styles['Heading2']))
     elements.append(Image(graph_2, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step. It does not include the effects of any mitigation measures applied.", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Indirect Energy CO2 Emissions Benchmark", styles['Heading2']))
@@ -457,7 +457,7 @@ def generate_part_2_report(self):
 
     elements.append(Image(graph_7, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("The cumulative carbon dioxide emission reduction in the marginal abatement cost graph does not equal to the calculated carbon dioxide emission reduction above, because in the calculations above, the energy and emissions available for reduction decrease with every measure applied. Meanwhile, in the marginal abatement cost graph, each measure's abatement cost is evaluated individually without any other measure applied", styles['Normal']))
+    elements.append(Paragraph("Note 1: No discoutn rate is applied for calculating the abatement cost. \n Note 2: The cumulative carbon dioxide emission reduction in the marginal abatement cost graph does not equal to the calculated total carbon dioxide emission reduction after measures above. This because in the calculations above, the energy and emissions available for reduction decrease with every measure applied. Meanwhile, in the marginal abatement cost graph, each measure's abatement cost is evaluated individually without any other measure applied", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     try:
