@@ -5907,7 +5907,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     Total_carbon_all_after_measures = Total_carbon_all - sum(emission_reduction_by_measure_cat.values())
 
     # Plot graphs
-    fig, ax = plt.subplots(figsize=(9, 4))
+    fig, ax = plt.subplots(figsize=(9, 5))
 
     direct_carbon_comparison_labels = ['Your facility', 'Your target', 'Your facity \n with measures', 'National \n best practice', 'International \n best practice', 'International \n best practice \n with different fuel']
     direct_carbon_comparison_values = [Total_carbon_direct, Target_carbon_direct, Total_carbon_direct_after_measures, 0, IBP_carbon_direct, IBP_with_different_fuel_carbon_direct]
@@ -6018,13 +6018,17 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     
     Total_investment = sum(total_investment_by_measure_cat.values())
     Total_energy_cost_savings = sum(energy_cost_savings_by_measure_cat.values())
+    Total_carbon_price_cost_savings = (Total_carbon_all-Total_carbon_all_after_measures)*carbon_price
     Overall_payback_period = Total_investment/Total_energy_cost_savings
+    Overall_payback_period_with_carbon_price = Total_investment/(Total_energy_cost_savings+Total_carbon_price_cost_savings)
     
     key_values_dict_finance = {
         'Value': {
-            'Total investment (million $USD)': round(Total_investment/10**6),
-            'Total energy cost savings per year (million $USD/year)': round(Total_energy_cost_savings/10**6),
-            'Overall payback period (years)': round(Overall_payback_period, 2)
+            'Total investment (million US$)': round(Total_investment/10**6, 2),
+            'Total energy cost savings per year (million US$/year)': round(Total_energy_cost_savings/10**6, 2),
+            'Total carbon price cost savings per year (million US$/year)': round(Total_carbon_price_cost_savings/10**6, 2),
+            'Overall payback period without carbon price (years)': round(Overall_payback_period, 2),
+            'Overall payback period with carbon price (years)': round(Overall_payback_period_with_carbon_price, 2)
         }        
     }
     
