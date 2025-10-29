@@ -103,48 +103,6 @@
      <property name="sizeConstraint">
       <enum>QLayout::SetFixedSize</enum>
      </property>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="coke_conveying_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="5">
-      <widget class="QLineEdit" name="msw_additive_prep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="4">
-      <widget class="QLineEdit" name="msw_grinding_input_page6_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="6" column="0">
       <widget class="QLabel" name="electricity_detailed_page6_label">
        <property name="sizePolicy">
@@ -197,32 +155,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="5">
-      <widget class="QLineEdit" name="coal_additive_prep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="4">
-      <widget class="QLineEdit" name="natural_gas_grinding_input_page6_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="6" column="3">
       <widget class="QLineEdit" name="electricity_crushing_input_page6">
        <property name="sizePolicy">
@@ -233,74 +165,6 @@
        </property>
        <property name="text">
         <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="3">
-      <widget class="QLineEdit" name="biomass_crushing_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="3">
-      <widget class="QLineEdit" name="msw_crushing_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QLineEdit" name="coal_grinding_input_page6_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
-      <widget class="QLineEdit" name="coke_grinding_input_page6_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="coal_conveying_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -323,60 +187,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="coal_crushing_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QLineEdit" name="natural_gas_crushing_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="6" column="2">
       <widget class="QLineEdit" name="electricity_preblending_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="5">
-      <widget class="QLineEdit" name="biomass_additive_prep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QLineEdit" name="msw_preblending_input_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -453,71 +265,6 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="QLineEdit" name="natural_gas_preblending_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="coal_preblending_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="natural_gas_conveying_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QLineEdit" name="biomass_preblending_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="4">
-      <widget class="QLineEdit" name="biomass_grinding_input_page6_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="6" column="1">
       <widget class="QLineEdit" name="electricity_conveying_input_page6">
        <property name="sizePolicy">
@@ -582,19 +329,6 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="biomass_conveying_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="2">
       <widget class="QLabel" name="preblending_label_page6">
        <property name="sizePolicy">
@@ -644,58 +378,6 @@
        </property>
        <property name="text">
         <string>Municipal Wastes (MJ)         </string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QLineEdit" name="coke_crushing_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="5">
-      <widget class="QLineEdit" name="coke_additive_prep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="coke_preblending_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="5">
-      <widget class="QLineEdit" name="natural_gas_additive_prep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
        </property>
       </widget>
      </item>
@@ -784,19 +466,6 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QLineEdit" name="msw_conveying_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget_2">
@@ -819,47 +488,8 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="4">
-      <widget class="QLineEdit" name="coke_kiln_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QLineEdit" name="coal_kiln_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="1">
       <widget class="QLineEdit" name="coal_additive_dry_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="3">
-      <widget class="QLineEdit" name="msw_homo_input_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -917,19 +547,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="coal_homo_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="4" column="0">
       <widget class="QLabel" name="biomass_label_detailed_page6_2">
        <property name="sizePolicy">
@@ -955,47 +572,8 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="4">
-      <widget class="QLineEdit" name="msw_kiln_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QLineEdit" name="natural_gas_homo_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="4" column="1">
       <widget class="QLineEdit" name="biomass_additive_dry_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QLineEdit" name="msw_fuelprep_input_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -1034,19 +612,6 @@
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="coke_additive_dry_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="4">
-      <widget class="QLineEdit" name="biomass_kiln_input_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -1124,45 +689,6 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="2">
-      <widget class="QLineEdit" name="biomass_fuelprep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="coal_fuelprep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLineEdit" name="natural_gas_fuelprep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="0">
       <widget class="QLabel" name="natural_gas_label_detailed_page6_2">
        <property name="sizePolicy">
@@ -1185,32 +711,6 @@
        </property>
        <property name="text">
         <string>Natural Gas (MJ)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLineEdit" name="electricity_additive_dry_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="2">
-      <widget class="QLineEdit" name="electricity_fuelprep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
        </property>
       </widget>
      </item>
@@ -1275,19 +775,6 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="4">
-      <widget class="QLineEdit" name="natural_gas_kiln_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="5" column="1">
       <widget class="QLineEdit" name="msw_additive_dry_input_page6">
        <property name="sizePolicy">
@@ -1326,19 +813,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="coke_fuelprep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="1">
       <widget class="QLineEdit" name="natural_gas_additive_dry_input_page6">
        <property name="sizePolicy">
@@ -1354,19 +828,6 @@
      </item>
      <item row="6" column="3">
       <widget class="QLineEdit" name="electricity_homo_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QLineEdit" name="coke_homo_input_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -1400,19 +861,6 @@
        </property>
        <property name="text">
         <string>Coke (MJ)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="3">
-      <widget class="QLineEdit" name="biomass_homo_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
        </property>
       </widget>
      </item>
@@ -1517,8 +965,8 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="5">
-      <widget class="QLineEdit" name="electricity_kiln_precalciner_input_page6">
+     <item row="6" column="2">
+      <widget class="QLineEdit" name="electricity_fuelprep_input_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -1583,7 +1031,7 @@ QProgressBar::chunk {
      <x>200</x>
      <y>40</y>
      <width>1001</width>
-     <height>16</height>
+     <height>22</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_11">
@@ -1698,59 +1146,18 @@ QProgressBar::chunk {
   </widget>
  </widget>
  <tabstops>
-  <tabstop>coal_conveying_input_page6</tabstop>
-  <tabstop>coke_conveying_input_page6</tabstop>
-  <tabstop>natural_gas_conveying_input_page6</tabstop>
-  <tabstop>biomass_conveying_input_page6</tabstop>
-  <tabstop>msw_conveying_input_page6</tabstop>
   <tabstop>electricity_conveying_input_page6</tabstop>
-  <tabstop>coal_preblending_input_page6</tabstop>
-  <tabstop>coke_preblending_input_page6</tabstop>
-  <tabstop>natural_gas_preblending_input_page6</tabstop>
-  <tabstop>biomass_preblending_input_page6</tabstop>
-  <tabstop>msw_preblending_input_page6</tabstop>
   <tabstop>electricity_preblending_input_page6</tabstop>
-  <tabstop>coal_crushing_input_page6</tabstop>
-  <tabstop>coke_crushing_input_page6</tabstop>
-  <tabstop>natural_gas_crushing_input_page6</tabstop>
-  <tabstop>biomass_crushing_input_page6</tabstop>
-  <tabstop>msw_crushing_input_page6</tabstop>
   <tabstop>electricity_crushing_input_page6</tabstop>
-  <tabstop>coal_grinding_input_page6_2</tabstop>
-  <tabstop>coke_grinding_input_page6_2</tabstop>
-  <tabstop>natural_gas_grinding_input_page6_2</tabstop>
-  <tabstop>biomass_grinding_input_page6_2</tabstop>
-  <tabstop>msw_grinding_input_page6_2</tabstop>
   <tabstop>electricity_grinding_input_page6_2</tabstop>
-  <tabstop>coal_additive_prep_input_page6</tabstop>
-  <tabstop>coke_additive_prep_input_page6</tabstop>
-  <tabstop>natural_gas_additive_prep_input_page6</tabstop>
-  <tabstop>biomass_additive_prep_input_page6</tabstop>
-  <tabstop>msw_additive_prep_input_page6</tabstop>
   <tabstop>electricity_additive_prep_input_page6</tabstop>
   <tabstop>coal_additive_dry_input_page6</tabstop>
   <tabstop>coke_additive_dry_input_page6</tabstop>
   <tabstop>natural_gas_additive_dry_input_page6</tabstop>
   <tabstop>biomass_additive_dry_input_page6</tabstop>
   <tabstop>msw_additive_dry_input_page6</tabstop>
-  <tabstop>electricity_additive_dry_input_page6</tabstop>
-  <tabstop>coal_fuelprep_input_page6</tabstop>
-  <tabstop>coke_fuelprep_input_page6</tabstop>
-  <tabstop>natural_gas_fuelprep_input_page6</tabstop>
-  <tabstop>biomass_fuelprep_input_page6</tabstop>
-  <tabstop>msw_fuelprep_input_page6</tabstop>
   <tabstop>electricity_fuelprep_input_page6</tabstop>
-  <tabstop>coal_homo_input_page6</tabstop>
-  <tabstop>coke_homo_input_page6</tabstop>
-  <tabstop>natural_gas_homo_input_page6</tabstop>
-  <tabstop>biomass_homo_input_page6</tabstop>
-  <tabstop>msw_homo_input_page6</tabstop>
   <tabstop>electricity_homo_input_page6</tabstop>
-  <tabstop>coal_kiln_input_page6</tabstop>
-  <tabstop>coke_kiln_input_page6</tabstop>
-  <tabstop>natural_gas_kiln_input_page6</tabstop>
-  <tabstop>biomass_kiln_input_page6</tabstop>
-  <tabstop>msw_kiln_input_page6</tabstop>
   <tabstop>electricity_kiln_input_page6</tabstop>
   <tabstop>backBtn</tabstop>
   <tabstop>saveBtn</tabstop>

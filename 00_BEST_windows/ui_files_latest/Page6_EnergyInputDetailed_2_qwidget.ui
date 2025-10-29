@@ -119,19 +119,6 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="4">
-      <widget class="QLineEdit" name="msw_other_conveying_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="6" column="0">
       <widget class="QLabel" name="electricity_detailed_page6_label">
        <property name="sizePolicy">
@@ -187,73 +174,8 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="4">
-      <widget class="QLineEdit" name="natural_gas_other_conveying_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="6" column="3">
       <widget class="QLineEdit" name="electricity_cement_grinding_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="3">
-      <widget class="QLineEdit" name="biomass_cement_grinding_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="3">
-      <widget class="QLineEdit" name="msw_cement_grinding_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QLineEdit" name="coal_other_conveying_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
-      <widget class="QLineEdit" name="coke_other_conveying_page6_b">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -300,47 +222,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="coal_cement_grinding_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QLineEdit" name="natural_gas_cement_grinding_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="6" column="2">
       <widget class="QLineEdit" name="electricity_kiln_cooler_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QLineEdit" name="msw_kiln_cooler_page6_b">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -420,73 +303,8 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="QLineEdit" name="natural_gas_kiln_cooler_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="coal_kiln_cooler_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="1">
       <widget class="QLineEdit" name="natural_gas_kiln_kiln_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QLineEdit" name="biomass_kiln_cooler_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="4">
-      <widget class="QLineEdit" name="biomass_other_conveying_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLineEdit" name="electricity_kiln_kiln_page6_b">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -604,32 +422,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="3">
-      <widget class="QLineEdit" name="coke_cement_grinding_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="coke_kiln_cooler_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="3">
       <widget class="QLabel" name="crushing_label_page6">
        <property name="sizePolicy">
@@ -713,22 +505,6 @@
      <property name="sizeConstraint">
       <enum>QLayout::SetNoConstraint</enum>
      </property>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="coke_non_production_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
      <item row="6" column="0">
       <widget class="QLabel" name="electricity_detailed_page6_label_2">
        <property name="sizePolicy">
@@ -820,22 +596,6 @@
        </property>
        <property name="text">
         <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="coal_non_production_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -1004,19 +764,6 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="natural_gas_non_production_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="4" column="2">
       <widget class="QLineEdit" name="biomass_air_pollution_page6_b">
        <property name="sizePolicy">
@@ -1065,19 +812,6 @@
        </property>
        <property name="text">
         <string>Coal (MJ)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="biomass_non_production_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
        </property>
       </widget>
      </item>
@@ -1211,19 +945,6 @@
        </property>
        <property name="text">
         <string>Natural Gas (MJ)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLineEdit" name="msw_non_production_page6_b">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
        </property>
       </widget>
      </item>
@@ -1400,30 +1121,9 @@ QProgressBar::chunk {
   <tabstop>natural_gas_kiln_kiln_page6_b</tabstop>
   <tabstop>biomass_kiln_kiln_page6_b</tabstop>
   <tabstop>msw_kiln_kiln_page6_b</tabstop>
-  <tabstop>electricity_kiln_kiln_page6_b</tabstop>
-  <tabstop>coal_kiln_cooler_page6_b</tabstop>
-  <tabstop>coke_kiln_cooler_page6_b</tabstop>
-  <tabstop>natural_gas_kiln_cooler_page6_b</tabstop>
-  <tabstop>biomass_kiln_cooler_page6_b</tabstop>
-  <tabstop>msw_kiln_cooler_page6_b</tabstop>
   <tabstop>electricity_kiln_cooler_page6_b</tabstop>
-  <tabstop>coal_cement_grinding_page6_b</tabstop>
-  <tabstop>coke_cement_grinding_page6_b</tabstop>
-  <tabstop>natural_gas_cement_grinding_page6_b</tabstop>
-  <tabstop>biomass_cement_grinding_page6_b</tabstop>
-  <tabstop>msw_cement_grinding_page6_b</tabstop>
   <tabstop>electricity_cement_grinding_page6_b</tabstop>
-  <tabstop>coal_other_conveying_page6_b</tabstop>
-  <tabstop>coke_other_conveying_page6_b</tabstop>
-  <tabstop>natural_gas_other_conveying_page6_b</tabstop>
-  <tabstop>biomass_other_conveying_page6_b</tabstop>
-  <tabstop>msw_other_conveying_page6_b</tabstop>
   <tabstop>electricity_other_conveying_page6_b</tabstop>
-  <tabstop>coal_non_production_page6_b</tabstop>
-  <tabstop>coke_non_production_page6_b</tabstop>
-  <tabstop>natural_gas_non_production_page6_b</tabstop>
-  <tabstop>biomass_non_production_page6_b</tabstop>
-  <tabstop>msw_non_production_page6_b</tabstop>
   <tabstop>electricity_non_production_page6_b</tabstop>
   <tabstop>coal_air_pollution_page6_b</tabstop>
   <tabstop>coke_air_pollution_page6_b</tabstop>
