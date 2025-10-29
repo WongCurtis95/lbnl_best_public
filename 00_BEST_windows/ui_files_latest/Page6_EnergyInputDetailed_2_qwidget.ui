@@ -164,7 +164,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Other conveying, auxilaries</string>
+        <string>Other Conveying, Auxilaries</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -393,7 +393,8 @@
         </font>
        </property>
        <property name="text">
-        <string>Kiln System - Cooler</string>
+        <string>Kiln System - Clinker 
+ Cooler</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -841,7 +842,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Air Pollution Flue-Gas Mitigation</string>
+        <string>Air Pollution Mitigation - Flue-Gas</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignHCenter|Qt::AlignTop</set>

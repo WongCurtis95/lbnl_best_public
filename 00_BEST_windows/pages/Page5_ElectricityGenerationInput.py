@@ -366,7 +366,7 @@ class Ui_Page5_ElectricityGenerationInput(object):
         self.natural_gas_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Natural Gas"))
         self.biomass_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Biomass"))
         self.municipal_wastes_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Municipal Wastes"))
-        self.electricity_generation_group_3.setTitle(_translate("Page5_ElectricityGenerationInput", "Renewable electricity generation (kWh/year)"))
+        self.electricity_generation_group_3.setTitle(_translate("Page5_ElectricityGenerationInput", "Onsite renewable electricity generation (kWh/year)"))
         self.onsite_renewables_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Onsite Renewables"))
         self.label.setText(_translate("Page5_ElectricityGenerationInput", "Cost and Emission"))
         self.label_2.setText(_translate("Page5_ElectricityGenerationInput", "Production"))

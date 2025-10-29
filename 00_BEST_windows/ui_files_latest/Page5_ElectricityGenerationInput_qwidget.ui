@@ -357,7 +357,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
     </font>
    </property>
    <property name="title">
-    <string>Renewable electricity generation (kWh/year)</string>
+    <string>Onsite renewable electricity generation (kWh/year)</string>
    </property>
    <widget class="QWidget" name="layoutWidget_6">
     <property name="geometry">

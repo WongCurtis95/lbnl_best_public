@@ -359,7 +359,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="0" column="0">
       <widget class="QLabel" name="type_1_label">
        <property name="text">
-        <string>Type 1 Name</string>
+        <string>Kiln Type 1 Name</string>
        </property>
       </widget>
      </item>
@@ -379,7 +379,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="1" column="0">
       <widget class="QLabel" name="type_2_label">
        <property name="text">
-        <string>Type 2 Name</string>
+        <string>Kiln Type 2 Name</string>
        </property>
       </widget>
      </item>
@@ -473,7 +473,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <rect>
       <x>170</x>
       <y>30</y>
-      <width>271</width>
+      <width>307</width>
       <height>106</height>
      </rect>
     </property>
@@ -481,7 +481,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="0" column="0">
       <widget class="QLabel" name="pure_portland_label">
        <property name="text">
-        <string>Pure Portland</string>
+        <string>Pure Portland Cement</string>
        </property>
       </widget>
      </item>
@@ -501,7 +501,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="1" column="0">
       <widget class="QLabel" name="common_portland_label">
        <property name="text">
-        <string>Common Portland</string>
+        <string>Common Portland Cement</string>
        </property>
       </widget>
      </item>
@@ -545,7 +545,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <rect>
       <x>570</x>
       <y>30</y>
-      <width>221</width>
+      <width>261</width>
       <height>106</height>
      </rect>
     </property>
@@ -553,7 +553,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="0" column="0">
       <widget class="QLabel" name="flay_ash_label">
        <property name="text">
-        <string>Fly Ash</string>
+        <string>Fly Ash Cement</string>
        </property>
       </widget>
      </item>
@@ -573,7 +573,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="1" column="0">
       <widget class="QLabel" name="pozzolana_label">
        <property name="text">
-        <string>Pozzolana</string>
+        <string>Pozzolana Cement</string>
        </property>
       </widget>
      </item>
@@ -593,7 +593,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="2" column="0">
       <widget class="QLabel" name="blended_label">
        <property name="text">
-        <string>Blended</string>
+        <string>Blended Cement</string>
        </property>
       </widget>
      </item>
