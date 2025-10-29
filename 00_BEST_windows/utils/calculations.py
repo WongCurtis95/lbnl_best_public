@@ -1478,6 +1478,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields(self):
 
     if self.ui.biomass_additive_dry_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive drying"]["fuel"]["biomass"] = _f(self.ui.biomass_additive_dry_input_page6.text())
+        """
     if self.ui.biomass_additive_prep_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive prepration"]["fuel"]["biomass"] = _f(self.ui.biomass_additive_prep_input_page6.text())
     if self.ui.biomass_conveying_input_page6.text() != "":
@@ -1494,12 +1495,14 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields(self):
         energy_input_dict["Energy input"]["Kiln system - preheater"]["fuel"]["biomass"] = _f(self.ui.biomass_kiln_input_page6.text())
     if self.ui.biomass_preblending_input_page6.text() != "":
         energy_input_dict["Energy input"]["Preblending"]["fuel"]["biomass"] = _f(self.ui.biomass_preblending_input_page6.text())
+        """
     if self.ui.biomass_kiln_precalciner_input_page6.text() != "":
         energy_input_dict["Energy input"]["Kiln system - precalciner"]["fuel"]["biomass"] = _f(self.ui.biomass_kiln_precalciner_input_page6.text())
 
 
     if self.ui.coal_additive_dry_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive drying"]["fuel"]["coal"] = _f(self.ui.coal_additive_dry_input_page6.text())
+        """
     if self.ui.coal_additive_prep_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive prepration"]["fuel"]["coal"] = _f(self.ui.coal_additive_prep_input_page6.text())
     if self.ui.coal_conveying_input_page6.text() != "":
@@ -1516,10 +1519,13 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields(self):
         energy_input_dict["Energy input"]["Kiln system - preheater"]["fuel"]["coal"] = _f(self.ui.coal_kiln_input_page6.text())
     if self.ui.coal_preblending_input_page6.text() != "":
         energy_input_dict["Energy input"]["Preblending"]["fuel"]["coal"] = _f(self.ui.coal_preblending_input_page6.text())
+        """
     if self.ui.coal_kiln_precalciner_input_page6.text() != "":
         energy_input_dict["Energy input"]["Kiln system - precalciner"]["fuel"]["coal"] = _f(self.ui.coal_kiln_precalciner_input_page6.text())
+        
     if self.ui.coke_additive_dry_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive drying"]["fuel"]["coke"] = _f(self.ui.coke_additive_dry_input_page6.text())
+        """
     if self.ui.coke_additive_prep_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive prepration"]["fuel"]["coke"] = _f(self.ui.coke_additive_prep_input_page6.text())
     if self.ui.coke_conveying_input_page6.text() != "":
@@ -1536,10 +1542,12 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields(self):
         energy_input_dict["Energy input"]["Kiln system - preheater"]["fuel"]["coke"] = _f(self.ui.coke_kiln_input_page6.text())
     if self.ui.coke_preblending_input_page6.text() != "":
         energy_input_dict["Energy input"]["Preblending"]["fuel"]["coke"] = _f(self.ui.coke_preblending_input_page6.text())
+        """
     if self.ui.coke_kiln_precalciner_input_page6.text() != "":
         energy_input_dict["Energy input"]["Kiln system - precalciner"]["fuel"]["coke"] = _f(self.ui.coke_kiln_precalciner_input_page6.text())
-    if self.ui.electricity_additive_dry_input_page6.text() != "":
-        energy_input_dict["Energy input"]["Additive drying"]["electricity"] = _f(self.ui.electricity_additive_dry_input_page6.text())
+        
+    #if self.ui.electricity_additive_dry_input_page6.text() != "":
+    #    energy_input_dict["Energy input"]["Additive drying"]["electricity"] = _f(self.ui.electricity_additive_dry_input_page6.text())
     if self.ui.electricity_additive_prep_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive prepration"]["electricity"] = _f(self.ui.electricity_additive_prep_input_page6.text())
     if self.ui.electricity_conveying_input_page6.text() != "":
@@ -1556,10 +1564,12 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields(self):
         energy_input_dict["Energy input"]["Kiln system - preheater"]["electricity"] = _f(self.ui.electricity_kiln_input_page6.text())
     if self.ui.electricity_preblending_input_page6.text() != "":
         energy_input_dict["Energy input"]["Preblending"]["electricity"] = _f(self.ui.electricity_preblending_input_page6.text())
-    if self.ui.electricity_kiln_precalciner_input_page6.text() != "":
-        energy_input_dict["Energy input"]["Kiln system - precalciner"]["electricity"] = _f(self.ui.electricity_kiln_precalciner_input_page6.text())
+    #if self.ui.electricity_kiln_precalciner_input_page6.text() != "":
+    #    energy_input_dict["Energy input"]["Kiln system - precalciner"]["electricity"] = _f(self.ui.electricity_kiln_precalciner_input_page6.text())
+        
     if self.ui.msw_additive_dry_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive drying"]["fuel"]["municipal wastes"] = _f(self.ui.msw_additive_dry_input_page6.text())
+        """
     if self.ui.msw_additive_prep_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive prepration"]["fuel"]["municipal wastes"] = _f(self.ui.msw_additive_prep_input_page6.text())
     if self.ui.msw_conveying_input_page6.text() != "":
@@ -1576,10 +1586,13 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields(self):
         energy_input_dict["Energy input"]["Kiln system - preheater"]["fuel"]["municipal wastes"] = _f(self.ui.msw_kiln_input_page6.text())
     if self.ui.msw_preblending_input_page6.text() != "":
         energy_input_dict["Energy input"]["Preblending"]["fuel"]["municipal wastes"] = _f(self.ui.msw_preblending_input_page6.text())
+        """
     if self.ui.msw_kiln_precalciner_input_page6.text() != "":
         energy_input_dict["Energy input"]["Kiln system - precalciner"]["fuel"]["municipal wastes"] = _f(self.ui.msw_kiln_precalciner_input_page6.text())
+        
     if self.ui.natural_gas_additive_dry_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive drying"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_additive_dry_input_page6.text())
+        """
     if self.ui.natural_gas_additive_prep_input_page6.text() != "":
         energy_input_dict["Energy input"]["Additive prepration"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_additive_prep_input_page6.text())
     if self.ui.natural_gas_conveying_input_page6.text() != "":
@@ -1596,6 +1609,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields(self):
         energy_input_dict["Energy input"]["Kiln system - preheater"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_kiln_input_page6.text())
     if self.ui.natural_gas_preblending_input_page6.text() != "":
         energy_input_dict["Energy input"]["Preblending"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_preblending_input_page6.text())
+        """
     if self.ui.natural_gas_kiln_precalciner_input_page6.text() != "":
         energy_input_dict["Energy input"]["Kiln system - precalciner"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_kiln_precalciner_input_page6.text())
 
@@ -1616,6 +1630,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
 
     if self.ui.coal_kiln_kiln_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - kiln"]["fuel"]["coal"] = _f(self.ui.coal_kiln_kiln_page6_b.text())
+        """
     if self.ui.coal_kiln_cooler_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - cooler"]["fuel"]["coal"] = _f(self.ui.coal_kiln_cooler_page6_b.text())
     if self.ui.coal_cement_grinding_page6_b.text() != "":
@@ -1624,6 +1639,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         energy_input_dict["Energy input"]["Other conveying, auxilaries"]["fuel"]["coal"] = _f(self.ui.coal_other_conveying_page6_b.text())
     if self.ui.coal_non_production_page6_b.text() != "":
         energy_input_dict["Energy input"]["Non-production energy use"]["fuel"]["coal"] = _f(self.ui.coal_non_production_page6_b.text())
+        """
     if self.ui.coal_air_pollution_page6_b.text() != "":
         energy_input_dict["Energy input"]["Air pollution flue-gas mitigation"]["fuel"]["coal"] = _f(self.ui.coal_air_pollution_page6_b.text())
     if self.ui.coal_ccus_page6_b.text() != "":
@@ -1631,6 +1647,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
 
     if self.ui.coke_kiln_kiln_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - kiln"]["fuel"]["coke"] = _f(self.ui.coke_kiln_kiln_page6_b.text())
+        """
     if self.ui.coke_kiln_cooler_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - cooler"]["fuel"]["coke"] = _f(self.ui.coke_kiln_cooler_page6_b.text())
     if self.ui.coke_cement_grinding_page6_b.text() != "":
@@ -1639,6 +1656,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         energy_input_dict["Energy input"]["Other conveying, auxilaries"]["fuel"]["coke"] = _f(self.ui.coke_other_conveying_page6_b.text())
     if self.ui.coke_non_production_page6_b.text() != "":
         energy_input_dict["Energy input"]["Non-production energy use"]["fuel"]["coke"] = _f(self.ui.coke_non_production_page6_b.text())
+        """
     if self.ui.coke_air_pollution_page6_b.text() != "":
         energy_input_dict["Energy input"]["Air pollution flue-gas mitigation"]["fuel"]["coke"] = _f(self.ui.coke_air_pollution_page6_b.text())
     if self.ui.coke_ccus_page6_b.text() != "":
@@ -1646,6 +1664,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
 
     if self.ui.natural_gas_kiln_kiln_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - kiln"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_kiln_kiln_page6_b.text())
+        """
     if self.ui.natural_gas_kiln_cooler_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - cooler"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_kiln_cooler_page6_b.text())
     if self.ui.natural_gas_cement_grinding_page6_b.text() != "":
@@ -1654,6 +1673,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         energy_input_dict["Energy input"]["Other conveying, auxilaries"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_other_conveying_page6_b.text())
     if self.ui.natural_gas_non_production_page6_b.text() != "":
         energy_input_dict["Energy input"]["Non-production energy use"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_non_production_page6_b.text())
+        """
     if self.ui.natural_gas_air_pollution_page6_b.text() != "":
         energy_input_dict["Energy input"]["Air pollution flue-gas mitigation"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_air_pollution_page6_b.text())
     if self.ui.natural_gas_ccus_page6_b.text() != "":
@@ -1661,6 +1681,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         
     if self.ui.biomass_kiln_kiln_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - kiln"]["fuel"]["biomass"] = _f(self.ui.biomass_kiln_kiln_page6_b.text())
+        """
     if self.ui.biomass_kiln_cooler_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - cooler"]["fuel"]["biomass"] = _f(self.ui.biomass_kiln_cooler_page6_b.text())
     if self.ui.biomass_cement_grinding_page6_b.text() != "":
@@ -1669,6 +1690,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         energy_input_dict["Energy input"]["Other conveying, auxilaries"]["fuel"]["biomass"] = _f(self.ui.biomass_other_conveying_page6_b.text())
     if self.ui.biomass_non_production_page6_b.text() != "":
         energy_input_dict["Energy input"]["Non-production energy use"]["fuel"]["biomass"] = _f(self.ui.biomass_non_production_page6_b.text())
+        """
     if self.ui.biomass_air_pollution_page6_b.text() != "":
         energy_input_dict["Energy input"]["Air pollution flue-gas mitigation"]["fuel"]["biomass"] = _f(self.ui.biomass_air_pollution_page6_b.text())
     if self.ui.biomass_ccus_page6_b.text() != "":
@@ -1676,6 +1698,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         
     if self.ui.msw_kiln_kiln_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - kiln"]["fuel"]["municipal wastes"] = _f(self.ui.msw_kiln_kiln_page6_b.text())
+        """
     if self.ui.msw_kiln_cooler_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - cooler"]["fuel"]["municipal wastes"] = _f(self.ui.msw_kiln_cooler_page6_b.text())
     if self.ui.msw_cement_grinding_page6_b.text() != "":
@@ -1684,13 +1707,16 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         energy_input_dict["Energy input"]["Other conveying, auxilaries"]["fuel"]["municipal wastes"] = _f(self.ui.msw_other_conveying_page6_b.text())
     if self.ui.msw_non_production_page6_b.text() != "":
         energy_input_dict["Energy input"]["Non-production energy use"]["fuel"]["municipal wastes"] = _f(self.ui.msw_non_production_page6_b.text())
+        """
     if self.ui.msw_air_pollution_page6_b.text() != "":
         energy_input_dict["Energy input"]["Air pollution flue-gas mitigation"]["fuel"]["municipal wastes"] = _f(self.ui.msw_air_pollution_page6_b.text())
     if self.ui.msw_ccus_page6_b.text() != "":
         energy_input_dict["Energy input"]["CCUS"]["fuel"]["municipal wastes"] = _f(self.ui.msw_ccus_page6_b.text())
-        
+    
+        """
     if self.ui.electricity_kiln_kiln_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - kiln"]["electricity"] = _f(self.ui.electricity_kiln_kiln_page6_b.text())
+        """
     if self.ui.electricity_kiln_cooler_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - cooler"]["electricity"] = _f(self.ui.electricity_kiln_cooler_page6_b.text())
     if self.ui.electricity_cement_grinding_page6_b.text() != "":
