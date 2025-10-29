@@ -228,33 +228,13 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
     </property>
     <layout class="QFormLayout" name="formLayout_carbon_electricity_gen_2">
      <item row="0" column="0">
-      <widget class="QLabel" name="waste_heat_label_page5">
-       <property name="text">
-        <string>Waste Heat</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="waste_heat_input_page5">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
       <widget class="QLabel" name="coal_label_page5">
        <property name="text">
         <string>Coal</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="0" column="1">
       <widget class="QLineEdit" name="coal_input_page5">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -267,14 +247,14 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="coke_label_page5">
        <property name="text">
         <string>Coke</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="1" column="1">
       <widget class="QLineEdit" name="coke_input_page5">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -360,19 +340,6 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QCheckBox" name="checkBox">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>60</y>
-      <width>171</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Use Default Waste Heat</string>
-    </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="electricity_generation_group_3">
@@ -588,6 +555,77 @@ QProgressBar::chunk {
     </item>
    </layout>
   </widget>
+  <widget class="QGroupBox" name="electricity_generation_group_4">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>560</y>
+     <width>1001</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="title">
+    <string>Waste heat electricity generation (kWh/year)</string>
+   </property>
+   <widget class="QWidget" name="layoutWidget_9">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>30</y>
+      <width>281</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout_carbon_electricity_gen_6">
+     <item row="0" column="0">
+      <widget class="QLabel" name="waste_heat_label_page5">
+       <property name="text">
+        <string>Waste Heat             </string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="waste_heat_input_page5">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>30</y>
+      <width>171</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Use Default Waste Heat</string>
+    </property>
+   </widget>
+  </widget>
+  <zorder>electricity_generation_group_4</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>electricity_generation_group_1</zorder>
+  <zorder>electricity_generation_group_2</zorder>
+  <zorder>electricity_generation_group_3</zorder>
+  <zorder>progressBar</zorder>
+  <zorder>side_image</zorder>
+  <zorder>layoutWidget_2</zorder>
  </widget>
  <resources/>
  <connections/>

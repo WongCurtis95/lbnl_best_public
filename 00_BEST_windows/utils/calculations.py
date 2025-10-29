@@ -449,7 +449,6 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     "Electricity generated and sold to the grid or offsite (kWh/year)": 0,
     "Electricity generated and used at cement plant (kWh/year)": 0,
     "Energy used for electricity generation (MJ/year)": {
-        "waste heat": 0.0,
         "coal": 0.0,
         "coke": 0.0,
         "natural gas": 0.0,
@@ -457,6 +456,8 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
         "municipal wastes": 0.0
     },
     "Energy used for electricity generation (kWh/year) - onsite renewables": 0.0,
+    "Energy used for electricity generation (kWh/year) - waste heat": 0,
+    "Use default waste heat": False,
     "Subtotal final energy (MJ/year)": 0.0
     }
     
@@ -471,8 +472,8 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
 
         
     # Energy used for electricity generation
-    if self.ui.waste_heat_input_page5.text() != "":
-        electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]["waste heat"] = _f(self.ui.waste_heat_input_page5.text())
+    #if self.ui.waste_heat_input_page5.text() != "":
+    #    electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]["waste heat"] = _f(self.ui.waste_heat_input_page5.text())
     if self.ui.coal_input_page5.text() != "":
         electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]["coal"] = _f(self.ui.coal_input_page5.text())
     if self.ui.coke_input_page5.text() != "":
@@ -487,7 +488,16 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     # Onsite Rewnewables
     if self.ui.onsite_renewables_input_page5.text() != "":
         electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - onsite renewables"] = _f(self.ui.onsite_renewables_input_page5.text())
+        
+    # Waste Heat
+    if self.ui.waste_heat_input_page5.text() != "":
+        electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - waste heat"] = _f(self.ui.waste_heat_input_page5.text())
 
+    electricity_generation_input_dict["Use default waste heat"] = self.ui.checkBox.isChecked()
+        
+    print("Checkbox")
+    print(self.ui.checkBox.isChecked())
+    
     # Cost and Emissions Data
     with open(json_folder / "Cost_and_Emission_Input.json", 'r') as f:
         cost_and_emissions_dict = json.load(f)
@@ -502,23 +512,27 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
 
     electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"] = electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"] - electricity_generation_input_dict["Electricity generated and sold to the grid or offsite (kWh/year)"]
 
-    #electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['waste heat'] = 0
-
     Total_electricity_fuel = sum(electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"].values())
 
     electricity_generation_input_dict["Subtotal final energy (MJ/year)"] = Total_electricity_fuel + electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - onsite renewables"]*3.6
     
     if Total_electricity_fuel >0:
-        electricity_fuel_emission_intensity = (electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['waste heat']*0+ electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coal']*coal_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coke']*coke_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['natural gas']*natural_gas_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['biomass']*biomass_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['municipal wastes']*msw_emission_intensity) / Total_electricity_fuel
+        electricity_fuel_emission_intensity = (electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coal']*coal_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coke']*coke_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['natural gas']*natural_gas_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['biomass']*biomass_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['municipal wastes']*msw_emission_intensity) / Total_electricity_fuel # removed waste heat
+        #electricity_fuel_emission_intensity = (electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['waste heat']*0+ electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coal']*coal_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['coke']*coke_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['natural gas']*natural_gas_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['biomass']*biomass_emission_intensity + electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]['municipal wastes']*msw_emission_intensity) / Total_electricity_fuel
     else:
         electricity_fuel_emission_intensity = 0
     
     electricity_generation_emissions = electricity_fuel_emission_intensity * Total_electricity_fuel
 
     onsite_RE_electricity_generation = electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - onsite renewables"]
+
+    if electricity_generation_input_dict["Use default waste heat"] == True:
+        electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - waste heat"] = (electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"] + electricity_generation_input_dict["Total electricity purchased (kWh/year)"])*0.25
+    
+    waste_heat_electricity_generation = electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - waste heat"]
     
     if Total_electricity_fuel >0:
-        onsite_electricity_generation_efficiency = (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"] - onsite_RE_electricity_generation)/(Total_electricity_fuel/3.6) # this is just for generation from combustion and waste heat
+        onsite_electricity_generation_efficiency = (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"] - onsite_RE_electricity_generation - waste_heat_electricity_generation)/(Total_electricity_fuel/3.6) # this is just for generation from combustion and waste heat
     else:
         onsite_electricity_generation_efficiency = 0
     
@@ -532,8 +546,10 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] = onsite_electricity_generation_efficiency # thermal
     
     share_of_electricity_from_purchase = electricity_generation_input_dict["Total electricity purchased (kWh/year)"] / (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"]+electricity_generation_input_dict["Total electricity purchased (kWh/year)"])
+    share_of_electricity_from_onsite_combustion = 1 - ((electricity_generation_input_dict["Total electricity purchased (kWh/year)"] + onsite_RE_electricity_generation + waste_heat_electricity_generation) / (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"]+electricity_generation_input_dict["Total electricity purchased (kWh/year)"]))
     
     electricity_generation_input_dict["Share of electricity from electricity purchase"] = share_of_electricity_from_purchase
+    electricity_generation_input_dict["Share of electricity from onsite combustion"] = share_of_electricity_from_onsite_combustion
     
     # Save the updated dictionary
     with open(filepath, "w") as f:
@@ -2944,6 +2960,7 @@ def Part_1_Detailed_Output(self):
 
     electricity_generation_emissions =electricity_generation_input_dict["Electricity Generation Emissions"]
     onsite_RE_electricity_generation = electricity_generation_input_dict["Onsite Renewable Electricity Generation"]
+    share_of_electricity_from_onsite_combustion = electricity_generation_input_dict["Share of electricity from onsite combustion"]
     electricity_fuel_emission_intensity = electricity_generation_input_dict["Electricity Fuel Emission Intensity"]
 
     Total_carbon_indirect = purchased_electricity * cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000
@@ -2960,7 +2977,7 @@ def Part_1_Detailed_Output(self):
     benchmarking_results_primary_dict["Target carbon all"] = Target_carbon_all
 
     IBP_carbon_indirect = benchmarking_results_primary_dict["International Benchmarking"]["Electricity Consumption (kWh/year)"]["International Best Practice Facility"] * cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000 * (share_of_electricity_from_purchase) # for IBP, assume it uses the same share of purchased electricity # repalce purchased_electricity/Total_process_electricity with share_of_electricity_from_purchase
-    IBP_carbon_direct = benchmarking_results_primary_dict["International Benchmarking"]["Fuel Consumption (MJ/year)"]["International Best Practice Facility"] * fuel_emission_intensity + benchmarking_results_primary_dict["International Benchmarking"]["Electricity Consumption (kWh/year)"]["International Best Practice Facility"]*3.6*electricity_fuel_emission_intensity*(1-share_of_electricity_from_purchase)   
+    IBP_carbon_direct = benchmarking_results_primary_dict["International Benchmarking"]["Fuel Consumption (MJ/year)"]["International Best Practice Facility"] * fuel_emission_intensity + benchmarking_results_primary_dict["International Benchmarking"]["Electricity Consumption (kWh/year)"]["International Best Practice Facility"]*3.6*electricity_fuel_emission_intensity*(share_of_electricity_from_onsite_combustion)   
     #IBP_carbon_direct = benchmarking_results_primary_dict["International Benchmarking"]["Fuel Consumption (MJ/year)"]["International Best Practice Facility"] * fuel_emission_intensity + benchmarking_results_primary_dict["International Benchmarking"]["Electricity Consumption (kWh/year)"]["International Best Practice Facility"]* (1 - ((purchased_electricity+onsite_RE_electricity_generation)/Total_process_electricity)) * (electricity_fuel_emission_intensity*3.6/0.305)
     IBP_carbon_all = IBP_carbon_indirect + IBP_carbon_direct + Total_clinker*cost_and_emissions_dict["Process emission per metric ton of clinker (tCO2/t clinker)"]
 
@@ -4939,6 +4956,7 @@ def EE_measure(self):
         electricity_generation_input_dict = json.load(f)
 
     onsite_RE_electricity_generation = electricity_generation_input_dict["Onsite Renewable Electricity Generation"]
+    share_of_electricity_from_onsite_combustion = electricity_generation_input_dict["Share of electricity from onsite combustion"]
     electricity_fuel_emission_intensity = electricity_generation_input_dict["Electricity Fuel Emission Intensity"]
     onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"]
 
@@ -4975,7 +4993,8 @@ def EE_measure(self):
                     # Add total emission reduction
                     if measures_data[measure_cateogry][measure]["Energy Type"] == 'Electricity':
                         measures_data[measure_cateogry][measure]["Total Emissions Reduction - indirect"] = measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_emission_intensity * purchased_electricity / Total_process_electricity #  only accounts for the impacts of purchased electricity
-                        measures_data[measure_cateogry][measure]["Total Emissions Reduction - direct"] = measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*(electricity_fuel_emission_intensity*3.6/onsite_electricity_generation_efficiency)*(1 - ((purchased_electricity+onsite_RE_electricity_generation) / Total_process_electricity)) # emissions from onsite electricity generation
+                        measures_data[measure_cateogry][measure]["Total Emissions Reduction - direct"] = measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*(electricity_fuel_emission_intensity*3.6/onsite_electricity_generation_efficiency)*(share_of_electricity_from_onsite_combustion) # emissions from onsite electricity generation # share of electricity from purchase was previosuly: ((purchased_electricity+onsite_RE_electricity_generation) / Total_process_electricity)
+                        
                         measures_data[measure_cateogry][measure]["Total Emissions Reduction"] = measures_data[measure_cateogry][measure]["Total Emissions Reduction - indirect"] + measures_data[measure_cateogry][measure]["Total Emissions Reduction - direct"]
                     elif measures_data[measure_cateogry][measure]["Energy Type"] == 'Fuel':
                         measures_data[measure_cateogry][measure]["Total Emissions Reduction - indirect"] = 0
@@ -5204,6 +5223,7 @@ def Page9_Share_Default_Update_Fields(self):
         electricity_generation_input_dict = json.load(f)
 
     onsite_RE_electricity_generation = electricity_generation_input_dict["Onsite Renewable Electricity Generation"]
+    waste_heat_electricity_generation = electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - waste heat"]
     electricity_fuel_emission_intensity = electricity_generation_input_dict["Electricity Fuel Emission Intensity"]
     onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"]
 
@@ -5251,8 +5271,9 @@ def Page9_Share_Default_Update_Fields(self):
     else:
         indirect_emission_before_re = Total_carbon_indirect - EE_measure_indirect_emission_reduction
         
-        re_emission_reduction_indirect = indirect_emission_before_re * new_re_share_dict["RE-Renewable Energy"]["share of electricity from purchased or self-generated renewable energy"]
-        re_emission_reduction_direct = re_emission_reduction_indirect*((Total_process_electricity-purchased_electricity-onsite_RE_electricity_generation) / purchased_electricity)*((electricity_fuel_emission_intensity*3.6/onsite_electricity_generation_efficiency)/electricity_emission_intensity)
+        re_emission_reduction_indirect = indirect_emission_before_re * (new_re_share_dict["RE-Renewable Energy"]["share of electricity from purchased or self-generated renewable energy"] - onsite_RE_electricity_generation / Total_process_electricity)
+        re_emission_reduction_direct = re_emission_reduction_indirect*((Total_process_electricity - purchased_electricity - onsite_RE_electricity_generation - waste_heat_electricity_generation) / purchased_electricity)*((electricity_fuel_emission_intensity*3.6/onsite_electricity_generation_efficiency)/electricity_emission_intensity)
+        
         indirect_carbon_reduction_by_measure_cat["RE-Renewable Energy"] = re_emission_reduction_indirect
         direct_carbon_reduction_by_measure_cat["RE-Renewable Energy"] = re_emission_reduction_direct
         emission_reduction_by_measure_cat["RE-Renewable Energy"] = re_emission_reduction_indirect + re_emission_reduction_direct
@@ -6021,6 +6042,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     Total_carbon_price_cost_savings = (Total_carbon_all-Total_carbon_all_after_measures)*carbon_price
     Overall_payback_period = Total_investment/Total_energy_cost_savings
     Overall_payback_period_with_carbon_price = Total_investment/(Total_energy_cost_savings+Total_carbon_price_cost_savings)
+    #Overall_abatement_cost = (Total_investment+(Total_energy_cost_savings+Total_carbon_price_cost_savings)*20)/((Total_carbon_all-Total_carbon_all_after_measures)*20)
     
     key_values_dict_finance = {
         'Value': {
@@ -6029,6 +6051,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
             'Total carbon price cost savings per year (million US$/year)': round(Total_carbon_price_cost_savings/10**6, 2),
             'Overall payback period without carbon price (years)': round(Overall_payback_period, 2),
             'Overall payback period with carbon price (years)': round(Overall_payback_period_with_carbon_price, 2)
+            #'Overall abatement cost (US$/tCO2)': round(Overall_abatement_cost)
         }        
     }
     
@@ -6058,6 +6081,9 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     with open(json_folder / 'all_DT_measures.json', 'w') as f:
         json.dump(all_DT_measures_dict, f, indent=4)
     all_dt_measures_dict = {}
+    
+    with open(json_folder / "Detailed_Output.json", "w") as f:
+        json.dump(detailed_output_dict, f, indent=4)
     
     # Load other json files
     with open(json_folder / "Carbon_Capture_Input.json", "r") as f:
