@@ -266,7 +266,7 @@ def generate_part1_report(self):
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Energy Benchmark", styles['Heading2']))
-    elements.append(Paragraph("The international best practice value refers to the energy cpnsumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps, but using the best energy efficiency internationally for each step.", styles['Normal']))
+    elements.append(Paragraph("The international best practice value refers to the energy consumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps, but using the best energy efficiency internationally for each step.", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_1, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
@@ -290,7 +290,7 @@ def generate_part1_report(self):
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Energy Benchmark by Process", styles['Heading2']))
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("Red = Your Facility; Green = International Best Practice Facility", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(Image(graph_5, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
@@ -416,7 +416,7 @@ def generate_part_2_report(self):
     elements.append(Paragraph("Energy Benchmark", styles['Heading2']))
     elements.append(Image(graph_1, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("The international best practice value refers to the energy cpnsumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any mitigation measures applied", styles['Normal']))
+    elements.append(Paragraph("The international best practice value refers to the energy consumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any mitigation measures applied", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Direct Energy CO2 Emissions Benchmark", styles['Heading2']))

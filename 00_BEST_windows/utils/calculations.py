@@ -136,7 +136,7 @@ def Page2_Costs_and_Emissions_Input_Default_Update_Fields(self):
             "coke": 95,
             "natural gas": 56,
             "biomass": 0,
-            "municipal wastes": 0
+            "municipal wastes": 50
         },
         "Fuel high heating value (MJ/kg fuel)": {
             "coal": 30.0,
@@ -154,6 +154,7 @@ def Page2_Costs_and_Emissions_Input_Default_Update_Fields(self):
             "municipal wastes": 0.018181818181818184
         },
         "Process emission per metric ton of clinker (tCO2/t clinker)": 0.507} 
+        # Source of alternative fuel CO2 emission intensity: Global Energy Intelligence, Emissions Impacts of Alternative Fuels Combustion in the Cement Industry, https://www.globalefficiencyintel.com/emissions-impacts-of-alternative-fuels-combustion-in-the-cement-industry
 
     # Cost of Electricity
     if self.ui.electricity_input.text() != "":
@@ -2344,13 +2345,14 @@ def Part_1_Detailed_Output(self):
             detailed_output_dict[process]["International Best Practice Facility"] = energy_input_dict["Energy input"][process]["Production Per Process (tonnes/year)"] * international_best_practice_dict[process]["Value"]
         except:
             KeyError()
-
+            
     ## Handle special cases
     dummy = 0
     for mill_type in international_best_practice_dict["Grinding Detailed"]["Value"].keys():
         dummy += energy_input_dict["Raw material grinding (%)"][mill_type]/100*international_best_practice_dict["Grinding Detailed"]["Value"][mill_type]*energy_input_dict["Energy input"]["Grinding"]["Production Per Process (tonnes/year)"] # /100 for converting percentage into share
     detailed_output_dict["Grinding"]["International Best Practice Facility"] = dummy
-
+    
+    
     cement_type_map = {
         "Pure Portland cement production (tonnes/year)": "Pure Portland cement",
         "Common Portland cement production (tonnes/year)": "Common Portland cement",
@@ -2396,6 +2398,12 @@ def Part_1_Detailed_Output(self):
             IBP_total_electricity += detailed_output_dict[process]["International Best Practice Facility"] # be careful of double counting values from the grouped categories
         elif detailed_output_dict[process]["unit"] == "MJ/year":
             IBP_total_fuel += detailed_output_dict[process]["International Best Practice Facility"]
+    
+    """
+    # Note: no need to handle this special case, because at this point in the calculation, detailed_output_dict["Total Electricity - Production - other"]["International Best Practice Facility"] is stil lequal to zero. See the line arond 17 lines below: detailed_output_dict["Total Electricity - Production - other"]["Your Facility"] = detailed_output_dict["Raw material conveying and quarraying"]["Your Facility"] + detailed_output_dict["Auxiliaries"]["Your Facility"]
+    # Handle special case because of dupilication
+    IBP_total_electricity = IBP_total_electricity - detailed_output_dict["Total Electricity - Production - other"]["International Best Practice Facility"] # doubled-counted together with "Raw material conveying and quarraying", "Auxiliaries", and "Conveyors"
+    """
     
     onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
     share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]
@@ -2623,6 +2631,124 @@ def Part_1_Detailed_Output(self):
     benchmarking_results_primary_dict = {
         "name": "Benchmarking Results Primary",
         "International Benchmarking": {
+        "Primary Energy Intensity Index": 0,
+        "Electricity Consumption (kWh/year)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0.0
+        },
+        "Comprehensive Electricity Intensity (kWh/tonne cement)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Purchased Electricity Intensity (kWh/tonne cement)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Fuel Consumption (MJ/year)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0.0
+        },
+        "Comprehensive Fuel Intensity (MJ/tonne clinker)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Final (site) Energy Consumption (MJ/year)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0.0
+        },
+        "Final (site) Energy Intensity (MJ/tonne cement produced)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Primary Energy Consumption (MJ/year)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Primary Energy Intensity (MJ/tonne cement produced)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Final Energy Intensity Index": 0
+        },
+        "Domestic Benchmarking": {
+        "Primary Energy Intensity Index": 0,
+        "Electricity Consumption (kWh/year)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Comprehensive Electricity Intensity (kWh/tonne cement)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Purchased Electricity Intensity (kWh/tonne cement)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Fuel Consumption (MJ/year)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Comprehensive Fuel Intensity (MJ/tonne clinker)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Final (site) Energy Consumption (MJ/year)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Final (site) Energy Intensity (MJ/tonne cement produced)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Primary Energy Consumption (MJ/year)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        },
+        "Primary Energy Intensity (MJ/tonne cement produced)": {
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
+            "Potential for Efficiency Improvement": 0,
+            "Potential Cost Reduction (USD/year)": 0
+        }
+            }}
+    """
+    benchmarking_results_primary_dict = {
+        "name": "Benchmarking Results Primary",
+        "International Benchmarking": {
         "Primary Energy Intensity Index": 134.4751525965144,
         "Electricity Consumption (kWh/year)": {
             "Your Facility": 19040000.0,
@@ -2737,7 +2863,7 @@ def Part_1_Detailed_Output(self):
             "Potential Cost Reduction (USD/year)": 0
         }
             }}
-    
+    """
     # #Energy Input Data
     Total_primary_energy = energy_input_dict["Total Primary Energy Consumption (MJ/year)"]
     Total_final_energy = energy_input_dict["Total Final Energy Consumption (MJ/year)"]
@@ -2788,64 +2914,64 @@ def Part_1_Detailed_Output(self):
 
     # Benchmarking Results Final
     benchmarking_results_final_dict = {
-    "name": "Benchmarking Results Primary",
+    "name": "Benchmarking Results Final",
     "International Benchmarking": {
-        "Primary Energy Intensity Index": 134.4751525965144,
+        "Primary Energy Intensity Index": 0,
         "Electricity Consumption (kWh/year)": {
-            "Your Facility": 19040000.0,
-            "International Best Practice Facility": 15838397.777777778,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for Efficiency Improvement": 0,
             "Potential Cost Reduction (USD/year)": 0.0
         },
         "Comprehensive Electricity Intensity (kWh/tonne cement)": {
-            "Your Facility": 152.32,
-            "International Best Practice Facility": 126.70718222222223,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for Efficiency Improvement": 0,
             "Potential Cost Reduction (USD/year)": 0
         },
         "Purchased Electricity Intensity (kWh/tonne cement)": {
-            "Your Facility": 144.32,
+            "Your Facility": 0,
             "International Best Practice Facility": 0,
             "Potential for Efficiency Improvement": 0,
             "Potential Cost Reduction (USD/year)": 0
         },
         "Fuel Consumption (MJ/year)": {
-            "Your Facility": 420000000.0,
-            "International Best Practice Facility": 292500000.0,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for Efficiency Improvement": 0,
             "Potential Cost Reduction (USD/year)": 0.0
         },
         "Comprehensive Fuel Intensity (MJ/tonne clinker)": {
-            "Your Facility": 3360.0,
-            "International Best Practice Facility": 2340.0,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for Efficiency Improvement": 0,
             "Potential Cost Reduction (USD/year)": 0
         },
         "Final (site) Energy Consumption (MJ/year)": {
-            "Your Facility": 488544000.0,
-            "International Best Practice Facility": 349518232.0,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for Efficiency Improvement": 0,
             "Potential Cost Reduction (USD/year)": 0.0
         },
         "Final (site) Energy Intensity (MJ/tonne cement produced)": {
-            "Your Facility": 3908.352,
-            "International Best Practice Facility": 2796.145856,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for Efficiency Improvement": 0,
             "Potential Cost Reduction (USD/year)": 0
         },
         "Primary Energy Consumption (MJ/year)": {
-            "Your Facility": 644734426.2295082,
-            "International Best Practice Facility": 479445022.9508197,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for Efficiency Improvement": 0,
             "Potential Cost Reduction (USD/year)": 0
         },
         "Primary Energy Intensity (MJ/tonne cement produced)": {
-            "Your Facility": 5157.875409836065,
-            "International Best Practice Facility": 3835.5601836065575,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for Efficiency Improvement": 0,
             "Potential Cost Reduction (USD/year)": 0
         },
-        "Final Energy Intensity Index": 139.77639941827127
+        "Final Energy Intensity Index": 0
     },
     "Domestic Benchmarking": {
         "Primary Energy Intensity Index": 0,
@@ -2945,14 +3071,14 @@ def Part_1_Detailed_Output(self):
     "name": "Benchmarking Results CO2",
     "International Benchmarking": {
         "Indirect emission - energy (million tCO2/year)": {
-            "Your Facility": 0.00952,
-            "International Best Practice Facility": 0.007919198888888888,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for CO2 Emission Reduction": 0.0,
             "Potential Carbon Cost Reduction (USD/year)": 0.0
         },
         "Direct emission - energy (million tCO2/year)": {
-            "Your Facility": 0.03906,
-            "International Best Practice Facility": 0.0272025,
+            "Your Facility": 0,
+            "International Best Practice Facility": 0,
             "Potential for CO2 Emission Reduction": 0.0,
             "Potential Carbon Cost Reduction (USD/year)": 0.0
         },
@@ -6158,8 +6284,6 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
         for sheet in sheets_dict.keys():
             dummy = convert_dict_to_excel(sheets_dict[sheet], sheet)
             dummy.to_excel(writer, sheet_name=sheet)
-            
-
 
     print("page 10 completed")
 

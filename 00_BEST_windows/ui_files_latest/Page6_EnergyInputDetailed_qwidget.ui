@@ -103,6 +103,45 @@
      <property name="sizeConstraint">
       <enum>QLayout::SetFixedSize</enum>
      </property>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="electricity_conveying_input_page6">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="5">
+      <widget class="QLineEdit" name="electricity_additive_prep_input_page6">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="3">
+      <widget class="QLineEdit" name="electricity_crushing_input_page6">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
      <item row="6" column="0">
       <widget class="QLabel" name="electricity_detailed_page6_label">
        <property name="sizePolicy">
@@ -155,35 +194,44 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="3">
-      <widget class="QLineEdit" name="electricity_crushing_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="biomass_label_detailed_page6">
+     <item row="0" column="5">
+      <widget class="QLabel" name="additive_prep_label_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="maximumSize">
+       <property name="minimumSize">
         <size>
-         <width>174</width>
-         <height>21</height>
+         <width>148</width>
+         <height>25</height>
         </size>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>148</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
-        <string>Biomass (MJ)</string>
+        <string>Additive Crushing 
+ and Grinding</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="coal_label_detailed_page6_2">
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
@@ -200,10 +248,22 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="coal_label_detailed_page6_2">
+     <item row="3" column="0">
+      <widget class="QLabel" name="natural_gas_label_detailed_page6">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>174</width>
+         <height>21</height>
+        </size>
+       </property>
        <property name="text">
-        <string/>
+        <string>Natural Gas (MJ)</string>
        </property>
       </widget>
      </item>
@@ -232,8 +292,27 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="conveying_label_page6">
+     <item row="5" column="0">
+      <widget class="QLabel" name="municipal_wastes_label_detailed_page6">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>174</width>
+         <height>21</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Municipal Wastes (MJ)         </string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="crushing_label_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -258,36 +337,10 @@
         </font>
        </property>
        <property name="text">
-        <string>Conveying &amp; Quarrying</string>
+        <string>     Crushing       </string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLineEdit" name="electricity_conveying_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="5">
-      <widget class="QLineEdit" name="electricity_additive_prep_input_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
        </property>
       </widget>
      </item>
@@ -362,8 +415,8 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="municipal_wastes_label_detailed_page6">
+     <item row="4" column="0">
+      <widget class="QLabel" name="biomass_label_detailed_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -377,12 +430,12 @@
         </size>
        </property>
        <property name="text">
-        <string>Municipal Wastes (MJ)         </string>
+        <string>Biomass (MJ)</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="5">
-      <widget class="QLabel" name="additive_prep_label_page6">
+     <item row="0" column="1">
+      <widget class="QLabel" name="conveying_label_page6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -398,7 +451,7 @@
        <property name="maximumSize">
         <size>
          <width>148</width>
-         <height>25</height>
+         <height>50</height>
         </size>
        </property>
        <property name="font">
@@ -407,62 +460,11 @@
         </font>
        </property>
        <property name="text">
-        <string>Additive Preparation</string>
+        <string>Raw Material 
+ Conveying &amp; Quarrying</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLabel" name="crushing_label_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>148</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>148</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>      Crushing       </string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="natural_gas_label_detailed_page6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>174</width>
-         <height>21</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Natural Gas (MJ)</string>
        </property>
       </widget>
      </item>
