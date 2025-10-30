@@ -5111,7 +5111,15 @@ def EE_measure(self):
     share_of_electricity_from_onsite_combustion = electricity_generation_input_dict["Share of electricity from onsite combustion"]
     electricity_fuel_emission_intensity = electricity_generation_input_dict["Electricity Fuel Emission Intensity"]
     onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"]
-
+    
+    discount_rate = 0.09
+    project_life = 20
+    CRF = discount_rate*((1+discount_rate)**project_life)/((1+discount_rate)**project_life-1)
+    
+    electricity_generation_input_dict['Capital Recovery Factor'] = CRF
+    
+    
+    
     # Run this different function to reflect the updates made
     def EE_measure_table_end(measures_data):    
         for measure_cateogry in measures_data.keys():
@@ -5134,12 +5142,12 @@ def EE_measure(self):
                     # Add abatement cost
                     if measures_data[measure_cateogry][measure]["Energy Type"] == 'Electricity':
                         if measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"] != 0:
-                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"] + measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_price*20)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_emission_intensity*20) # 20 is assumed to be the equipment lifetime
+                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF + measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_price*project_life)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_emission_intensity*project_life) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero
                         else:
                             measures_data[measure_cateogry][measure]["Abatement cost"] = 'N/A'
                     elif measures_data[measure_cateogry][measure]["Energy Type"] == 'Fuel':
                         if measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"] != 0:
-                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"] + measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_price*20)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_emission_intensity*20) # 20 is assumed to be the equipment lifetime
+                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF + measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_price*project_life)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_emission_intensity*project_life) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero
                         else:
                             measures_data[measure_cateogry][measure]["Abatement cost"] = 'N/A'
                     # Add total emission reduction
@@ -5169,8 +5177,7 @@ def EE_measure(self):
             dummy.to_excel(writer, sheet_name=sheet)
             dummy = dummy.reset_index() # so the measures can also be shown
     # Electricity Generation Data
-    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
-        electricity_generation_input_dict = json.load(f)
+    
     onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
     share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]   
     
@@ -5221,6 +5228,9 @@ def EE_measure(self):
     all_measures_dict["EE_measure_direct_emission_reduction"] = EE_measure_direct_emission_reduction
     all_measures_dict["EE_measure_indirect_emission_reduction"] = EE_measure_indirect_emission_reduction
 
+    with open(json_folder / "Electricity_Generation_Input.json", "w") as f:
+        json.dump(electricity_generation_input_dict, f, indent=4)
+
     with open(json_folder / 'all_measures.json', 'w') as f:
         json.dump(all_measures_dict, f, indent=4)
 
@@ -5247,6 +5257,7 @@ def EE_measure(self):
 
     with open(json_folder / "Detailed_Output.json", "w") as f:
         json.dump(detailed_output_dict, f, indent=4)
+    
 
     print("detailed_output_dict keys Page 8 end:")
     print(detailed_output_dict.keys())
@@ -5842,6 +5853,8 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     IBP_total_electricity = detailed_output_dict["IBP total electricity"]
 
     overall_process_carbon = Total_process_carbon
+    
+    CRF = electricity_generation_input_dict['Capital Recovery Factor']
 
     def DT_measure_table(measures_data): 
         nonlocal overall_fuel  
@@ -5884,7 +5897,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                     measures_data[measure_cateogry][measure]['Total Emissions Reduction'] = -(measures_data[measure_cateogry][measure]["CO2 impacts (indirect)"]+measures_data[measure_cateogry][measure]["CO2 impacts (direct energy)"]+measures_data[measure_cateogry][measure]["CO2 impacts (direct process)"])*Total_cement
                 
                     if measures_data[measure_cateogry][measure]["Total Emissions Reduction"] > 0:
-                        measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]['Typical Investments'] + (measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_price + measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"]*fuel_price)*measures_data[measure_cateogry][measure]["Equipment Lifetime"])*Total_cement/(measures_data[measure_cateogry][measure]["Total Emissions Reduction"]*measures_data[measure_cateogry][measure]["Equipment Lifetime"])
+                        measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]['Typical Investments']*CRF + (measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_price + measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"]*fuel_price)*measures_data[measure_cateogry][measure]["Equipment Lifetime"])*Total_cement/(measures_data[measure_cateogry][measure]["Total Emissions Reduction"]*measures_data[measure_cateogry][measure]["Equipment Lifetime"]) # equipment lifetime here means project lifetime. Salvage value is assumed to be zero. The CRF is calculated in the previous section
                     else:
                         measures_data[measure_cateogry][measure]["Abatement cost"] = "error"
                     
@@ -5892,7 +5905,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                         if measures_data[measure_cateogry][measure]['Total Investments'] <= 0:
                             measures_data[measure_cateogry][measure]["Payback Period with carbon price"] = "immediate"
                         else: 
-                            measures_data[measure_cateogry][measure]["Payback Period with carbon price"] = measures_data[measure_cateogry][measure]['Total Investments'] / (measures_data[measure_cateogry][measure]["Total Emissions Reduction"]*carbon_price + (measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_price + measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"]*fuel_price)*Total_cement)
+                            measures_data[measure_cateogry][measure]["Payback Period with carbon price"] = measures_data[measure_cateogry][measure]['Total Investments']*CRF / (measures_data[measure_cateogry][measure]["Total Emissions Reduction"]*carbon_price + (measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_price + measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"]*fuel_price)*Total_cement)
                     else:
                         measures_data[measure_cateogry][measure]["Payback Period with carbon price"] = "N/A"
                     
