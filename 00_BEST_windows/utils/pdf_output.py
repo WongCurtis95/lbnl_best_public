@@ -13,7 +13,7 @@ timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 import reportlab
 from reportlab.lib.pagesizes import LETTER
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer, PageBreak
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
@@ -262,77 +262,97 @@ def generate_part1_report(self):
     elements = []
 
     elements.append(Paragraph("Part 1 BEST Report ", styles['Title']))
-    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
-
-    elements.append(Paragraph("Energy Benchmark", styles['Heading2']))
-    elements.append(Paragraph("The international best practice value refers to the energy consumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps, but using the best energy efficiency internationally for each step.", styles['Normal']))
+    elements.append(Paragraph("The first half of the BEST Cement Tool analysis is completed. This report calculates and benchmarks your facility's energy consumption and carbon dioxide emissions with a hypothetical international best practice facility. Results are reported at both the facility level and process level. You can also find the energy and cost summaries of your facility and comparisons with the targets you set.", styles['Normal']))
     elements.append(Spacer(1, 12))
+    
+    elements.append(Paragraph("Final Energy Consumption Benchmark", styles['Heading2']))
+    elements.append(Spacer(1, 4))
     elements.append(Image(graph_1, width=usable_width, height=usable_width*0.56))
+    elements.append(Spacer(1, 12)) # 12 is the vertical spacer, i.e.: how many blank lines after the content
+    elements.append(Paragraph("Note: The international best practice value refers to the energy consumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps, but using the best energy efficiency internationally for each step.", styles['Normal']))
     elements.append(Spacer(1, 12))
+    elements.append(PageBreak()) # creates a new page
 
     elements.append(Paragraph("Direct Energy CO2 Emissions Benchmark", styles['Heading2']))
-    elements.append(Paragraph("International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step.", styles['Normal']))
+    elements.append(Spacer(1, 4))
+    elements.append(Image(graph_2, width=usable_width*0.75, height=usable_width*0.56*0.75)) # *0.75 because the graphs take up too much space
     elements.append(Spacer(1, 12))
-    elements.append(Image(graph_2, width=usable_width, height=usable_width*0.56))
+    elements.append(Paragraph("Note 1: Direct energy emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production. \n Note 2: International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step.", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Indirect Energy CO2 Emissions Benchmark", styles['Heading2']))
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Spacer(1, 4))
+    elements.append(Image(graph_3, width=usable_width*0.75, height=usable_width*0.56*0.75))
     elements.append(Spacer(1, 12))
-    elements.append(Image(graph_3, width=usable_width, height=usable_width*0.56))
+    elements.append(Paragraph("Note: Indirect emissions include carbon dioxide emissions from purchased elctricity only.", styles['Normal']))
     elements.append(Spacer(1, 12))
+    elements.append(PageBreak())
 
     elements.append(Paragraph("Total CO2 Emissions Benchmark", styles['Heading2']))
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Spacer(1, 4))
+    elements.append(Image(graph_4, width=usable_width*0.75, height=usable_width*0.56*0.75))
     elements.append(Spacer(1, 12))
-    elements.append(Image(graph_4, width=usable_width, height=usable_width*0.56))
+    elements.append(Paragraph("Note 1: Total emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production, purchased electricity, and process emissions from calcination. It does not include other emissions such as those related to fuel production and transportation. \n Note 2: Process emissions are estimated solely based on the user input on clinker process emission intensity.", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Energy Benchmark by Process", styles['Heading2']))
     elements.append(Paragraph("Red = Your Facility; Green = International Best Practice Facility", styles['Normal']))
+    elements.append(Spacer(1, 4))
+    elements.append(Image(graph_5, width=usable_width*0.9, height=usable_width*0.56*0.9))
     elements.append(Spacer(1, 12))
-    elements.append(Image(graph_5, width=usable_width, height=usable_width*0.56))
+    elements.append(Paragraph("Note: Additives preparation include additives crushing & grinding and additives drying; Kiln - machinery use includes preheater and clinker cooler; Kiln - clinker making includes precalciner and kiln.", styles['Normal']))
     elements.append(Spacer(1, 12))
+    elements.append(PageBreak())
 
     elements.append(Paragraph("Energy Benchmark by Process Normalized", styles['Heading2']))
-    elements.append(Paragraph(" ", styles['Normal']))
-    elements.append(Spacer(1, 12))
+    elements.append(Spacer(1, 4))
     elements.append(Image(graph_6, width=usable_width, height=usable_width*0.56))
     elements.append(Spacer(1, 12))
-
-    elements.append(Paragraph("Final Energy Consumption", styles['Heading2']))
-    elements.append(Paragraph(" ", styles['Normal']))
-    elements.append(Spacer(1, 12))
-    elements.append(Image(graph_7, width=usable_width, height=usable_width*0.56))
+    elements.append(Paragraph("Note: A value of 1.0 indicates that your facility's final energy consumption for the specified process is in line with the hypothetical international best practice facility. A value greater than 1.0 indicates that your facility has higher energy consumption.", styles['Normal']))
     elements.append(Spacer(1, 12))
 
-    elements.append(Paragraph("Primary Energy Consumption", styles['Heading2']))
+    elements.append(Paragraph("Final Energy Consumption by Fuel", styles['Heading2']))
+    elements.append(Spacer(1, 4))
+    elements.append(Image(graph_7, width=usable_width*0.75, height=usable_width*0.56*0.75))
+    elements.append(Spacer(1, 12))
     elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
-    elements.append(Image(graph_8, width=usable_width, height=usable_width*0.56))
+    elements.append(PageBreak())
+
+    elements.append(Paragraph("Primary Energy Consumption by Fuel", styles['Heading2']))
+    elements.append(Spacer(1, 4))
+    elements.append(Image(graph_8, width=usable_width*0.75, height=usable_width*0.56*0.75))
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph("Note: This chart is for reference only. A simplified method is employed here to get primary energy consumption shares by fuel. All electricity consumption, whether purchased or generated onsite, are assumed to have conversion efficiencies of 30.5%.", styles['Normal']))
     elements.append(Spacer(1, 12))
 
-    elements.append(Paragraph("Energy Cost", styles['Heading2']))
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("Energy Cost by Fuel", styles['Heading2']))
+    elements.append(Spacer(1, 4))
+    elements.append(Image(graph_9, width=usable_width*0.75, height=usable_width*0.56*0.75))
     elements.append(Spacer(1, 12))
-    elements.append(Image(graph_9, width=usable_width, height=usable_width*0.56))
+    elements.append(Paragraph("Note: This chart is for reference only. A simplified method is employed here to calculate enegy cost shares by fuel. All electricity consumption is assumed to be from purchased electricity.", styles['Normal']))
     elements.append(Spacer(1, 12))
+    elements.append(PageBreak())
 
     elements.append(Paragraph("Final Energy by Process", styles['Heading2']))
-    elements.append(Paragraph(" ", styles['Normal']))
-    elements.append(Spacer(1, 12))
+    elements.append(Spacer(1, 4))
     elements.append(Image(graph_10, width=usable_width, height=usable_width*0.44)) # it is 0.44, because figure size is (9, 4), which means height to width ratio should be 1:0.44
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Primary Energy by Process", styles['Heading2']))
+    elements.append(Spacer(1, 4))
     elements.append(Image(graph_11, width=usable_width, height=usable_width*0.44))
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("Note: This chart is for reference only. A simplified method is employed here to get primary energy consumption shares by process. All electricity consumption, whether purchased or generated onsite, are assumed to have conversion efficiencies of 30.5%.", styles['Normal']))
     elements.append(Spacer(1, 12))
+    elements.append(PageBreak())
 
-    elements.append(Paragraph("Share of Energy Cost by Process Step", styles['Heading2']))
+    elements.append(Paragraph("Share of Energy Cost by Process", styles['Heading2']))
+    elements.append(Spacer(1, 4))
     elements.append(Image(graph_12, width=usable_width, height=usable_width*0.44))
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("Note: This chart is for reference only. A simplified method is employed here to calculate enegy cost shares by process. All electricity consumption is assumed to be from purchased electricity.", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     try:
@@ -390,6 +410,9 @@ def generate_part_2_report(self):
 
     elements.append(Paragraph("BEST Report ", styles['Title']))
     elements.append(Spacer(1, 12))
+    
+    elements.append(Paragraph("The BEST Cement Tool analysis is completed. This report compares the energy consumption and carbon dioxide emissions of your facility before and after applying the measures you selected. The impacts of each measure category on final energy consumption and carbon dioxide emissions are plotted in the waterfall charts. The abatement cost for each measure is indicated in the marginal abatement cost curve.", styles['Normal']))
+    elements.append(Spacer(1, 12))
 
     auto_text = get_auto_text(key_values_in_excel)
     # add paragraph below
@@ -412,50 +435,54 @@ def generate_part_2_report(self):
 
     
     elements.append(Spacer(1, 12))
+    elements.append(PageBreak())
 
     elements.append(Paragraph("Energy Benchmark", styles['Heading2']))
     elements.append(Image(graph_1, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("The international best practice value refers to the energy consumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any mitigation measures applied", styles['Normal']))
-    elements.append(Spacer(1, 12))
+    elements.append(Paragraph("Note: The international best practice value refers to the energy consumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any mitigation measures applied", styles['Normal']))
+    elements.append(Spacer(1, 12))    
 
     elements.append(Paragraph("Direct Energy CO2 Emissions Benchmark", styles['Heading2']))
     elements.append(Image(graph_2, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step. It does not include the effects of any mitigation measures applied.", styles['Normal']))
+    elements.append(Paragraph("Note 1: Direct energy emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production. \n Note 2: International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step. It does not include the effects of any mitigation measures applied.", styles['Normal']))
     elements.append(Spacer(1, 12))
+    elements.append(PageBreak())
 
     elements.append(Paragraph("Indirect Energy CO2 Emissions Benchmark", styles['Heading2']))
 
-    elements.append(Image(graph_3, width=usable_width*.75, height=usable_width*.75*0.56))
+    elements.append(Image(graph_3, width=usable_width*.75, height=usable_width*.75*0.55)) # the aspect ratio here is 9 x 5 rather than 7 x 4 in other cases
 
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("Note: Indirect emissions include carbon dioxide emissions from purchased elctricity only.", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Total CO2 Emissions Benchmark", styles['Heading2']))
 
     elements.append(Image(graph_4, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("Note 1: Total emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production, purchased electricity, and process emissions from calcination. It does not include other emissions such as those related to fuel production and transportation. \n Note 2: Process emissions are estimated solely based on the user input on clinker process emission intensity.", styles['Normal']))
     elements.append(Spacer(1, 12))
+    elements.append(PageBreak())
 
     elements.append(Paragraph("Final Energy Reduction by Measurement Category", styles['Heading2']))
 
-    elements.append(Image(graph_5, width=usable_width*.75, height=usable_width*.75*0.56))
+    elements.append(Image(graph_5, width=usable_width*.75, height=usable_width*.75*0.71)) # *0.71, because the aspect ratio of the graph is 700 x 500, (5/7 = 0.71)
 
     elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Total Carbon Dioxide Emissions Reduction by Measurement Category", styles['Heading2']))
 
-    elements.append(Image(graph_6, width=usable_width*.75, height=usable_width*.75*0.56))
+    elements.append(Image(graph_6, width=usable_width*.75, height=usable_width*.75*0.71))
 
     elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
+    elements.append(PageBreak())
 
     elements.append(Paragraph("Marginal Abatement Cost Curve", styles['Heading2']))
 
-    elements.append(Image(graph_7, width=usable_width*.75, height=usable_width*.75*0.56))
+    elements.append(Image(graph_7, width=usable_width*.75, height=usable_width*.75*0.66))
 
     elements.append(Paragraph("Note 1: A discount rate of 9% and a project lifetime of 20 years are applied for calculating the abatement cost for each measure. The salvage value after the completion of the project lifetime is assuemd to be zero. \n Note 2: The cumulative carbon dioxide emission reduction in the marginal abatement cost graph does not equal to the calculated total carbon dioxide emission reduction after measures above. This because in the calculations above, the energy and emissions available for reduction decrease with every measure applied. Meanwhile, in the marginal abatement cost graph, each measure's abatement cost is evaluated individually without any other measure applied", styles['Normal']))
     elements.append(Spacer(1, 12))
