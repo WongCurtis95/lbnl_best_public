@@ -520,7 +520,7 @@ class Page6_Quick(QWidget):
         self.ui.biomass_quick_input_page6.setValidator(sci_validator)
         self.ui.msw_quick_input_page6.setValidator(sci_validator)
         self.ui.electricity_quick_input_page6.setValidator(sci_validator)
-        self.ui.electricity_input_page6.setValidator(sci_validator)
+        #self.ui.electricity_input_page6.setValidator(sci_validator)
 
     def go_to_previous(self):
         self.stack.setCurrentWidget(self.parent.page6)
