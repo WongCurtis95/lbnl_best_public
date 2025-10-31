@@ -522,7 +522,7 @@ def generate_report_reportlab(self):
     elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
 
-    elements.append(Paragraph("User Input Summary", styles['Heading2']))
+    elements.append(Paragraph("User Input and Calculations Summary", styles['Heading2']))
 
     for sheet_name, df in report_in_excel_sheets.items():
         # remove first row
@@ -550,7 +550,7 @@ def generate_report_reportlab(self):
 
     elements.append(Spacer(1, 12))
 
-    elements.append(Paragraph("Calculations", styles['Heading2']))
+    # elements.append(Paragraph("Calculations", styles['Heading2']))
     elements.append(Spacer(1, 12))
     # elements.append(Image(graph_path_process_co2_emissions_benchmark_normalized, width=600, height=300))
     elements.append(Paragraph(" ", styles['Normal']))

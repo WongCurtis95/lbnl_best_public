@@ -1311,12 +1311,28 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     "message": "N/A"
     }
     
+        
+    if self.ui.coal_quick_input_page6.text() != "":
+        energy_input_quick_dict["Energy input"]["fuel"]["coal"] = _f(self.ui.coal_quick_input_page6.text())
+    if self.ui.coke_quick_input_page6.text() != "":
+        energy_input_quick_dict["Energy input"]["fuel"]["coke"] = _f(self.ui.coke_quick_input_page6.text())
+    if self.ui.natural_gas_quick_input_page6.text() != "":
+        energy_input_quick_dict["Energy input"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_quick_input_page6.text())
+    if self.ui.biomass_quick_input_page6.text() != "":
+        energy_input_quick_dict["Energy input"]["fuel"]["biomass"] = _f(self.ui.biomass_quick_input_page6.text())
+    if self.ui.msw_quick_input_page6.text() != "":
+        energy_input_quick_dict["Energy input"]["fuel"]["municipal wastes"] = _f(self.ui.msw_quick_input_page6.text())
+    if self.ui.electricity_quick_input_page6.text() != "":
+        energy_input_quick_dict["Energy input"]["electricity"] = _f(self.ui.electricity_quick_input_page6.text())
+    
+    
     # Electricity Generation Data
     with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
         electricity_generation_input_dict = json.load(f)
     onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
     share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]    
     
+    # Calculate energy input by process
     for process in energy_input_dict["Energy input"].keys():
         for fuel in energy_input_dict["Energy input"][process]["fuel"].keys():
             energy_input_dict["Energy input"][process]["fuel"][fuel] = energy_input_quick_dict["Energy input"]["fuel"][fuel] * energy_share_default_dict[process]["fuel"]
