@@ -481,10 +481,10 @@ def generate_part_2_report(self):
     elements.append(PageBreak())
 
     elements.append(Paragraph("Marginal Abatement Cost Curve", styles['Heading2']))
-
+    elements.append(Paragraph("Red = Energy efficiency measures; Blue = Other measures", styles['Normal']))
     elements.append(Image(graph_7, width=usable_width*.75, height=usable_width*.75*0.66))
 
-    elements.append(Paragraph("Note 1: A discount rate of 9% and a project lifetime of 20 years are applied for calculating the abatement cost for each measure. The salvage value after the completion of the project lifetime is assuemd to be zero. \n Note 2: The cumulative carbon dioxide emission reduction in the marginal abatement cost graph does not equal to the calculated total carbon dioxide emission reduction after measures above. This because in the calculations above, the energy and emissions available for reduction decrease with every measure applied. Meanwhile, in the marginal abatement cost graph, each measure's abatement cost is evaluated individually without any other measure applied", styles['Normal']))
+    elements.append(Paragraph("Note 1: A discount rate of 9% and a project lifetime of 20 years are applied for calculating the abatement cost for each measure. The salvage value after the completion of the project lifetime is assuemd to be zero. \n Note 2: The cumulative carbon dioxide emission reduction in the marginal abatement cost graph does not equal to the calculated total carbon dioxide emission reduction after measures above. This because in the calculations above, the energy and emissions available for reduction decrease with every measure applied. Meanwhile, in the marginal abatement cost graph, each measure's abatement cost is evaluated individually without any other measure applied. \n Note 3: Fuel switching and onsite renewable energy generation measures are not included here.", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     try:

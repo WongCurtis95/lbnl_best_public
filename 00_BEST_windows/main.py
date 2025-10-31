@@ -42,11 +42,14 @@ from pages.Page8_2b_AllMeasures import Ui_Page8_AllMeasures_2b as AllMeasuresUI_
 print("importing all measures - part 3")
 from pages.Page8_3_AllMeasures import Ui_Page8_AllMeasures_3 as AllMeasuresUI_3
 
-print("importing share page")
+print("importing FS and RE measures")
 from pages.Page9_Share import Ui_Page9_Share as ShareUI
 
-print("importing all measures")
+print("importing all DT measures")
 from pages.Page10_AllDTMeasures import Ui_Page10_AllDTMeasures as AllDTMeasuresUI
+
+print("importing Quick end page")
+from pages.Page11_QuickEnd import Ui_Page11_QuickEnd as QuickEndUI
 
 print("importing sys")
 import sys
@@ -268,7 +271,7 @@ class Page3(QWidget):
 
     def next_page(self):
         Page3_Production_Input_Default_Update_Fields(self)
-        self.stack.setCurrentWidget(self.parent.page4)
+        self.stack.setCurrentWidget(self.parent.page5) # skip page 4: carbon capture
 
     def collect_page_data(self):
         data = {}
@@ -298,7 +301,7 @@ class Page3(QWidget):
                 if index != -1:
                     combo.setCurrentIndex(index)
 
-class Page4(QWidget):
+class Page4(QWidget): # This page is skipped
     def __init__(self, stack, parent=None):
         super().__init__()
         self.stack = stack
@@ -389,7 +392,7 @@ class Page5(QWidget):
         
 
     def go_to_previous(self):
-        self.stack.setCurrentWidget(self.parent.page4)
+        self.stack.setCurrentWidget(self.parent.page3) # Page 4 about carbon capture is skipped
 
     def next_page(self):
         Page5_ElectricityGeneration_Input_Default_Update_Fields(self)
@@ -1037,6 +1040,7 @@ class Page8_2b(QWidget):
                     combo.setCurrentIndex(index)
 
 class Page8_3(QWidget):
+    
     def __init__(self, stack, parent=None):
         super().__init__()
         self.stack = stack
@@ -1068,12 +1072,26 @@ class Page8_3(QWidget):
 
     def go_to_previous(self):
         self.stack.setCurrentWidget(self.parent.page8_2b)
-
+    
     def next_page(self):
         Page8_All_Measures_3_Default_Update_Fields(self)
         evaluate_EE_only_popup(self)
         EE_measure(self)
-        self.stack.setCurrentWidget(self.parent.page9)
+        
+        # Get "Evaluate EE Measure only" selection
+        from utils.save_progress import get_user_data_dir 
+        data_dir = get_user_data_dir()
+        data_dir.mkdir(parents=True, exist_ok=True)
+        json_folder = data_dir / "Saved Progress"
+        json_folder.mkdir(parents=True, exist_ok=True)
+        
+        with open(json_folder / "evaluate_EE_only.json", "r") as f:
+            evaluate_EE_only = json.load(f)  
+            
+        if evaluate_EE_only != "Yes":
+            self.stack.setCurrentWidget(self.parent.page9)
+        else:
+            self.stack.setCurrentWidget(self.parent.page11)
 
     def collect_page_data(self):
         data = {}
@@ -1224,6 +1242,58 @@ class Page10(QWidget):
                 if index != -1:
                     combo.setCurrentIndex(index)
 
+class Page11(QWidget):
+    from utils.pdf_output import generate_report_reportlab
+    
+    print("final page")
+    
+    def __init__(self, stack, parent=None):
+        super().__init__()
+        self.stack = stack
+        self.parent = parent
+        self.ui = QuickEndUI()
+        self.ui.setupUi(self)
+        self.ui.pdfBtn.clicked.connect(self.generate_report)
+        self.ui.saveBtn.clicked.connect(self.save_current_and_all)
+        self.ui.backBtn.clicked.connect(self.go_to_previous)
+    
+    def go_to_previous(self):
+        self.stack.setCurrentWidget(self.parent.page8)
+    
+    def generate_report(self):
+        #Page10_AllDTMeasures_Default_Update_Fields(self)
+        self.save_current_and_all()
+        final_report_pdf(self)
+        
+    def collect_page_data(self):
+        data = {}
+        for widget in self.findChildren(QLineEdit):
+            data[widget.objectName()] = widget.text()
+
+        # Collect from QComboBox
+        for combo in self.findChildren(QComboBox):
+            data[combo.objectName()] = combo.currentText()
+        return data    
+        
+    def save_current_and_all(self):
+        if self.parent:
+            self.parent.save_all_pages()
+    
+    def load_values_from_dict(self, data_dict):
+        for widget in self.findChildren(QLineEdit):
+            name = widget.objectName()
+            if name in data_dict:
+                widget.setText(data_dict[name])
+
+        for combo in self.findChildren(QComboBox):
+            name = combo.objectName()
+            if name in data_dict:
+                index = combo.findText(data_dict[name])
+                if index != -1:
+                    combo.setCurrentIndex(index)
+
+    
+
 LICENSE_HTML_MAC = (
     '<b>Licensed Visual Content</b><br><br>'
     'This application uses design elements licensed under Canva’s Free Content License '
@@ -1319,6 +1389,8 @@ class MainApp(QMainWindow):
         self.page8_3 = Page8_3(self.stack, self)
         self.page9 = Page9(self.stack, self)
         self.page10 = Page10(self.stack, self)
+        self.page11 = Page11(self.stack, self)
+        
 
         self.stack.addWidget(self.landing_page)  
         self.stack.addWidget(self.page1)         
@@ -1336,7 +1408,8 @@ class MainApp(QMainWindow):
         self.stack.addWidget(self.page8_2b)         
         self.stack.addWidget(self.page8_3)         
         self.stack.addWidget(self.page9)         
-        self.stack.addWidget(self.page10)         
+        self.stack.addWidget(self.page10)
+        self.stack.addWidget(self.page11)          
         self.stack.setCurrentIndex(0)
         self.setWindowTitle("BEST Cement")
         self.setFixedSize(1260, 700)
@@ -1359,7 +1432,7 @@ class MainApp(QMainWindow):
     def save_all_pages(self, filename="Saved_BEST_Report_Progress.json"):
 
         all_data = {}
-        for page in [self.page1, self.page2, self.page3, self.page4, self.page5, self.page6, self.page6_Quick, self.page6_Detailed, self.page6_Detailed_2, self.page7, self.page8_1, self.page8_2a, self.page8_2b, self.page8_3, self.page9, self.page10]:
+        for page in [self.page1, self.page2, self.page3, self.page4, self.page5, self.page6, self.page6_Quick, self.page6_Detailed, self.page6_Detailed_2, self.page7, self.page8_1, self.page8_2a, self.page8_2b, self.page8_3, self.page9, self.page10, self.page11]:
             if hasattr(page, "collect_page_data"):
                 all_data.update(page.collect_page_data())
 
@@ -1389,7 +1462,7 @@ class MainApp(QMainWindow):
         if filepath.exists():
 
             data = load_progress_json(filepath)
-            for page in [self.page1, self.page2, self.page3, self.page4, self.page5, self.page6, self.page6_Quick, self.page6_Detailed, self.page6_Detailed_2, self.page7, self.page8_1, self.page8_2a, self.page8_2b, self.page8_3, self.page9, self.page10]:
+            for page in [self.page1, self.page2, self.page3, self.page4, self.page5, self.page6, self.page6_Quick, self.page6_Detailed, self.page6_Detailed_2, self.page7, self.page8_1, self.page8_2a, self.page8_2b, self.page8_3, self.page9, self.page10, self.page11]:
                 if hasattr(page, "load_values_from_dict"):
                     page.load_values_from_dict(data)
             QMessageBox.information(self, "Session Resumed", "Your previous responses have been restored. Please review each page for accuracy.")

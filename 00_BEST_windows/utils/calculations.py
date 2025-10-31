@@ -3284,7 +3284,7 @@ def Part_1_Detailed_Output(self):
         'Carbon Capture': carbon_capture_dict,
         'Electricity Generation Input': electricity_generation_input_dict,
         'Energy Input': energy_input_dict,
-        'Energy Billing Input': energy_billing_input_dict,
+        #'Energy Billing Input': energy_billing_input_dict,
         'Target': target_dict,
         'Detailed Output': detailed_output_dict,
         'Detailed Output Emissions': detailed_output_emissions_dict,
@@ -5274,9 +5274,62 @@ def EE_measure(self):
     with open(json_folder / "Detailed_Output.json", "w") as f:
         json.dump(detailed_output_dict, f, indent=4)
     
+    
+    # Update report to excel file   
+    # Load other json files
+      
+    with open(json_folder / "Carbon_Capture_Input.json", "r") as f:
+        carbon_capture_dict = json.load(f)
+        
+    with open(json_folder / "Energy_Billing_Input.json", 'r') as f:
+         energy_billing_input_dict = json.load(f)
 
+    with open(json_folder / "Detailed_Output_Emissions.json", 'r') as f:
+        detailed_output_emissions_dict = json.load(f)
+
+    with open(json_folder / "Benchmarking_Results_Primary.json", 'r') as f:
+        benchmarking_results_primary_dict = json.load(f)    
+
+    with open(json_folder / "Benchmarking_Results_Final.json", 'r') as f:
+        benchmarking_results_final_dict = json.load(f)
+        
+    with open(json_folder / "Benchmarking_Results_CO2.json", 'r') as f:
+        benchmarking_results_co2_dict = json.load(f)
+        
+    with open(json_folder / "Target_Input.json", 'r') as f:
+         target_dict = json.load(f)
+
+
+    def convert_dict_to_excel(name_of_dict, name_of_sheet):
+        df = pd.json_normalize(name_of_dict, sep='-').T
+        df.name = 'index'
+        return df
+    
+    sheets_dict = {
+        'Cost and Emission Input': cost_and_emissions_dict,
+        'Production Input': production_input_dict,
+        'Carbon Capture': carbon_capture_dict,
+        'Electricity Generation Input': electricity_generation_input_dict,
+        'Energy Input': energy_input_dict,
+        #'Energy Billing Input': energy_billing_input_dict,
+        'Target': target_dict,
+        'Detailed Output': detailed_output_dict,
+        'Detailed Output Emissions': detailed_output_emissions_dict,
+        'Benchmarking Results Primary': benchmarking_results_primary_dict,
+        'Benchmarking Results Final': benchmarking_results_final_dict,
+        'Benchmarking Results CO2': benchmarking_results_co2_dict,
+        'EE-measures': all_measures_dict
+        
+        }
+    
+    with pd.ExcelWriter(json_folder / "report_in_excel.xlsx") as writer:
+        for sheet in sheets_dict.keys():
+            dummy = convert_dict_to_excel(sheets_dict[sheet], sheet)
+            dummy.to_excel(writer, sheet_name=sheet)
+    
     print("detailed_output_dict keys Page 8 end:")
     print(detailed_output_dict.keys())
+ 
 
     return all_measures_dict
 
@@ -5293,7 +5346,7 @@ def evaluate_EE_only_popup(self):
     "Would you like to only benchmark energy efficiency measures?",
     QMessageBox.StandardButton.No | QMessageBox.StandardButton.Yes, 
     QMessageBox.StandardButton.Yes
-)
+    )
 
     if reply == QMessageBox.StandardButton.Yes:
         evaluate_EE_only = "Yes"
@@ -5303,6 +5356,7 @@ def evaluate_EE_only_popup(self):
 
     with open(json_folder / "evaluate_EE_only.json", "w") as f:
         json.dump(evaluate_EE_only, f, indent=4)
+        
 
 def Page9_Share_Default_Update_Fields(self):
     data_dir = get_user_data_dir()
@@ -6288,26 +6342,42 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
         df.name = 'index'
         return df
 
-
-    sheets_dict = {
-        'Cost and Emission Input': cost_and_emissions_dict,
-        'Production Input': production_input_dict,
-        'Carbon Capture': carbon_capture_dict,
-        'Electricity Generation Input': electricity_generation_input_dict,
-        'Energy Input': energy_input_dict,
-        'Energy Billing Input': energy_billing_input_dict,
-        'Target': target_dict,
-        'Detailed Output': detailed_output_dict,
-        'Detailed Output Emissions': detailed_output_emissions_dict,
-        'Benchmarking Results Primary': benchmarking_results_primary_dict,
-        'Benchmarking Results Final': benchmarking_results_final_dict,
-        'Benchmarking Results CO2': benchmarking_results_co2_dict,
-        'EE-measures': all_measures_dict,
-        'New Fuel Share': new_fuel_share_dict, 
-        'Use of RE': new_re_share_dict,
-        'DT-measures': all_DT_measures_dict
-        
-        }
+    if evaluate_EE_only != "Yes":
+        sheets_dict = {
+            'Cost and Emission Input': cost_and_emissions_dict,
+            'Production Input': production_input_dict,
+            'Carbon Capture': carbon_capture_dict,
+            'Electricity Generation Input': electricity_generation_input_dict,
+            'Energy Input': energy_input_dict,
+            #'Energy Billing Input': energy_billing_input_dict,
+            'Target': target_dict,
+            'Detailed Output': detailed_output_dict,
+            'Detailed Output Emissions': detailed_output_emissions_dict,
+            'Benchmarking Results Primary': benchmarking_results_primary_dict,
+            'Benchmarking Results Final': benchmarking_results_final_dict,
+            'Benchmarking Results CO2': benchmarking_results_co2_dict,
+            'EE-measures': all_measures_dict,
+            'New Fuel Share': new_fuel_share_dict, 
+            'Use of RE': new_re_share_dict,
+            'DT-measures': all_DT_measures_dict
+            
+            }
+    else:
+        sheets_dict = {
+            'Cost and Emission Input': cost_and_emissions_dict,
+            'Production Input': production_input_dict,
+            'Carbon Capture': carbon_capture_dict,
+            'Electricity Generation Input': electricity_generation_input_dict,
+            'Energy Input': energy_input_dict,
+            #'Energy Billing Input': energy_billing_input_dict,
+            'Target': target_dict,
+            'Detailed Output': detailed_output_dict,
+            'Detailed Output Emissions': detailed_output_emissions_dict,
+            'Benchmarking Results Primary': benchmarking_results_primary_dict,
+            'Benchmarking Results Final': benchmarking_results_final_dict,
+            'Benchmarking Results CO2': benchmarking_results_co2_dict,
+            'EE-measures': all_measures_dict            
+            }
 
     with pd.ExcelWriter(json_folder / "report_in_excel.xlsx") as writer:
         for sheet in sheets_dict.keys():
