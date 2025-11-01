@@ -94,10 +94,10 @@ def get_auto_text(df: pd.DataFrame):
 
     # Sentences
     text = (f"After applying your selected measures, your facility's final energy is reduced by "
-        f"<b><font color='red'>{fmt_num(final_energy_reduction,1)} TJ</font></b> and is now "
+        f"<b><font color='green'>{fmt_num(final_energy_reduction,1)} TJ</font></b> and is now "
         f"{rel_phrase(final_energy_difference_ibp, 'TJ')} than the International Best Practice value; "
         f"meanwhile, carbon dioxide emissions is reduced by "
-        f"<b><font color='red'>{fmt_num(total_emissions_reduction,0)} tCO<sub>2</sub></font></b> and is now "
+        f"<b><font color='green'>{fmt_num(total_emissions_reduction,0)} tCO<sub>2</sub></font></b> and is now "
         f"{rel_phrase(total_emissions_difference_ibp, 'tCO<sub>2</sub>')} than the International Best Practice value.")
 
     return text
@@ -530,7 +530,27 @@ def generate_report_reportlab(self):
     elements.append(Paragraph("BEST Report ", styles['Title']))
     elements.append(Spacer(1, 12))
     # add paragraph below
-    elements.append(Paragraph(" ", styles['Normal']))
+    """
+    if 
+        elements.append(Paragraph("Quick assessment is selected.", styles['Normal']))
+    else:
+        elements.append(Paragraph("Detailed assessment is selected.", styles['Normal']))
+    
+    # EE measure evaluation selection
+    from utils.save_progress import get_user_data_dir 
+    data_dir = get_user_data_dir()
+    data_dir.mkdir(parents=True, exist_ok=True)
+    json_folder = data_dir / "Saved Progress"
+    json_folder.mkdir(parents=True, exist_ok=True)
+    
+    with open(json_folder / "evaluate_EE_only.json", "r") as f:
+        evaluate_EE_only = json.load(f)  
+            
+    if evaluate_EE_only != "Yes":
+        elements.append(Paragraph("Only energy efficiency measures are evaluated.", styles['Normal']))
+    else:
+        elements.append(Paragraph("All measures are evaluated.", styles['Normal']))
+    """
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("User Input and Calculations Summary", styles['Heading2']))
