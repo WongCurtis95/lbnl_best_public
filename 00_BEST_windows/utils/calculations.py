@@ -4907,6 +4907,11 @@ def EE_measure(self):
 
     overall_electricity_initial = Total_process_electricity
     overall_fuel_initial = Total_process_fuel
+    
+    print("Overall electricity after this step - before any measures:")
+    print(overall_electricity)
+    print("Overall fuel after this step - before any measures:")
+    print(overall_fuel)
 
     def EE_measure_table_energy_consumption_shares(measures_data, measure_cateogry, measure, process_energy_use, quantity_of_material_handled):
         if process_energy_use != 0:
@@ -5183,7 +5188,15 @@ def EE_measure(self):
             
         return measures_data
     all_measures_dict = EE_measure_table_end(all_measures_dict)
-
+    
+    detailed_output_dict["overall fuel"] = overall_fuel # Need to put this pack into the dictionary to reflect the changes made in EE measuures, so the overall fuel loaded in the next page can reflect the latest changes
+    detailed_output_dict["overall electricity"] = overall_electricity
+    
+    print("Overall electricity after this step - after EE measures:")
+    print(overall_electricity)
+    print("Overall fuel after this step - after EE measures:")
+    print(overall_fuel)
+    
     with open(json_folder / 'all_measures.json', 'w') as f:
         json.dump(all_measures_dict, f, indent=4)
 
@@ -5910,6 +5923,11 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     overall_process_carbon = Total_process_carbon
     
     CRF = electricity_generation_input_dict['Capital Recovery Factor']
+    
+    print("Overall electricity after this step - after EE measures:")
+    print(overall_electricity)
+    print("Overall fuel after this step - after EE measures:")
+    print(overall_fuel)
 
     def DT_measure_table(measures_data): 
         nonlocal overall_fuel  
@@ -6016,7 +6034,15 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
 
         # Handle CCUS
         emission_reduction_by_measure_cat["DT-CCUS"] = direct_carbon_reduction_by_measure_cat["DT-CCUS"] + ((Total_carbon_all-Total_carbon_indirect)-EE_measure_direct_emission_reduction-DT_measure_direct_emission_reduction-FS_measure_direct_emission_reduction-RE_measure_direct_emission_reduction)*(CCUS_emission_reduction_percentage)
-
+        
+    detailed_output_dict["overall fuel"] = overall_fuel 
+    detailed_output_dict["overall electricity"] = overall_electricity 
+    
+    print("Overall electricity after this step - after DT measures:")
+    print(overall_electricity)
+    print("Overall fuel after this step - after DT measures:")
+    print(overall_fuel)
+    
     # Json dump    
     with open(json_folder / "all_DT_measures.json", "w") as f:
         json.dump(all_DT_measures_dict, f)   
@@ -6125,6 +6151,11 @@ def PageEnd(self):
     # Detailed Output
     overall_fuel = detailed_output_dict["overall fuel"]
     overall_electricity = detailed_output_dict["overall electricity"]
+    
+    print("Overall electricity after this step - after DT measures:")
+    print(overall_electricity)
+    print("Overall fuel after this step - after DT measures:")
+    print(overall_fuel)
 
     IBP_total_final_energy = detailed_output_dict["IBP total final energy"]
     IBP_total_primary_energy = detailed_output_dict["IBP total primary energy"]
@@ -6160,6 +6191,7 @@ def PageEnd(self):
     
     df_abatement_cost['Abatement Cost'] = pd.to_numeric(df_abatement_cost['Abatement Cost'], errors='coerce') # convert to numeric
     df_abatement_cost["Total Emissions Reduction"] = pd.to_numeric(df_abatement_cost["Total Emissions Reduction"], errors='coerce') 
+    df_abatement_cost = df_abatement_cost.sort_values(by='Abatement Cost', ascending=False)
     
     df_abatement_cost = df_abatement_cost.round({'Abatement Cost': 1, 'Total Emissions Reduction': 1}) # round out the numbers
     df_abatement_cost = df_abatement_cost.reset_index()
