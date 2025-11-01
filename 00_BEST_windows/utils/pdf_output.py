@@ -398,6 +398,9 @@ def generate_part_2_report(self):
     
     excel_file_path_2 = json_folder / "finance_key_values_in_excel.xlsx"
     finance_key_values_in_excel = pd.read_excel(excel_file_path_2, sheet_name=None)
+    
+    excel_file_path_3 = json_folder / "abatement_cost.xlsx"
+    abatement_cost_in_excel = pd.read_excel(excel_file_path_3, sheet_name=None)
 
     # Create PDF with ReportLab
     doc = SimpleDocTemplate(OUTPUT_FILE, pagesize=LETTER)
@@ -483,6 +486,14 @@ def generate_part_2_report(self):
     elements.append(Paragraph("Marginal Abatement Cost Curve", styles['Heading2']))
     elements.append(Paragraph("Red = Energy efficiency measures; Blue = Other measures", styles['Normal']))
     elements.append(Image(graph_7, width=usable_width*.75, height=usable_width*.75*0.66))
+    elements.append(Spacer(1, 4))
+    
+    for sheet_name, df in abatement_cost_in_excel.items():
+        df.columns = ["Measure Index (from right to left)", "Measure", "Abatement Cost ($/tCO2)", "Emission Reduction Potential (tCO2)", "Measure Type"]
+
+        elements.extend(df_to_table_part2(df, ""))
+        elements.append(Spacer(1, 12))
+
 
     elements.append(Paragraph("Note 1: A discount rate of 9% and a project lifetime of 20 years are applied for calculating the abatement cost for each measure. The salvage value after the completion of the project lifetime is assuemd to be zero. \n Note 2: The cumulative carbon dioxide emission reduction in the marginal abatement cost graph does not equal to the calculated total carbon dioxide emission reduction after measures above. This because in the calculations above, the energy and emissions available for reduction decrease with every measure applied. Meanwhile, in the marginal abatement cost graph, each measure's abatement cost is evaluated individually without any other measure applied. \n Note 3: Fuel switching and onsite renewable energy generation measures are not included here.", styles['Normal']))
     elements.append(Spacer(1, 12))

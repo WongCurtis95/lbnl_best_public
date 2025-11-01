@@ -5822,12 +5822,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
         },
         }
     }
-    # Electricity Generation Data
-    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
-        electricity_generation_input_dict = json.load(f)
-    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
-    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]   
-    
+
     for unit, measures in page10_all_measures_map.items():
         for measure, widgets in measures.items():
 
@@ -5851,10 +5846,14 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
             print("this is what is saved in the dict", all_DT_measures_dict[unit][measure]["Potential Application"])
 
     with open(json_folder / "all_DT_measures.json", "w") as f:
-        json.dump(all_DT_measures_dict, f)
-
-    print("page 10 all done")
-
+        json.dump(all_DT_measures_dict, f)     
+    
+    # Electricity Generation Data
+    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
+        electricity_generation_input_dict = json.load(f)
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
+    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]   
+    
     # Benchmarking Results Primary
     Total_process_carbon = benchmarking_results_primary_dict["Total process carbon"]
     Total_carbon_all = benchmarking_results_primary_dict["Total carbon all"]
@@ -5862,14 +5861,6 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     Total_carbon_indirect = benchmarking_results_primary_dict["Total carbon indirect"]
     Total_process_carbon = benchmarking_results_primary_dict["Total process carbon"]
 
-    Target_carbon_indirect = benchmarking_results_primary_dict["Target carbon indirect"]
-    Target_carbon_direct = benchmarking_results_primary_dict["Target carbon direct"]
-    Target_carbon_all = benchmarking_results_primary_dict["Target carbon all"]
-
-    IBP_carbon_indirect = benchmarking_results_primary_dict["IBP carbon indirect"]
-    IBP_carbon_direct = benchmarking_results_primary_dict["IBP carbon direct"]
-    IBP_carbon_all = benchmarking_results_primary_dict["IBP carbon all"]
-    IBP_with_different_fuel_carbon_direct = benchmarking_results_primary_dict["IBP with different fuel carbon direct"]
 
     # Production Input
     Total_cement = production_input_dict["Total cement"]
@@ -5887,7 +5878,6 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
 
     # Target Input Data
     purchased_electricity = target_dict["Purchased Electricity"]
-    Target_final = target_dict["Target Final"]
 
     # Electricity Generation Input
     onsite_RE_electricity_generation = electricity_generation_input_dict["Onsite Renewable Electricity Generation"]
@@ -5916,11 +5906,6 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     # Detailed Output
     overall_fuel = detailed_output_dict["overall fuel"]
     overall_electricity = detailed_output_dict["overall electricity"]
-
-    IBP_total_final_energy = detailed_output_dict["IBP total final energy"]
-    IBP_total_primary_energy = detailed_output_dict["IBP total primary energy"]
-    IBP_total_fuel = detailed_output_dict["IBP total fuel"]
-    IBP_total_electricity = detailed_output_dict["IBP total electricity"]
 
     overall_process_carbon = Total_process_carbon
     
@@ -6032,8 +6017,123 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
         # Handle CCUS
         emission_reduction_by_measure_cat["DT-CCUS"] = direct_carbon_reduction_by_measure_cat["DT-CCUS"] + ((Total_carbon_all-Total_carbon_indirect)-EE_measure_direct_emission_reduction-DT_measure_direct_emission_reduction-FS_measure_direct_emission_reduction-RE_measure_direct_emission_reduction)*(CCUS_emission_reduction_percentage)
 
-    exempt_keys_all_measures_dict = ['EE_measure_direct_emission_reduction', 'EE_measure_indirect_emission_reduction']
+    # Json dump    
+    with open(json_folder / "all_DT_measures.json", "w") as f:
+        json.dump(all_DT_measures_dict, f)   
+        
+    with open(json_folder / "emission_reduction_by_measure_cat.json", "w") as f:
+        json.dump(emission_reduction_by_measure_cat, f, indent=4)
+    
+    with open(json_folder / "energy_reduction_by_measure_cat.json", "w") as f:
+        json.dump(energy_reduction_by_measure_cat, f, indent=4)
+    
+    
+    with open(json_folder / "Detailed_Output.json", "w") as f:
+        json.dump(detailed_output_dict, f, indent=4)
+    
+    
+    
+    print("page 10 all done")    
+    return all_DT_measures_dict
+    
+def PageEnd(self):
+    
+    data_dir = get_user_data_dir()
+    data_dir.mkdir(parents=True, exist_ok=True)
+    json_folder = data_dir / "Saved Progress"
 
+    def jload(p):
+        with open(p, "r") as f:
+            return json.load(f)
+    
+    detailed_output_dict = jload(json_folder / "Detailed_Output.json")
+    benchmarking_results_primary_dict = jload(json_folder / "Benchmarking_Results_Primary.json")
+    production_input_dict = jload(json_folder / "Production_Input.json")
+    energy_input_dict = jload(json_folder / "Energy_Input.json")
+    cost_and_emissions_dict = jload(json_folder / "Cost_and_Emission_Input.json")
+    energy_reduction_by_measure_cat = jload(json_folder / "energy_reduction_by_measure_cat.json")
+    emission_reduction_by_measure_cat = jload(json_folder / "emission_reduction_by_measure_cat.json")
+    primary_energy_reduction_by_measure_cat = jload(json_folder / "primary_energy_reduction_by_measure_cat.json")
+    direct_carbon_reduction_by_measure_cat = jload(json_folder / "direct_carbon_reduction_by_measure_cat.json")
+    indirect_carbon_reduction_by_measure_cat = jload(json_folder / "indirect_carbon_reduction_by_measure_cat.json")
+    total_investment_by_measure_cat = jload(json_folder / "total_investment_by_measure_cat.json")
+    energy_cost_savings_by_measure_cat = jload(json_folder / "energy_cost_savings_by_measure_cat.json")
+    target_dict = jload(json_folder / "Target_Input.json")
+    electricity_generation_input_dict = jload(json_folder / "Electricity_Generation_Input.json")
+    all_measures_dict = jload(json_folder / "all_measures.json")
+    evaluate_EE_only = jload(json_folder / "evaluate_EE_only.json")
+    new_re_share_dict = jload(json_folder / "new_re_share.json")
+    new_fuel_share_dict = jload(json_folder / "new_fuel_share.json")
+    all_DT_measures_dict = jload(json_folder / "all_DT_measures.json")
+    
+    # Electricity Generation Data
+    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
+        electricity_generation_input_dict = json.load(f)
+    
+    # Benchmarking Results Primary
+    Total_process_carbon = benchmarking_results_primary_dict["Total process carbon"]
+    Total_carbon_all = benchmarking_results_primary_dict["Total carbon all"]
+    Total_carbon_direct = benchmarking_results_primary_dict["Total carbon direct"]
+    Total_carbon_indirect = benchmarking_results_primary_dict["Total carbon indirect"]
+    Total_process_carbon = benchmarking_results_primary_dict["Total process carbon"]
+
+    Target_carbon_indirect = benchmarking_results_primary_dict["Target carbon indirect"]
+    Target_carbon_direct = benchmarking_results_primary_dict["Target carbon direct"]
+    Target_carbon_all = benchmarking_results_primary_dict["Target carbon all"]
+
+    IBP_carbon_indirect = benchmarking_results_primary_dict["IBP carbon indirect"]
+    IBP_carbon_direct = benchmarking_results_primary_dict["IBP carbon direct"]
+    IBP_carbon_all = benchmarking_results_primary_dict["IBP carbon all"]
+    IBP_with_different_fuel_carbon_direct = benchmarking_results_primary_dict["IBP with different fuel carbon direct"]
+
+    # Production Input
+    Total_cement = production_input_dict["Total cement"]
+    Total_clinker = production_input_dict["Total clinker production"]
+
+    # Energy Input
+    Total_process_fuel = energy_input_dict["Totals"]["Total process fuel"]
+    Total_process_electricity = energy_input_dict["Totals"]["Total process electricity"]
+
+    # Cost and Emission Input Data
+    electricity_price = cost_and_emissions_dict["Cost of electricity in $/kWh"]
+    fuel_price = cost_and_emissions_dict["Fuel Price"]
+    electricity_emission_intensity = cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000
+    fuel_emission_intensity = cost_and_emissions_dict["Fuel Emission Intensity"]
+
+    # Target Input Data
+    purchased_electricity = target_dict["Purchased Electricity"]
+    Target_final = target_dict["Target Final"]
+    
+    # Energy Input again (we already have energy_input_dict)
+    Total_process_electricity = energy_input_dict["Totals"]["Total process electricity"]
+    Total_final_energy = energy_input_dict["Total Final Energy Consumption (MJ/year)"]
+    Total_primary_energy = energy_input_dict["Total Primary Energy Consumption (MJ/year)"]
+    Total_process_fuel = energy_input_dict["Totals"]["Total process fuel"]
+
+    # All Measures
+    EE_measure_direct_emission_reduction = all_measures_dict["EE_measure_direct_emission_reduction"]
+    EE_measure_indirect_emission_reduction = all_measures_dict["EE_measure_indirect_emission_reduction"]
+
+    # Cost and Emission
+    if evaluate_EE_only != "Yes":
+        new_fuel_emission_intensity = cost_and_emissions_dict["New fuel emission intensity"]
+    else:
+        new_fuel_emission_intensity = fuel_emission_intensity # no new fuel emission intensity if fuel switching is not used
+     # this doesn't not exist in the case of 
+    carbon_price = cost_and_emissions_dict["Carbon price ($/tCO2)"] 
+
+    # Detailed Output
+    overall_fuel = detailed_output_dict["overall fuel"]
+    overall_electricity = detailed_output_dict["overall electricity"]
+
+    IBP_total_final_energy = detailed_output_dict["IBP total final energy"]
+    IBP_total_primary_energy = detailed_output_dict["IBP total primary energy"]
+    IBP_total_fuel = detailed_output_dict["IBP total fuel"]
+    IBP_total_electricity = detailed_output_dict["IBP total electricity"]
+
+    
+    exempt_keys_all_measures_dict = ['EE_measure_direct_emission_reduction', 'EE_measure_indirect_emission_reduction']
+    
     abatement_cost = {}
     for measure_cateogry in all_measures_dict.keys():
         if measure_cateogry not in exempt_keys_all_measures_dict:
@@ -6045,18 +6145,31 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                         abatement_cost[measure]["Total Emissions Reduction"] = all_measures_dict[measure_cateogry][measure]["Total Emissions Reduction"]
                         abatement_cost[measure]["Type"] = "EE"
     
-    for measure_cateogry in all_DT_measures_dict.keys():
-        for measure in all_DT_measures_dict[measure_cateogry].keys():
-            if measure != 'unit': 
-                if all_DT_measures_dict[measure_cateogry][measure]["Abatement cost"] != 'error' and all_DT_measures_dict[measure_cateogry][measure]["Abatement cost"] <5000:
-                    abatement_cost[measure] = {}
-                    abatement_cost[measure]['Abatement Cost'] = all_DT_measures_dict[measure_cateogry][measure]["Abatement cost"] 
-                    abatement_cost[measure]["Total Emissions Reduction"] = all_DT_measures_dict[measure_cateogry][measure]["Total Emissions Reduction"]
-                    abatement_cost[measure]["Type"] = "DT"
+    if evaluate_EE_only != "Yes":
+        for measure_cateogry in all_DT_measures_dict.keys():
+            for measure in all_DT_measures_dict[measure_cateogry].keys():
+                if measure != 'unit': 
+                    if all_DT_measures_dict[measure_cateogry][measure]["Abatement cost"] != 'error' and all_DT_measures_dict[measure_cateogry][measure]["Abatement cost"] <5000:
+                        abatement_cost[measure] = {}
+                        abatement_cost[measure]['Abatement Cost'] = all_DT_measures_dict[measure_cateogry][measure]["Abatement cost"] 
+                        abatement_cost[measure]["Total Emissions Reduction"] = all_DT_measures_dict[measure_cateogry][measure]["Total Emissions Reduction"]
+                        abatement_cost[measure]["Type"] = "DT"
 
     df_abatement_cost = pd.DataFrame.from_dict(abatement_cost)
     df_abatement_cost = df_abatement_cost.T
+    
+    df_abatement_cost['Abatement Cost'] = pd.to_numeric(df_abatement_cost['Abatement Cost'], errors='coerce') # convert to numeric
+    df_abatement_cost["Total Emissions Reduction"] = pd.to_numeric(df_abatement_cost["Total Emissions Reduction"], errors='coerce') 
+    
+    df_abatement_cost = df_abatement_cost.round({'Abatement Cost': 1, 'Total Emissions Reduction': 1}) # round out the numbers
     df_abatement_cost = df_abatement_cost.reset_index()
+    
+    with pd.ExcelWriter(json_folder / "abatement_cost.xlsx") as writer:
+            df_abatement_cost.to_excel(writer, sheet_name='abatement cost')
+    
+    print("Abatement cost table:")
+    print(df_abatement_cost)
+    print(df_abatement_cost.dtypes)
 
     plt.figure(figsize=(12, 8))
 
@@ -6083,7 +6196,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     for i, (pos, measure, cost, emission, color) in enumerate(zip(positions, measures, abatement_costs, emissions, colors)):
         plt.bar(pos, cost, width=emission, color=color, edgecolor='black', align='edge')
 
-    plt.ylabel('Abatement Cost', fontsize=18)
+    plt.ylabel('Abatement Cost ($/tCO2)', fontsize=18)
     plt.xlabel('Measures / Annual Total Emission Reduction (tCO2)', fontsize=18)
     plt.title('Abatement Cost Curve', fontsize=18)
 
@@ -6315,7 +6428,6 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
     
     with open(json_folder / 'all_DT_measures.json', 'w') as f:
         json.dump(all_DT_measures_dict, f, indent=4)
-    all_dt_measures_dict = {}
     
     with open(json_folder / "Detailed_Output.json", "w") as f:
         json.dump(detailed_output_dict, f, indent=4)
@@ -6384,6 +6496,6 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
             dummy = convert_dict_to_excel(sheets_dict[sheet], sheet)
             dummy.to_excel(writer, sheet_name=sheet)
 
-    print("page 10 completed")
+    print("all pages completed")
 
-    return all_dt_measures_dict
+    return key_values_df, key_values_df_finance
