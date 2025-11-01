@@ -4506,7 +4506,7 @@ def Page8_All_Measures_1_Default_Update_Fields(self):
                 all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_measures_dict[unit][measure]["Potential Application"] = input_value
+                all_measures_dict[unit][measure]["Potential Application"] = input_value/100
             
 
             print("this is what is saved in the dict", all_measures_dict[unit][measure]["Do you want to apply this measure?"])
@@ -4593,7 +4593,7 @@ def Page8_All_Measures_2a_Default_Update_Fields(self):
                 all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_measures_dict[unit][measure]["Potential Application"] = input_value
+                all_measures_dict[unit][measure]["Potential Application"] = input_value/100
 
             print("this is what is saved in the dict", all_measures_dict[unit][measure]["Do you want to apply this measure?"])
             print("this is what is saved in the dict", all_measures_dict[unit][measure]["Potential Application"])
@@ -4671,7 +4671,7 @@ def Page8_All_Measures_2b_Default_Update_Fields(self):
                 all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_measures_dict[unit][measure]["Potential Application"] = input_value
+                all_measures_dict[unit][measure]["Potential Application"] = input_value/100
 
             print("this is what is saved in the dict", all_measures_dict[unit][measure]["Do you want to apply this measure?"])
             print("this is what is saved in the dict", all_measures_dict[unit][measure]["Potential Application"])
@@ -4773,7 +4773,7 @@ def Page8_All_Measures_3_Default_Update_Fields(self):
                 all_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_measures_dict[unit][measure]["Potential Application"] = input_value
+                all_measures_dict[unit][measure]["Potential Application"] = input_value/100
 
             print("this is what is saved in the dict", all_measures_dict[unit][measure]["Do you want to apply this measure?"])
             print("this is what is saved in the dict", all_measures_dict[unit][measure]["Potential Application"])
@@ -5853,7 +5853,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                 all_DT_measures_dict[unit][measure]["Potential Application"] = 1 if "Yes (100%)" in choice else 0
             elif choice in ["Yes, Partially"]:
                 all_DT_measures_dict[unit][measure]["Do you want to apply this measure?"] = choice
-                all_DT_measures_dict[unit][measure]["Potential Application"] = input_value
+                all_DT_measures_dict[unit][measure]["Potential Application"] = input_value/100
 
             print("this is what is saved in the dict", all_DT_measures_dict[unit][measure]["Do you want to apply this measure?"])
             print("this is what is saved in the dict", all_DT_measures_dict[unit][measure]["Potential Application"])
