@@ -40,7 +40,7 @@ class Ui_Page11_QuickEnd(object):
         self.pdfBtn.setObjectName("pdfBtn")
         self.button_layout.addWidget(self.pdfBtn)
         self.page_11_group_1 = QtWidgets.QGroupBox(parent=Page11_QuickEnd)
-        self.page_11_group_1.setGeometry(QtCore.QRect(180, 340, 1001, 21))
+        self.page_11_group_1.setGeometry(QtCore.QRect(650, 330, 161, 21))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)

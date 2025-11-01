@@ -71,7 +71,8 @@ from utils.calculations import (Page2_Costs_and_Emissions_Input_Default_Update_F
                                 evaluate_EE_only_popup,
                                 Page9_Share_Default_Update_Fields,
                                 Page10_AllDTMeasures_Default_Update_Fields, 
-                                Part_1_Detailed_Output)
+                                Part_1_Detailed_Output,
+                                PageEnd)
                                 
 from utils.pdf_output import generate_part1_report, final_report_pdf
 
@@ -1212,6 +1213,7 @@ class Page10(QWidget):
 
     def generate_report(self):
         Page10_AllDTMeasures_Default_Update_Fields(self)
+        PageEnd(self) 
         self.save_current_and_all()
         final_report_pdf(self)
 
@@ -1261,7 +1263,7 @@ class Page11(QWidget):
         self.stack.setCurrentWidget(self.parent.page8)
     
     def generate_report(self):
-        #Page10_AllDTMeasures_Default_Update_Fields(self)
+        PageEnd(self) 
         self.save_current_and_all()
         final_report_pdf(self)
         
