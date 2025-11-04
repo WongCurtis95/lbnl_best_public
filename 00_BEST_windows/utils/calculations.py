@@ -17,6 +17,8 @@ pio.renderers.default = 'png'
 import textwrap
 from PyQt6.QtWidgets import QMessageBox
 
+import datetime
+
 # Default Values and Input Field Mapping
 page2_formal_to_qt_mapping = {
     # Electricity
@@ -5198,8 +5200,15 @@ def EE_measure(self):
     
     with open(json_folder / 'all_measures.json', 'w') as f:
         json.dump(all_measures_dict, f, indent=4)
-
+    
     with pd.ExcelWriter(json_folder / "measures_output_in_excel.xlsx") as writer:
+        for sheet in all_measures_dict.keys():
+            dummy = pd.DataFrame.from_dict(all_measures_dict[sheet], orient = 'index')
+            dummy.to_excel(writer, sheet_name=sheet)
+            dummy = dummy.reset_index() # so the measures can also be shown
+    
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    with pd.ExcelWriter(data_dir / f"measures_output_in_excel_{timestamp}.xlsx") as writer:
         for sheet in all_measures_dict.keys():
             dummy = pd.DataFrame.from_dict(all_measures_dict[sheet], orient = 'index')
             dummy.to_excel(writer, sheet_name=sheet)
@@ -5989,6 +5998,12 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
 
     if evaluate_EE_only != "Yes":
         with pd.ExcelWriter(json_folder / "measures_DT_output_in_excel.xlsx") as writer:
+            for sheet in all_DT_measures_dict.keys():
+                dummy = pd.DataFrame.from_dict(all_DT_measures_dict[sheet], orient = 'index')
+                dummy.to_excel(writer, sheet_name=sheet)        
+                dummy = dummy.reset_index()
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        with pd.ExcelWriter(data_dir / f"measures_DT_output_in_excel_{timestamp}.xlsx") as writer:
             for sheet in all_DT_measures_dict.keys():
                 dummy = pd.DataFrame.from_dict(all_DT_measures_dict[sheet], orient = 'index')
                 dummy.to_excel(writer, sheet_name=sheet)        
