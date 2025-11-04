@@ -1,5 +1,4 @@
 # Stop tracking the specific file
-main.exe
-
-# Also good practice to ignore the entire build folder
-/dist/
+# *.exe
+# *.o
+# main.exe
