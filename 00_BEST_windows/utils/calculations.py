@@ -5136,11 +5136,10 @@ def EE_measure(self):
     discount_rate = 0.09
     project_life = 20
     CRF = discount_rate*((1+discount_rate)**project_life)/((1+discount_rate)**project_life-1)
-    
+        
     electricity_generation_input_dict['Capital Recovery Factor'] = CRF
-    
-    
-    
+    electricity_generation_input_dict['Discount Rate'] = discount_rate
+       
     # Run this different function to reflect the updates made
     def EE_measure_table_end(measures_data):    
         for measure_cateogry in measures_data.keys():
@@ -5163,12 +5162,12 @@ def EE_measure(self):
                     # Add abatement cost
                     if measures_data[measure_cateogry][measure]["Energy Type"] == 'Electricity':
                         if measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"] != 0:
-                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF + measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_price*project_life)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_emission_intensity*project_life) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero
+                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF - measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_price)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_emission_intensity) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero # Note: when using CRF, use annual energy savings and emissions avoided only, no need to multiply by project life
                         else:
                             measures_data[measure_cateogry][measure]["Abatement cost"] = 'N/A'
                     elif measures_data[measure_cateogry][measure]["Energy Type"] == 'Fuel':
                         if measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"] != 0:
-                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF + measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_price*project_life)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_emission_intensity*project_life) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero
+                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF - measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_price)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_emission_intensity) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero
                         else:
                             measures_data[measure_cateogry][measure]["Abatement cost"] = 'N/A'
                     # Add total emission reduction
@@ -5922,7 +5921,8 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
 
     overall_process_carbon = Total_process_carbon
     
-    CRF = electricity_generation_input_dict['Capital Recovery Factor']
+    #CRF = electricity_generation_input_dict['Capital Recovery Factor'] # calculated individually for each measure
+    discount_rate = electricity_generation_input_dict['Discount Rate'] 
     
     print("Overall electricity after this step - after EE measures:")
     print(overall_electricity)
@@ -5970,7 +5970,8 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                     measures_data[measure_cateogry][measure]['Total Emissions Reduction'] = -(measures_data[measure_cateogry][measure]["CO2 impacts (indirect)"]+measures_data[measure_cateogry][measure]["CO2 impacts (direct energy)"]+measures_data[measure_cateogry][measure]["CO2 impacts (direct process)"])*Total_cement
                 
                     if measures_data[measure_cateogry][measure]["Total Emissions Reduction"] > 0:
-                        measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]['Typical Investments']*CRF + (measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_price + measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"]*fuel_price)*measures_data[measure_cateogry][measure]["Equipment Lifetime"])*Total_cement/(measures_data[measure_cateogry][measure]["Total Emissions Reduction"]*measures_data[measure_cateogry][measure]["Equipment Lifetime"]) # equipment lifetime here means project lifetime. Salvage value is assumed to be zero. The CRF is calculated in the previous section
+                        CRF = discount_rate*((1+discount_rate)**measures_data[measure_cateogry][measure]["Equipment Lifetime"])/((1+discount_rate)**measures_data[measure_cateogry][measure]["Equipment Lifetime"]-1) # equipment lifetime here means project lifetime.
+                        measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]['Typical Investments']*CRF + (measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_price + measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"]*fuel_price))*Total_cement/(measures_data[measure_cateogry][measure]["Total Emissions Reduction"]) # Salvage value is assumed to be zero. The CRF is calculated in the previous section # Removed equipment lifetime because we are now using CRF
                     else:
                         measures_data[measure_cateogry][measure]["Abatement cost"] = "error"
                     

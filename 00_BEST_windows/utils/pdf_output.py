@@ -472,14 +472,14 @@ def generate_part_2_report(self):
 
     elements.append(Image(graph_5, width=usable_width*.75, height=usable_width*.75*0.71)) # *0.71, because the aspect ratio of the graph is 700 x 500, (5/7 = 0.71)
 
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("EE = Energy Efficiency; DT = Other Technologies", styles['Normal']))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Total Carbon Dioxide Emissions Reduction by Measurement Category", styles['Heading2']))
 
     elements.append(Image(graph_6, width=usable_width*.75, height=usable_width*.75*0.71))
 
-    elements.append(Paragraph(" ", styles['Normal']))
+    elements.append(Paragraph("EE = Energy Efficiency; FS = Fuel Switching; RE = Renewable Electricity; DT = Other Technologies", styles['Normal']))
     elements.append(Spacer(1, 12))
     elements.append(PageBreak())
 
@@ -508,7 +508,27 @@ def generate_part_2_report(self):
     
 
 def generate_report_reportlab(self):
+    
+    data_dir = get_user_data_dir()
+    json_folder = data_dir / "Saved Progress"
+    
+    # Load Excel (all sheets)
+    excel_file_path_1 = json_folder / "measures_output_in_excel.xlsx"
+    excel_file_dummy = pd.ExcelFile(excel_file_path_1)
+    list_of_sheet_names = excel_file_dummy.sheet_names
+    EE_measure_in_excel_dict = {}
+    for sheet in list_of_sheet_names:
+        EE_measure_in_excel_dict[sheet] = pd.read_excel(excel_file_path_1, sheet_name=sheet)
+        #EE_measure_in_excel_dict[sheet] = EE_measure_in_excel_dict[sheet].rename(columns={'Unnamed: 0': 'Measure'}, inplace=False)
 
+    print("List of sheet names:")
+    print(list_of_sheet_names)
+    print(EE_measure_in_excel_dict)
+
+    for sheet in EE_measure_in_excel_dict.keys():
+        print(type(EE_measure_in_excel_dict[sheet]))
+
+        
     filename="Saved_BEST_Report_Progress.json"
     data_dir = get_user_data_dir()
     json_folder = data_dir / "Saved Progress"
@@ -586,7 +606,31 @@ def generate_report_reportlab(self):
     # elements.append(Image(graph_path_process_co2_emissions_benchmark_normalized, width=600, height=300))
     elements.append(Paragraph(" ", styles['Normal']))
     elements.append(Spacer(1, 12))
+    
+    """
+    elements.append(Paragraph("Energy Efficiency Measures", styles['Heading2']))
+    print("Print EE Measures tables")
+    for sheet in list_of_sheet_names:
+        print(EE_measure_in_excel_dict[sheet])
+        #column_name = ["Measure", "Do you want to apply this measure?", "Potential Application", "Energy Consumption Share of Process", "Typical Energy Savings per Unit Mass", "Typical Investment per Unit Mass", "Typical Invesment per Unit Energy Saved", "Total Energy Savings Share", "Total Energy Savings Absolute", "Total Investment", "Payback Period", "Energy Type", "Process", "Abatement Cost", "Total Emission Reduction", "Total Emission Reduction - Direct", "Total Emission Reduction - Indirect"]
+        column_name_index = 0
+        for sheet_name, df in EE_measure_in_excel_dict[sheet].items():
+            #df.columns = ["Measure", "Do you want to apply this measure?", "Potential Application", "Energy Consumption Share of Process", "Typical Energy Savings per Unit Mass", "Typical Investment per Unit Mass", "Typical Invesment per Unit Energy Saved", "Total Energy Savings Share", "Total Energy Savings Absolute", "Total Investment", "Payback Period", "Energy Type", "Process", "Abatement Cost", "Total Emission Reduction", "Total Emission Reduction - Direct", "Total Emission Reduction - Indirect"]
+            print(df)
+            print(sheet_name)
 
+            if isinstance(df, pd.Series):
+                # Force the Series into a DataFrame. 
+                # We give it a temporary name, which will be overwritten by NEW_COLUMNS later.
+                df = df.to_frame(name=column_name[column_name_index]) 
+                print(f"INFO: Converted Series to DataFrame for sheet: {sheet_name}")
+                
+                column_name_index += 1      
+
+           
+            elements.extend(df_to_table_part2(df, ""))
+            elements.append(Spacer(1, 12))
+            """
     try:
         doc.build(elements)
     except Exception as e:
