@@ -88,7 +88,7 @@
     </font>
    </property>
    <property name="title">
-    <string>Grinding</string>
+    <string>Grinding Share by Material</string>
    </property>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">

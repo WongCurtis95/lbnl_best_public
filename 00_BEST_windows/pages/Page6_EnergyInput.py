@@ -251,7 +251,7 @@ class Ui_Page6_EnergyInput(object):
         self.backBtn.setText(_translate("Page6_EnergyInput", "Back"))
         self.saveBtn.setText(_translate("Page6_EnergyInput", "Save Progress"))
         self.nextBtn.setText(_translate("Page6_EnergyInput", "Next"))
-        self.grinding_group1.setTitle(_translate("Page6_EnergyInput", "Grinding"))
+        self.grinding_group1.setTitle(_translate("Page6_EnergyInput", "Grinding Share by Material"))
         self.grinding_raw_label.setText(_translate("Page6_EnergyInput", "Raw Material (%)"))
         self.grinding_fuel_label.setText(_translate("Page6_EnergyInput", "Fuel (%)"))
         self.grinding_cement_label.setText(_translate("Page6_EnergyInput", "Cement (%)"))

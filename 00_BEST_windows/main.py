@@ -77,7 +77,7 @@ from utils.calculations import (Page2_Costs_and_Emissions_Input_Default_Update_F
 from utils.pdf_output import generate_part1_report, final_report_pdf
 
 from utils.save_progress import load_progress_json
-from utils.warning_messages import validate_inputs
+from utils.warning_messages import validate_inputs, validate_inputs_production_inputs, validate_inputs_grinding_inputs, validate_inputs_new_fuel_share
 
 from resources_rc import *
 icon_ico = ":images/BEST_App_Logo.ico"
@@ -266,13 +266,20 @@ class Page3(QWidget):
         self.ui.pozzolana_cement_production_input.setValidator(sci_validator)
         self.ui.blended_cement_production_input.setValidator(sci_validator)
         
-
+    
+    def validate_inputs_production_inputs(self):
+        if not validate_inputs_production_inputs(self):
+            return  
+        else:
+            self.stack.setCurrentWidget(self.parent.page5) # skip page 4: carbon capture
+        
     def go_to_previous(self):
         self.stack.setCurrentWidget(self.parent.page2)
 
     def next_page(self):
         Page3_Production_Input_Default_Update_Fields(self)
-        self.stack.setCurrentWidget(self.parent.page5) # skip page 4: carbon capture
+        #self.stack.setCurrentWidget(self.parent.page5) # skip page 4: carbon capture # proceed to the next page via the warning message
+        self.validate_inputs_production_inputs()
 
     def collect_page_data(self):
         data = {}
@@ -461,15 +468,22 @@ class Page6(QWidget):
         self.ui.horizontal_roller_mill_fuel_input.setValidator(percent_validator())
         self.ui.horizontal_roller_mill_cement_input.setValidator(percent_validator())
 
+    def validate_inputs_grinding_inputs(self):
+        if not validate_inputs_grinding_inputs(self):
+            return  
+        else:
+            if self.parent.assessment_choice == "Quick Assessment":
+                self.stack.setCurrentWidget(self.parent.page6_Quick) # Page6_Quick
+            else:
+                self.stack.setCurrentWidget(self.parent.page6_Detailed) # Page6_Detailed
+
     def go_to_previous(self):
         self.stack.setCurrentWidget(self.parent.page5)
 
     def next_page(self):
         Page6_Energy_Input_Default_Update_Fields(self)
-        if self.parent.assessment_choice == "Quick Assessment":
-            self.stack.setCurrentWidget(self.parent.page6_Quick) # Page6_Quick
-        else:
-            self.stack.setCurrentWidget(self.parent.page6_Detailed) # Page6_Detailed
+        self.validate_inputs_grinding_inputs() # go to the warning message before going to the next page
+
 
     def collect_page_data(self):
         data = {}
@@ -1144,13 +1158,20 @@ class Page9(QWidget):
         self.ui.biomass_input_page9.setValidator(percent_validator())
         self.ui.msw_input_page9.setValidator(percent_validator())
         self.ui.share_electricity_input_page9.setValidator(percent_validator())
-
+        
+    def validate_inputs_new_fuel_share(self):
+        if not validate_inputs_new_fuel_share(self):
+            return  
+        else:
+            self.stack.setCurrentWidget(self.parent.page10)
+    
     def go_to_previous(self):
         self.stack.setCurrentWidget(self.parent.page8_3)
 
     def next_page(self):
         Page9_Share_Default_Update_Fields(self)
-        self.stack.setCurrentWidget(self.parent.page10)
+        self.validate_inputs_new_fuel_share() # go to warning message first before going to the next page
+        
 
     def collect_page_data(self):
         data = {}
