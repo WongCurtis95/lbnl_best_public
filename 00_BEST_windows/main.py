@@ -77,7 +77,7 @@ from utils.calculations import (Page2_Costs_and_Emissions_Input_Default_Update_F
 from utils.pdf_output import generate_part1_report, final_report_pdf
 
 from utils.save_progress import load_progress_json
-from utils.warning_messages import validate_inputs, validate_inputs_production_inputs, validate_inputs_grinding_inputs, validate_inputs_new_fuel_share
+from utils.warning_messages import validate_inputs, validate_inputs_production_inputs, validate_inputs_grinding_inputs, validate_inputs_new_fuel_share, validate_inputs_DT_measures
 
 from resources_rc import *
 icon_ico = ":images/BEST_App_Logo.ico"
@@ -1228,15 +1228,22 @@ class Page10(QWidget):
         self.ui.page_10_input_7.setValidator(percent_validator())
         self.ui.page_10_input_8.setValidator(percent_validator())
         self.ui.page_10_input_9.setValidator(percent_validator())
-
+        
+    def validate_inputs_DT_measures(self):
+        if not validate_inputs_DT_measures(self):
+            return  
+        else:
+            PageEnd(self) 
+            self.save_current_and_all()
+            final_report_pdf(self)
+    
     def go_to_previous(self):
         self.stack.setCurrentWidget(self.parent.page9)
 
     def generate_report(self):
         Page10_AllDTMeasures_Default_Update_Fields(self)
-        PageEnd(self) 
-        self.save_current_and_all()
-        final_report_pdf(self)
+        self.validate_inputs_DT_measures() # Go to warnign message first before ending the page
+
 
     def collect_page_data(self):
         data = {}

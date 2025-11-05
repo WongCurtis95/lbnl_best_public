@@ -634,7 +634,7 @@ QProgressBar::chunk {
     </property>
     <property name="text">
      <string>Note: The default value is 25% of plant electricity consumption. 
-Please check if electricity generated onsite is higher than this value 
+Please ensure electricity generated onsite is higher than this value 
 when selecting this</string>
     </property>
    </widget>

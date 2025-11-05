@@ -387,5 +387,5 @@ class Ui_Page5_ElectricityGenerationInput(object):
         self.waste_heat_label_page5.setText(_translate("Page5_ElectricityGenerationInput", "Waste Heat             "))
         self.checkBox.setText(_translate("Page5_ElectricityGenerationInput", "Use Default Waste Heat"))
         self.label_3.setText(_translate("Page5_ElectricityGenerationInput", "Note: The default value is 25% of plant electricity consumption. \n"
-"Please check if electricity generated onsite is higher than this value \n"
+"Please ensure electricity generated onsite is higher than this value \n"
 "when selecting this"))

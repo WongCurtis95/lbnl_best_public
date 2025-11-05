@@ -52,9 +52,9 @@ def validate_inputs_production_inputs(self):
     
     Total_raw_material_and_additive = sum(list_of_raw_materials_and_additives_dummy)
     
-    def convert_string_to_float(strong_input):
+    def convert_string_to_float(string_input):
         try:
-            float_output = float(strong_input)
+            float_output = float(string_input)
         except ValueError:
             float_output = 0
         return float_output
@@ -117,9 +117,9 @@ def validate_inputs_grinding_inputs(self):
         ]
 
     
-    def convert_string_to_float(strong_input):
+    def convert_string_to_float(string_input):
         try:
-            float_output = float(strong_input)
+            float_output = float(string_input)
         except ValueError:
             float_output = 0
         return float_output
@@ -166,9 +166,9 @@ def validate_inputs_new_fuel_share(self):
         self.ui.msw_input_page9.text()
         ]
     
-    def convert_string_to_float(strong_input):
+    def convert_string_to_float(string_input):
         try:
-            float_output = float(strong_input)
+            float_output = float(string_input)
         except ValueError:
             float_output = 0
         return float_output
@@ -187,7 +187,77 @@ def validate_inputs_new_fuel_share(self):
         QMessageBox.critical(
             self,
             "Input Error",
-            "Please ensure that the total new fuel share must add up to 100%.."
+            "Please ensure that the total new fuel share must add up to 100%."
+        )
+        return False
+
+    return True
+
+def validate_inputs_DT_measures(self):
+    input_errors = []
+    
+    list_of_SCM_and_Filler_Measures = [
+        self.ui.page_10_comboBox.currentText(),
+        self.ui.page_10_comboBox_2.currentText(),
+        self.ui.page_10_comboBox_3.currentText(),
+        self.ui.page_10_comboBox_4.currentText(),
+        self.ui.page_10_comboBox_5.currentText()
+        ]
+    
+    SCM_and_Filler_Measures_count = 0
+    for i in list_of_SCM_and_Filler_Measures:
+        if i == "Yes (100%)":
+            SCM_and_Filler_Measures_count += 1
+        elif i == "Yes, Partially":
+            SCM_and_Filler_Measures_count += 1
+    
+    valid_count_input = 1
+    
+    list_of_CCUS_measures = [
+        self.ui.page_10_comboBox_6.currentText(),
+        self.ui.page_10_comboBox_7.currentText()
+        ]
+    
+    def convert_string_to_float(string_input):
+        try:
+            float_output = float(string_input)
+        except ValueError:
+            float_output = 0
+        return float_output
+    
+    CCUS_measure_sum = convert_string_to_float(self.ui.page_10_input_6.text()) + convert_string_to_float(self.ui.page_10_input_7.text())
+    
+    for i in list_of_CCUS_measures:
+        if i == "Yes (100%)":
+            CCUS_measure_sum += 100
+
+    
+    list_of_alternative_cement_measures = [
+        self.ui.page_10_comboBox_8.currentText(),
+        self.ui.page_10_comboBox_9.currentText()
+        ]
+    
+    alternative_cment_measure_sum = convert_string_to_float(self.ui.page_10_input_8.text()) + convert_string_to_float(self.ui.page_10_input_9.text())
+    for i in list_of_alternative_cement_measures:
+        if i == "Yes (100%)":
+            alternative_cment_measure_sum += 100
+
+    valid_sum_input = 100
+    
+    if SCM_and_Filler_Measures_count > valid_count_input:
+        input_errors.append("Only one SCM and Filler measure can be selected")
+    
+    if CCUS_measure_sum > valid_sum_input:
+        input_errors.append("Total CCUS measure must not exceed 100%")
+        
+    if alternative_cment_measure_sum > valid_sum_input:
+        input_errors.append("Total alternative cement measure must not exceed 100%")
+    
+    if input_errors:
+        QMessageBox.critical(
+            self,
+            "Input Error",
+            "Only one SCM and Filler measure can be selected. Total application of CCUS measures and total application of alternative cement measure must both not exceed 100%."
         )
         return False
 
