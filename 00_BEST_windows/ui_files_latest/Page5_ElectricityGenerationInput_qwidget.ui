@@ -628,8 +628,10 @@ QProgressBar::chunk {
     </property>
     <property name="font">
      <font>
-      <pointsize>9</pointsize>
+      <pointsize>7</pointsize>
+      <italic>true</italic>
       <bold>false</bold>
+      <kerning>true</kerning>
      </font>
     </property>
     <property name="text">

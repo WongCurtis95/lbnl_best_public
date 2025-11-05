@@ -844,6 +844,12 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
       <height>16</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>7</pointsize>
+      <italic>true</italic>
+     </font>
+    </property>
     <property name="text">
      <string>Note: Please do not select measures already applied in your facility to avoid double-counting</string>
     </property>

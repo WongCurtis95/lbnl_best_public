@@ -962,6 +962,8 @@
     </property>
     <property name="font">
      <font>
+      <pointsize>7</pointsize>
+      <italic>true</italic>
       <bold>false</bold>
      </font>
     </property>
