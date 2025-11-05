@@ -1,4 +1,5 @@
 # Stop tracking the specific file
 # *.exe
 # *.o
+# *.pkg
 # main.exe
