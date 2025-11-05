@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file '.\ui_files_latest\Page8_AllMeasures3_qwidget.ui'
+# Form implementation generated from reading ui file 'ui_files_latest\Page8_AllMeasures3_qwidget.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -7,9 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-from resources_rc import *
-main_page_image = ":images/BEST_landing_abstract.png"
-side_page_image = ":images/BEST_side_abstract.png"
+
 
 class Ui_Page8_AllMeasures_3(object):
     def setupUi(self, Page8_AllMeasures_3):
@@ -42,7 +40,7 @@ class Ui_Page8_AllMeasures_3(object):
         self.nextBtn.setObjectName("nextBtn")
         self.button_layout.addWidget(self.nextBtn)
         self.electricity_generation_group_1 = QtWidgets.QGroupBox(parent=Page8_AllMeasures_3)
-        self.electricity_generation_group_1.setGeometry(QtCore.QRect(200, 80, 1001, 561))
+        self.electricity_generation_group_1.setGeometry(QtCore.QRect(200, 80, 1001, 571))
         font = QtGui.QFont()
         font.setBold(True)
         self.electricity_generation_group_1.setFont(font)
@@ -463,19 +461,17 @@ class Ui_Page8_AllMeasures_3(object):
         self.side_image = QtWidgets.QLabel(parent=Page8_AllMeasures_3)
         self.side_image.setGeometry(QtCore.QRect(0, -30, 171, 761))
         self.side_image.setText("")
-        self.side_image.setPixmap(QtGui.QPixmap(side_page_image))
+        self.side_image.setPixmap(QtGui.QPixmap("ui_files_latest\\../images/BEST_side_abstract.png"))
         self.side_image.setObjectName("side_image")
         self.progressBar = QtWidgets.QProgressBar(parent=Page8_AllMeasures_3)
-        self.progressBar.setFixedHeight(12)
-        self.progressBar.setTextVisible(False) 
         self.progressBar.setGeometry(QtCore.QRect(200, 20, 1001, 23))
         self.progressBar.setStyleSheet("QProgressBar {\n"
 "    background-color: #F0F0F0;\n"
 "    border: none;\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "}\n"
 "QProgressBar::chunk {\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "    background: QLinearGradient(\n"
 "        x1: 0, y1: 0, x2: 1, y2: 0,\n"
 "        stop: 0 #33bef0,   /* Light Blue */\n"
@@ -595,15 +591,15 @@ class Ui_Page8_AllMeasures_3(object):
         self.saveBtn.setText(_translate("Page8_AllMeasures_3", "Save Progress"))
         self.nextBtn.setText(_translate("Page8_AllMeasures_3", "Next"))
         self.electricity_generation_group_1.setTitle(_translate("Page8_AllMeasures_3", "EE Measures - Product and Feedstock, Utility Systems"))
-        self.page_8_3_label_2.setText(_translate("Page8_AllMeasures_3", "Blended cements"))
-        self.page_8_3_label.setText(_translate("Page8_AllMeasures_3", "Low alkali cement"))
+        self.page_8_3_label_2.setText(_translate("Page8_AllMeasures_3", "Reserved for future use"))
+        self.page_8_3_label.setText(_translate("Page8_AllMeasures_3", "Reserved for future use"))
         self.page_8_3_comboBox_4.setItemText(0, _translate("Page8_AllMeasures_3", "Select"))
         self.page_8_3_comboBox_4.setItemText(1, _translate("Page8_AllMeasures_3", "Yes (100%)"))
         self.page_8_3_comboBox_4.setItemText(2, _translate("Page8_AllMeasures_3", "No (0%)"))
         self.page_8_3_comboBox_4.setItemText(3, _translate("Page8_AllMeasures_3", "Yes, Partially"))
         self.page_8_3_label_6.setText(_translate("Page8_AllMeasures_3", "High efficiency fans"))
         self.page_8_3_label_11.setText(_translate("Page8_AllMeasures_3", "Heat recovery for water preheating"))
-        self.page_8_3_header.setText(_translate("Page8_AllMeasures_3", "EE-Product and Feedstock Changes"))
+        self.page_8_3_header.setText(_translate("Page8_AllMeasures_3", "Reserved for future use"))
         self.page_8_3_label_8.setText(_translate("Page8_AllMeasures_3", "Variable speed drives in fan systems"))
         self.page_8_3_comboBox_10.setItemText(0, _translate("Page8_AllMeasures_3", "Select"))
         self.page_8_3_comboBox_10.setItemText(1, _translate("Page8_AllMeasures_3", "Yes (100%)"))
@@ -638,8 +634,8 @@ class Ui_Page8_AllMeasures_3(object):
         self.page_8_3_comboBox_11.setItemText(1, _translate("Page8_AllMeasures_3", "Yes (100%)"))
         self.page_8_3_comboBox_11.setItemText(2, _translate("Page8_AllMeasures_3", "No (0%)"))
         self.page_8_3_comboBox_11.setItemText(3, _translate("Page8_AllMeasures_3", "Yes, Partially"))
-        self.page_8_3_label_3.setText(_translate("Page8_AllMeasures_3", "Use of waste-derived fuels"))
-        self.page_8_3_label_4.setText(_translate("Page8_AllMeasures_3", "Limestone cement"))
+        self.page_8_3_label_3.setText(_translate("Page8_AllMeasures_3", "Reserved for future use"))
+        self.page_8_3_label_4.setText(_translate("Page8_AllMeasures_3", "Reserved for future use"))
         self.page_8_3_comboBox_6.setItemText(0, _translate("Page8_AllMeasures_3", "Select"))
         self.page_8_3_comboBox_6.setItemText(1, _translate("Page8_AllMeasures_3", "Yes (100%)"))
         self.page_8_3_comboBox_6.setItemText(2, _translate("Page8_AllMeasures_3", "No (0%)"))
@@ -660,7 +656,7 @@ class Ui_Page8_AllMeasures_3(object):
         self.page_8_3_comboBox.setItemText(1, _translate("Page8_AllMeasures_3", "Yes (100%)"))
         self.page_8_3_comboBox.setItemText(2, _translate("Page8_AllMeasures_3", "No (0%)"))
         self.page_8_3_comboBox.setItemText(3, _translate("Page8_AllMeasures_3", "Yes, Partially"))
-        self.page_8_3_label_5.setText(_translate("Page8_AllMeasures_3", "Use of steel slag in kiln (CemStar)"))
+        self.page_8_3_label_5.setText(_translate("Page8_AllMeasures_3", "Reserved for future use"))
         self.page_8_3_label_7.setText(_translate("Page8_AllMeasures_3", "High efficiency motors"))
         self.page_8_3_label_14.setText(_translate("Page8_AllMeasures_3", "Sizing pipe diameter correctly"))
         self.page_8_3_comboBox_14.setItemText(0, _translate("Page8_AllMeasures_3", "Select"))

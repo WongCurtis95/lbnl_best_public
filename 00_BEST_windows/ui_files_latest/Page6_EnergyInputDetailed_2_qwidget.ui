@@ -76,10 +76,10 @@
   <widget class="QGroupBox" name="electricity_generation_group_3">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>80</y>
+     <x>210</x>
+     <y>70</y>
      <width>991</width>
-     <height>561</height>
+     <height>571</height>
     </rect>
    </property>
    <property name="font">
@@ -950,6 +950,24 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>550</y>
+      <width>951</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Note: Process-level benchmarks for air pollution mitigation and CCUS energy use are not availble. Energy consumption in these steps are used for facility-level benchmarks</string>
+    </property>
    </widget>
   </widget>
   <widget class="QLabel" name="side_image">

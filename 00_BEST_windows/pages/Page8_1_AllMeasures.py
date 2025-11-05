@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files_latest/Page8_AllMeasures1_qwidget.ui'
+# Form implementation generated from reading ui file 'ui_files_latest\Page8_AllMeasures1_qwidget.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -8,9 +8,6 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from resources_rc import *
-main_page_image = ":images/BEST_landing_abstract.png"
-side_page_image = ":images/BEST_side_abstract.png"
 
 class Ui_Page8_AllMeasures_1(object):
     def setupUi(self, Page8_AllMeasures_1):
@@ -43,7 +40,7 @@ class Ui_Page8_AllMeasures_1(object):
         self.nextBtn.setObjectName("nextBtn")
         self.button_layout.addWidget(self.nextBtn)
         self.all_measures_group_1 = QtWidgets.QGroupBox(parent=Page8_AllMeasures_1)
-        self.all_measures_group_1.setGeometry(QtCore.QRect(200, 80, 1001, 561))
+        self.all_measures_group_1.setGeometry(QtCore.QRect(200, 80, 1001, 571))
         font = QtGui.QFont()
         font.setBold(True)
         self.all_measures_group_1.setFont(font)
@@ -84,7 +81,7 @@ class Ui_Page8_AllMeasures_1(object):
 "myLineEdit->setFixedSize(200, 30)")
         self.all_measures_group_1.setObjectName("all_measures_group_1")
         self.layoutWidget_3 = QtWidgets.QWidget(parent=self.all_measures_group_1)
-        self.layoutWidget_3.setGeometry(QtCore.QRect(100, 30, 811, 511))
+        self.layoutWidget_3.setGeometry(QtCore.QRect(100, 40, 811, 511))
         self.layoutWidget_3.setObjectName("layoutWidget_3")
         self.all_measure_1_gridLayout = QtWidgets.QGridLayout(self.layoutWidget_3)
         self.all_measure_1_gridLayout.setContentsMargins(0, 0, 0, 0)
@@ -415,13 +412,16 @@ class Ui_Page8_AllMeasures_1(object):
         self.page8_1_potential_input_12.setText("")
         self.page8_1_potential_input_12.setObjectName("page8_1_potential_input_12")
         self.all_measure_1_gridLayout.addWidget(self.page8_1_potential_input_12, 6, 2, 1, 1)
+        self.label = QtWidgets.QLabel(parent=self.all_measures_group_1)
+        self.label.setGeometry(QtCore.QRect(10, 20, 521, 16))
+        self.label.setObjectName("label")
         self.side_image = QtWidgets.QLabel(parent=Page8_AllMeasures_1)
         self.side_image.setGeometry(QtCore.QRect(0, -30, 171, 761))
         self.side_image.setText("")
-        self.side_image.setPixmap(QtGui.QPixmap(side_page_image))
+        self.side_image.setPixmap(QtGui.QPixmap("ui_files_latest\\../images/BEST_side_abstract.png"))
         self.side_image.setObjectName("side_image")
         self.layoutWidget_2 = QtWidgets.QWidget(parent=Page8_AllMeasures_1)
-        self.layoutWidget_2.setGeometry(QtCore.QRect(200, 40, 1001, 16))
+        self.layoutWidget_2.setGeometry(QtCore.QRect(200, 40, 1001, 22))
         self.layoutWidget_2.setObjectName("layoutWidget_2")
         self.gridLayout_12 = QtWidgets.QGridLayout(self.layoutWidget_2)
         self.gridLayout_12.setContentsMargins(0, 0, 0, 0)
@@ -487,15 +487,13 @@ class Ui_Page8_AllMeasures_1(object):
         self.gridLayout_12.addWidget(self.label_16, 0, 7, 1, 1)
         self.progressBar = QtWidgets.QProgressBar(parent=Page8_AllMeasures_1)
         self.progressBar.setGeometry(QtCore.QRect(200, 20, 1001, 23))
-        self.progressBar.setFixedHeight(12)
-        self.progressBar.setTextVisible(False)
         self.progressBar.setStyleSheet("QProgressBar {\n"
 "    background-color: #F0F0F0;\n"
 "    border: none;\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "}\n"
 "QProgressBar::chunk {\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "    background: QLinearGradient(\n"
 "        x1: 0, y1: 0, x2: 1, y2: 0,\n"
 "        stop: 0 #33bef0,   /* Light Blue */\n"
@@ -606,6 +604,7 @@ class Ui_Page8_AllMeasures_1(object):
         self.page8_1_comboBox_12.setItemText(1, _translate("Page8_AllMeasures_1", "Yes (100%)"))
         self.page8_1_comboBox_12.setItemText(2, _translate("Page8_AllMeasures_1", "No (0%)"))
         self.page8_1_comboBox_12.setItemText(3, _translate("Page8_AllMeasures_1", "Yes, Partially"))
+        self.label.setText(_translate("Page8_AllMeasures_1", "Note: Please do not select measures already applied in your facility to avoid double-counting"))
         self.label_3.setText(_translate("Page8_AllMeasures_1", "Cost and Emission"))
         self.label_10.setText(_translate("Page8_AllMeasures_1", "Production"))
         self.label_11.setText(_translate("Page8_AllMeasures_1", "Electricity Generation            "))

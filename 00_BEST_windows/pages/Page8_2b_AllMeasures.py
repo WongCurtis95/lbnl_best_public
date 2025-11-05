@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files_latest/Page8_AllMeasures2b_qwidget.ui'
+# Form implementation generated from reading ui file 'ui_files_latest\Page8_AllMeasures2b_qwidget.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -7,10 +7,6 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
-from resources_rc import *
-main_page_image = ":images/BEST_landing_abstract.png"
-side_page_image = ":images/BEST_side_abstract.png"
 
 
 class Ui_Page8_AllMeasures_2b(object):
@@ -26,7 +22,7 @@ class Ui_Page8_AllMeasures_2b(object):
         self.cement_decor = QtWidgets.QLabel(parent=Page8_AllMeasures_2b)
         self.cement_decor.setGeometry(QtCore.QRect(0, 0, 171, 711))
         self.cement_decor.setText("")
-        self.cement_decor.setPixmap(QtGui.QPixmap(side_page_image))
+        self.cement_decor.setPixmap(QtGui.QPixmap("ui_files_latest\\../prototype/images/BEST_side_abstract.png"))
         self.cement_decor.setObjectName("cement_decor")
         self.layoutWidget = QtWidgets.QWidget(parent=Page8_AllMeasures_2b)
         self.layoutWidget.setGeometry(QtCore.QRect(190, 650, 1051, 35))
@@ -49,7 +45,7 @@ class Ui_Page8_AllMeasures_2b(object):
         self.nextBtn.setObjectName("nextBtn")
         self.button_layout.addWidget(self.nextBtn)
         self.electricity_generation_group_1 = QtWidgets.QGroupBox(parent=Page8_AllMeasures_2b)
-        self.electricity_generation_group_1.setGeometry(QtCore.QRect(200, 90, 1001, 471))
+        self.electricity_generation_group_1.setGeometry(QtCore.QRect(200, 90, 1001, 501))
         font = QtGui.QFont()
         font.setBold(True)
         self.electricity_generation_group_1.setFont(font)
@@ -342,19 +338,17 @@ class Ui_Page8_AllMeasures_2b(object):
         self.side_image = QtWidgets.QLabel(parent=Page8_AllMeasures_2b)
         self.side_image.setGeometry(QtCore.QRect(0, -30, 171, 761))
         self.side_image.setText("")
-        self.side_image.setPixmap(QtGui.QPixmap(side_page_image))
+        self.side_image.setPixmap(QtGui.QPixmap("ui_files_latest\\../images/BEST_side_abstract.png"))
         self.side_image.setObjectName("side_image")
         self.progressBar = QtWidgets.QProgressBar(parent=Page8_AllMeasures_2b)
         self.progressBar.setGeometry(QtCore.QRect(200, 20, 1001, 23))
-        self.progressBar.setFixedHeight(12)
-        self.progressBar.setTextVisible(False)
         self.progressBar.setStyleSheet("QProgressBar {\n"
 "    background-color: #F0F0F0;\n"
 "    border: none;\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "}\n"
 "QProgressBar::chunk {\n"
-"    border-radius: 5px;\n"
+"    border-radius: 8px;\n"
 "    background: QLinearGradient(\n"
 "        x1: 0, y1: 0, x2: 1, y2: 0,\n"
 "        stop: 0 #33bef0,   /* Light Blue */\n"
@@ -364,7 +358,7 @@ class Ui_Page8_AllMeasures_2b(object):
         self.progressBar.setProperty("value", 70)
         self.progressBar.setObjectName("progressBar")
         self.layoutWidget_3 = QtWidgets.QWidget(parent=Page8_AllMeasures_2b)
-        self.layoutWidget_3.setGeometry(QtCore.QRect(200, 40, 1001, 16))
+        self.layoutWidget_3.setGeometry(QtCore.QRect(200, 40, 1001, 22))
         self.layoutWidget_3.setObjectName("layoutWidget_3")
         self.gridLayout_12 = QtWidgets.QGridLayout(self.layoutWidget_3)
         self.gridLayout_12.setContentsMargins(0, 0, 0, 0)

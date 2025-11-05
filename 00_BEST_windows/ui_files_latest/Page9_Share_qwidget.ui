@@ -270,7 +270,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="0" column="0">
       <widget class="QLabel" name="share_electricity_label_page9">
        <property name="text">
-        <string>Share of electricity from purchased or self-generated renewable </string>
+        <string>Share of electricity from purchased or self-generated renewable energy</string>
        </property>
       </widget>
      </item>
@@ -340,7 +340,7 @@ QProgressBar::chunk {
      <x>200</x>
      <y>40</y>
      <width>1001</width>
-     <height>16</height>
+     <height>22</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_12">
