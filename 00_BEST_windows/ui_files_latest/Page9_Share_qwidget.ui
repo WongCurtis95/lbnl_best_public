@@ -125,7 +125,7 @@ QPushButton#saveBtn:hover {
 myLineEdit-&gt;setFixedSize(200, 30)</string>
    </property>
    <property name="title">
-    <string>New Fuel Share (%)</string>
+    <string>New Fuel Share in Energy (%)</string>
    </property>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">

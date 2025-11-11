@@ -537,7 +537,7 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     if Total_electricity_fuel >0:
         onsite_electricity_generation_efficiency = (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"] - onsite_RE_electricity_generation - waste_heat_electricity_generation)/(Total_electricity_fuel/3.6) # this is just for generation from combustion and waste heat
     else:
-        onsite_electricity_generation_efficiency = 0
+        onsite_electricity_generation_efficiency = 1
     
     # electricity_emission_intensity = ((cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000)*electricity_generation_input_dict["Total electricity purchased (kWh/year)"] + (electricity_fuel_emission_intensity*3.6/0.305)*electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"])/(electricity_generation_input_dict["Total electricity purchased (kWh/year)"]+electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"]) # this electricity emission intensity combines both emission intensities from purchased and self-generated electricity
 
@@ -4960,10 +4960,14 @@ def EE_measure(self):
                 overall_electricity = overall_electricity - all_measures_dict["EE-RM Preparation"][measure]["Total Energy Savings - Absolute"]
 
 
-    if all_measures_dict["EE-RM Preparation"][ "Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Typical Energy Savings"] / (preblending_energy / Total_raw_material_and_additive) <1:
-        all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Energy Consumption Share of Process"] = all_measures_dict["EE-RM Preparation"][ "Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Typical Energy Savings"] / (preblending_energy_initial / Total_raw_material_and_additive)
+    if preblending_energy != 0:    
+        if all_measures_dict["EE-RM Preparation"][ "Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Typical Energy Savings"] / (preblending_energy / Total_raw_material_and_additive) <1:
+        
+            all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Energy Consumption Share of Process"] = all_measures_dict["EE-RM Preparation"][ "Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Typical Energy Savings"] / (preblending_energy_initial / Total_raw_material_and_additive)
+        else:
+            all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Energy Consumption Share of Process"] = 1
     else:
-        all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Energy Consumption Share of Process"] = 1
+        all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Energy Consumption Share of Process"] = 0
     all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Total Energy Savings"] = all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Energy Consumption Share of Process"]*all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Potential Application"]
     all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Total Energy Savings - Absolute"] = all_measures_dict["EE-RM Preparation"]["Raw Meal Blending (Homogenizing) Systems (Dry Process)"]["Total Energy Savings"] * preblending_energy
 

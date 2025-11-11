@@ -268,7 +268,7 @@ class Ui_Page9_Share(object):
         self.backBtn.setText(_translate("Page9_Share", "Back"))
         self.saveBtn.setText(_translate("Page9_Share", "Save Progress"))
         self.nextBtn.setText(_translate("Page9_Share", "Next"))
-        self.fuel_switching_group.setTitle(_translate("Page9_Share", "New Fuel Share (%)"))
+        self.fuel_switching_group.setTitle(_translate("Page9_Share", "New Fuel Share in Energy (%)"))
         self.coal_label_page9.setText(_translate("Page9_Share", "Coal"))
         self.coke_label_page9.setText(_translate("Page9_Share", "Coke"))
         self.natural_gas_label_page9.setText(_translate("Page9_Share", "Natural Gas"))

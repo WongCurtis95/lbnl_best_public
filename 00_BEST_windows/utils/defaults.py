@@ -7,21 +7,21 @@ from PyQt6 import QtWidgets
 
 default_values_by_page = {
     "Page2": {
-    "coal_input": "100",
+    "coal_input": "90",
     "coke_input": "180",
     "natural_gas_input": "6",
     "biomass_input": "40",
     "municipal_wastes_input": "40.0",
-
-    "electricity_input": "0.2",
+    "electricity_input": "0.067",
+    
     "coal_hhv_input": "30",
     "coke_hhv_input": "26",
     "natural_gas_hhv_input": "52",
     "biomass_hhv_input": "20",
     "municipal_wastes_hvv_input": "22",
     "process_emission_per_metric_input": "0.507",
-    "carbon_price_input": "20.0",
-    "grid_co2_input": "0.5",
+    "carbon_price_input": "4",
+    "grid_co2_input": "0.8",
 
     "comboBox_electricity_unit": "$/kWh",
     "comboBox_coal_unit": "$/metric ton",
