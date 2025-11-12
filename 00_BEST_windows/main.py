@@ -77,7 +77,7 @@ from utils.calculations import (Page2_Costs_and_Emissions_Input_Default_Update_F
 from utils.pdf_output import generate_part1_report, final_report_pdf
 
 from utils.save_progress import load_progress_json
-from utils.warning_messages import validate_inputs, validate_inputs_production_inputs, validate_inputs_grinding_inputs, validate_inputs_new_fuel_share, validate_inputs_DT_measures
+from utils.warning_messages import validate_inputs, validate_inputs_production_inputs, validate_inputs_grinding_inputs, validate_inputs_new_fuel_share, validate_inputs_DT_measures, validate_inputs_electricity_generation_inputs
 
 from resources_rc import *
 icon_ico = ":images/BEST_App_Logo.ico"
@@ -398,13 +398,18 @@ class Page5(QWidget):
         self.ui.municipal_wastes_input_page5.setValidator(sci_validator)
         self.ui.onsite_renewables_input_page5.setValidator(sci_validator)
         
-
+    def validate_inputs_electricity_generation_inputs(self):
+        if not validate_inputs_electricity_generation_inputs(self):
+            return  
+        else:
+            self.stack.setCurrentWidget(self.parent.page6) 
+        
     def go_to_previous(self):
         self.stack.setCurrentWidget(self.parent.page3) # Page 4 about carbon capture is skipped
 
     def next_page(self):
         Page5_ElectricityGeneration_Input_Default_Update_Fields(self)
-        self.stack.setCurrentWidget(self.parent.page6)
+        self.validate_inputs_electricity_generation_inputs() # go to warnign message first before going to the next page
 
     def collect_page_data(self):
         data = {}

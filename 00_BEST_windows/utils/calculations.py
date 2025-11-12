@@ -548,8 +548,12 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     electricity_generation_input_dict["Electricity Fuel Emission Intensity"] = electricity_fuel_emission_intensity
     electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] = onsite_electricity_generation_efficiency # thermal
     
-    share_of_electricity_from_purchase = electricity_generation_input_dict["Total electricity purchased (kWh/year)"] / (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"]+electricity_generation_input_dict["Total electricity purchased (kWh/year)"])
-    share_of_electricity_from_onsite_combustion = 1 - ((electricity_generation_input_dict["Total electricity purchased (kWh/year)"] + onsite_RE_electricity_generation + waste_heat_electricity_generation) / (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"]+electricity_generation_input_dict["Total electricity purchased (kWh/year)"]))
+    if electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"]+electricity_generation_input_dict["Total electricity purchased (kWh/year)"] != 0:
+        share_of_electricity_from_purchase = electricity_generation_input_dict["Total electricity purchased (kWh/year)"] / (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"]+electricity_generation_input_dict["Total electricity purchased (kWh/year)"])
+        share_of_electricity_from_onsite_combustion = 1 - ((electricity_generation_input_dict["Total electricity purchased (kWh/year)"] + onsite_RE_electricity_generation + waste_heat_electricity_generation) / (electricity_generation_input_dict["Total electricity generated onsite (kWh/year)"]+electricity_generation_input_dict["Total electricity purchased (kWh/year)"]))
+    else:
+        share_of_electricity_from_purchase = 1
+        share_of_electricity_from_onsite_combustion = 0
     
     electricity_generation_input_dict["Share of electricity from electricity purchase"] = share_of_electricity_from_purchase
     electricity_generation_input_dict["Share of electricity from onsite combustion"] = share_of_electricity_from_onsite_combustion
@@ -5495,12 +5499,17 @@ def Page9_Share_Default_Update_Fields(self):
         print('FS measures are not evaluated') # where is the partial application?
     else:
         
-        new_fuel_emission_intensity = coal_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coal"]/100 + coke_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coke"]/100 + natural_gas_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["natural gas"]/100 + biomass_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["biomass"]/100 + msw_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["municipal wastes"]/100
+        new_fuel_emission_intensity = (coal_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coal"]/100 + coke_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coke"]/100 + natural_gas_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["natural gas"]/100 + biomass_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["biomass"]/100 + msw_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["municipal wastes"]/100)/10**6
         cost_and_emissions_dict["New fuel emission intensity"] = new_fuel_emission_intensity
         direct_emission_before_fs = Total_carbon_direct - EE_measure_direct_emission_reduction
         fs_emission_reduction = direct_emission_before_fs * (1 - new_fuel_emission_intensity/fuel_emission_intensity)
         direct_carbon_reduction_by_measure_cat["FS-Fuel Switch"] = fs_emission_reduction
         emission_reduction_by_measure_cat["FS-Fuel Switch"] = fs_emission_reduction
+        
+        print('Fuel emission intensity')
+        print(fuel_emission_intensity)
+        print('New fuel emission intensity')
+        print(new_fuel_emission_intensity)
         
     FS_measure_direct_emission_reduction = fs_emission_reduction
     new_fuel_share_dict["FS measure direct emission reduction"] = FS_measure_direct_emission_reduction
@@ -6205,7 +6214,13 @@ def PageEnd(self):
                         abatement_cost[measure]['Abatement Cost'] = all_DT_measures_dict[measure_cateogry][measure]["Abatement cost"] 
                         abatement_cost[measure]["Total Emissions Reduction"] = all_DT_measures_dict[measure_cateogry][measure]["Total Emissions Reduction"]
                         abatement_cost[measure]["Type"] = "DT"
-
+    
+    if len(abatement_cost) == 0:
+        abatement_cost['No measure selected'] = {}
+        abatement_cost['No measure selected']['Abatement Cost'] = 0
+        abatement_cost['No measure selected']['Total Emissions Reduction'] = 0
+        abatement_cost['No measure selected']['Type'] = 'EE'
+    
     df_abatement_cost = pd.DataFrame.from_dict(abatement_cost)
     df_abatement_cost = df_abatement_cost.T
     
@@ -6440,8 +6455,15 @@ def PageEnd(self):
     Total_investment = sum(total_investment_by_measure_cat.values())
     Total_energy_cost_savings = sum(energy_cost_savings_by_measure_cat.values())
     Total_carbon_price_cost_savings = (Total_carbon_all-Total_carbon_all_after_measures)*carbon_price
-    Overall_payback_period = Total_investment/Total_energy_cost_savings
-    Overall_payback_period_with_carbon_price = Total_investment/(Total_energy_cost_savings+Total_carbon_price_cost_savings)
+    if Total_energy_cost_savings != 0:
+        Overall_payback_period = Total_investment/Total_energy_cost_savings
+    else:
+        Overall_payback_period = np.nan        
+    
+    if Total_energy_cost_savings+Total_carbon_price_cost_savings != 0 :
+        Overall_payback_period_with_carbon_price = Total_investment/(Total_energy_cost_savings+Total_carbon_price_cost_savings)
+    else:
+        Overall_payback_period_with_carbon_price = np.nan
     #Overall_abatement_cost = (Total_investment+(Total_energy_cost_savings+Total_carbon_price_cost_savings)*20)/((Total_carbon_all-Total_carbon_all_after_measures)*20)
     
     key_values_dict_finance = {

@@ -98,6 +98,34 @@ def validate_inputs_production_inputs(self):
 
     return True
 
+def validate_inputs_electricity_generation_inputs(self):
+    input_errors = []
+    
+    def convert_string_to_float(string_input):
+        try:
+            float_output = float(string_input)
+        except ValueError:
+            float_output = 0
+        return float_output
+    
+    electricity_purchased_or_generated = convert_string_to_float(self.ui.total_energy_purchased_input.text()) + convert_string_to_float(self.ui.total_electricity_generated_onsite_input.text())
+    
+    if electricity_purchased_or_generated == 0:
+        input_errors.append("Total electricity purchased and generated must be greater than zero.")
+    
+    if convert_string_to_float(self.ui.total_electricity_generated_onsite_input.text()) < convert_string_to_float(self.ui.electricity_generated_input.text()):
+        input_errors.append("Electricity generated onsite and sold to the grid cannot be greater than electricity generated onsite.")
+        
+    if input_errors:
+        QMessageBox.critical(
+            self,
+            "Input Error",
+            "Total electricity purchased and generated must be greater than zero; \nElectricity generated onsite and sold to the grid cannot be greater than electricity generated onsite."
+        )
+        return False
+
+    return True
+
 def validate_inputs_grinding_inputs(self):
     input_errors = []
     
@@ -115,7 +143,6 @@ def validate_inputs_grinding_inputs(self):
         self.ui.vert_roller_mill_cement_input.text(),        
         self.ui.horizontal_roller_mill_cement_input.text()
         ]
-
     
     def convert_string_to_float(string_input):
         try:

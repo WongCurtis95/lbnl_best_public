@@ -361,7 +361,7 @@ def generate_part1_report(self):
         print("PDF generation failed:", e)
         return
 
-    QMessageBox.information(self, "Report Saved", f"Part 1 Report saved successfully.\n After review, please continue with Part 2.")
+    QMessageBox.information(self, "Report Saved", f"Part 1 Report saved successfully.\nAfter review, please continue with Part 2. \nPlease find your files here: {data_dir}")
     open_pdf(OUTPUT_FILE)
 
 def generate_part_2_report(self):
