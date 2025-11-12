@@ -77,7 +77,7 @@ from utils.calculations import (Page2_Costs_and_Emissions_Input_Default_Update_F
 from utils.pdf_output import generate_part1_report, final_report_pdf
 
 from utils.save_progress import load_progress_json
-from utils.warning_messages import validate_inputs, validate_inputs_production_inputs, validate_inputs_grinding_inputs, validate_inputs_new_fuel_share, validate_inputs_DT_measures, validate_inputs_electricity_generation_inputs
+from utils.warning_messages import validate_inputs, validate_inputs_production_inputs, validate_inputs_grinding_inputs, validate_inputs_new_fuel_share, validate_inputs_DT_measures, validate_inputs_electricity_generation_inputs, validate_inputs_energy_quick_inputs, validate_inputs_energy_detailed_inputs
 
 from resources_rc import *
 icon_ico = ":images/BEST_App_Logo.ico"
@@ -545,12 +545,18 @@ class Page6_Quick(QWidget):
         self.ui.electricity_quick_input_page6.setValidator(sci_validator)
         #self.ui.electricity_input_page6.setValidator(sci_validator)
 
+    def validate_inputs_energy_quick_inputs(self):
+        if not validate_inputs_energy_quick_inputs(self):
+            return  
+        else:
+            self.stack.setCurrentWidget(self.parent.page7)
+
     def go_to_previous(self):
         self.stack.setCurrentWidget(self.parent.page6)
 
     def next_page(self):
-        Page6_Energy_Input_Quick_Default_Update_Fields(self)
-        self.stack.setCurrentWidget(self.parent.page7)
+        Page6_Energy_Input_Quick_Default_Update_Fields(self)        
+        self.validate_inputs_energy_quick_inputs()
 
     def collect_page_data(self):
         data = {}
@@ -767,12 +773,19 @@ class Page6_Detailed_2(QWidget):
         self.ui.electricity_air_pollution_page6_b.setValidator(sci_validator)
         self.ui.electricity_ccus_page6_b.setValidator(sci_validator)
 
+    def validate_inputs_energy_detailed_inputs(self):
+        if not validate_inputs_energy_detailed_inputs(self):
+            return  
+        else:
+            self.stack.setCurrentWidget(self.parent.page7)
+    
+    
     def go_to_previous(self):
         self.stack.setCurrentWidget(self.parent.page6_Detailed)
 
     def next_page(self):
         Page6_Energy_Input_Detailed_Default_Update_Fields_2(self)
-        self.stack.setCurrentWidget(self.parent.page7)
+        self.validate_inputs_energy_detailed_inputs() # go to warnign message first before going to the next page
 
     def collect_page_data(self):
         data = {}

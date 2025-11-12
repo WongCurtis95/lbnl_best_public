@@ -1400,10 +1400,15 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     biomass_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['biomass']/10**6 
     msw_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['municipal wastes']/10**6 
     carbon_price = cost_and_emissions_dict["Carbon price ($/tCO2)"]
-
-    fuel_price = (Total_process_coal*coal_price + Total_process_coke*coke_price + Total_process_natural_gas*natural_gas_price + Total_process_biomass*biomass_price + Total_process_msw*msw_price) / Total_process_fuel
-    fuel_emission_intensity = (Total_process_coal*coal_emission_intensity + Total_process_coke*coke_emission_intensity + Total_process_natural_gas*natural_gas_emission_intensity + Total_process_biomass*biomass_emission_intensity + Total_process_msw*msw_emission_intensity) / Total_process_fuel
-
+    
+    if Total_process_fuel != 0:
+        fuel_price = (Total_process_coal*coal_price + Total_process_coke*coke_price + Total_process_natural_gas*natural_gas_price + Total_process_biomass*biomass_price + Total_process_msw*msw_price) / Total_process_fuel
+        fuel_emission_intensity = (Total_process_coal*coal_emission_intensity + Total_process_coke*coke_emission_intensity + Total_process_natural_gas*natural_gas_emission_intensity + Total_process_biomass*biomass_emission_intensity + Total_process_msw*msw_emission_intensity) / Total_process_fuel
+        
+    else:
+        fuel_price = coal_price
+        fuel_emission_intensity = coal_emission_intensity
+        
     cost_and_emissions_dict["Fuel Emission Intensity"] = fuel_emission_intensity
     cost_and_emissions_dict["Fuel Price"] = fuel_price
     # Save the updated dictionary
@@ -1452,7 +1457,10 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     
     
     for process in energy_input_dict["Energy input"].keys():
-        energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = energy_input_dict["Energy input"][process]["electricity"] / Total_process_electricity
+        if Total_process_electricity != 0:
+            energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = energy_input_dict["Energy input"][process]["electricity"] / Total_process_electricity
+        else:
+            energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = 1
         energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"] = energy_input_dict["Energy input"][process]["electricity"]
         energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"] = sum(energy_input_dict["Energy input"][process]["fuel"].values())
         energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6 + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
@@ -1805,10 +1813,14 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     biomass_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['biomass']/10**6 
     msw_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['municipal wastes']/10**6 
     carbon_price = cost_and_emissions_dict["Carbon price ($/tCO2)"]
-
-    fuel_price = (Total_process_coal*coal_price + Total_process_coke*coke_price + Total_process_natural_gas*natural_gas_price + Total_process_biomass*biomass_price + Total_process_msw*msw_price) / Total_process_fuel
-    fuel_emission_intensity = (Total_process_coal*coal_emission_intensity + Total_process_coke*coke_emission_intensity + Total_process_natural_gas*natural_gas_emission_intensity + Total_process_biomass*biomass_emission_intensity + Total_process_msw*msw_emission_intensity) / Total_process_fuel
-
+    
+    if Total_process_fuel != 0:
+        fuel_price = (Total_process_coal*coal_price + Total_process_coke*coke_price + Total_process_natural_gas*natural_gas_price + Total_process_biomass*biomass_price + Total_process_msw*msw_price) / Total_process_fuel
+        fuel_emission_intensity = (Total_process_coal*coal_emission_intensity + Total_process_coke*coke_emission_intensity + Total_process_natural_gas*natural_gas_emission_intensity + Total_process_biomass*biomass_emission_intensity + Total_process_msw*msw_emission_intensity) / Total_process_fuel
+    else:
+        fuel_price = coal_price
+        fuel_emission_intensity = coal_emission_intensity
+        
     cost_and_emissions_dict["Fuel Emission Intensity"] = fuel_emission_intensity
     cost_and_emissions_dict["Fuel Price"] = fuel_price
     # Save the updated dictionary
@@ -1856,7 +1868,10 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]
     
     for process in energy_input_dict["Energy input"].keys():
-        energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = energy_input_dict["Energy input"][process]["electricity"] / Total_process_electricity
+        if Total_process_electricity != 0:
+            energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = energy_input_dict["Energy input"][process]["electricity"] / Total_process_electricity
+        else:
+            energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = 1
         energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"] = energy_input_dict["Energy input"][process]["electricity"]
         energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"] = sum(energy_input_dict["Energy input"][process]["fuel"].values())
         energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6 + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]

@@ -181,7 +181,79 @@ def validate_inputs_grinding_inputs(self):
         return False
 
     return True
+
+def validate_inputs_energy_quick_inputs(self):
+    input_errors = []
     
+    list_of_fuel_inputs =[
+        self.ui.coal_quick_input_page6.text(),
+        self.ui.coke_quick_input_page6.text(),
+        self.ui.natural_gas_quick_input_page6.text(),
+        self.ui.biomass_quick_input_page6.text(),
+        self.ui.msw_quick_input_page6.text()
+        ]
+    
+    def convert_string_to_float(string_input):
+        try:
+            float_output = float(string_input)
+        except ValueError:
+            float_output = 0
+        return float_output
+    
+    Total_fuel = 0
+    for fuel in list_of_fuel_inputs:
+        Total_fuel += convert_string_to_float(fuel)
+    
+    if Total_fuel == 0:
+        input_errors.append("Total fuel input must be greater than zero.")
+    
+    Total_electricity = convert_string_to_float(self.ui.electricity_quick_input_page6.text())
+    if Total_electricity == 0:
+        input_errors.append("Electricity input must be greater than zero.")
+        
+    if input_errors:
+        QMessageBox.critical(
+            self,
+            "Input Error",
+            "Electricity and total fuel input must be greater than zero."
+        )
+        return False
+
+    return True
+
+def validate_inputs_energy_detailed_inputs(self):
+    input_errors = []
+    from utils.save_progress import load_progress_json, get_user_data_dir
+    import json
+    
+    data_dir = get_user_data_dir()
+    data_dir.mkdir(parents=True, exist_ok=True)
+    json_folder = data_dir / "Saved Progress"
+    json_folder.mkdir(parents=True, exist_ok=True)
+    filepath = json_folder / "Energy_Input.json"
+    
+    with open(filepath, "r") as f:
+        energy_input_dict = json.load(f)
+    
+    Total_fuel = energy_input_dict["Totals"]["Total process fuel"]
+    Total_electricity = energy_input_dict["Totals"]["Total process electricity"]
+    
+    if Total_fuel == 0:
+        input_errors.append("Total fuel input must be greater than zero.")
+    
+    if Total_electricity == 0:
+        input_errors.append("Total electricity input must be greater than zero.")
+        
+    if input_errors:
+        QMessageBox.critical(
+            self,
+            "Input Error",
+            "Total electricity and total fuel input must be greater than zero."
+        )
+        return False
+
+    return True
+
 def validate_inputs_new_fuel_share(self):
     input_errors = []
     
