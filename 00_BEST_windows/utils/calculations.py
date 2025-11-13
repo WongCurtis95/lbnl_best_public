@@ -5417,7 +5417,7 @@ def Page9_Share_Default_Update_Fields(self):
     # Fuel Switching
     new_fuel_share_dict = {
     "FS-Fuel Switching": {
-        "coal": 100,
+        "coal": 0,
         "coke": 0.0,
         "natural gas": 0,
         "biomass": 0,
@@ -5514,13 +5514,19 @@ def Page9_Share_Default_Update_Fields(self):
         print('FS measures are not evaluated') # where is the partial application?
     else:
         
-        new_fuel_emission_intensity = (coal_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coal"]/100 + coke_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coke"]/100 + natural_gas_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["natural gas"]/100 + biomass_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["biomass"]/100 + msw_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["municipal wastes"]/100)/10**6
+        new_fuel_emission_intensity = (coal_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coal"]/100 + coke_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coke"]/100 + natural_gas_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["natural gas"]/100 + biomass_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["biomass"]/100 + msw_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["municipal wastes"]/100)
         cost_and_emissions_dict["New fuel emission intensity"] = new_fuel_emission_intensity
         direct_emission_before_fs = Total_carbon_direct - EE_measure_direct_emission_reduction
         fs_emission_reduction = direct_emission_before_fs * (1 - new_fuel_emission_intensity/fuel_emission_intensity)
         direct_carbon_reduction_by_measure_cat["FS-Fuel Switch"] = fs_emission_reduction
         emission_reduction_by_measure_cat["FS-Fuel Switch"] = fs_emission_reduction
         
+        print(new_fuel_share_dict["FS-Fuel Switching"]["coal"])
+        print(new_fuel_share_dict["FS-Fuel Switching"]["coke"])
+        print(new_fuel_share_dict["FS-Fuel Switching"]["natural gas"])
+        print(coal_emission_intensity)
+        print(coke_emission_intensity)
+        print(natural_gas_emission_intensity)
         print('Fuel emission intensity')
         print(fuel_emission_intensity)
         print('New fuel emission intensity')
