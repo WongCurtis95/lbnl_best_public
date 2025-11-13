@@ -77,7 +77,7 @@ def convert_energy_units(input_unit, input_value, HHV_value, output_unit):
     elif input_unit == "$/kg":
         output_value = input_value/HHV_value
     elif input_unit == "$/metric ton":
-        output_value = 0.01*input_value/HHV_value
+        output_value = 0.001*input_value/HHV_value
     elif input_unit == "$/Mcf":
         output_value = input_value/1094.052
     elif input_unit == "$/kWh":
@@ -118,7 +118,7 @@ def Page2_Costs_and_Emissions_Input_Default_Update_Fields(self):
         "Cost of electricity": 0.2,
         "Cost of electricity unit": "$/kWh",
         "Cost of fuel": {
-            "coal": 100.0,
+            "coal": 90.0,
             "coke": 180.0,
             "natural gas": 6.0,
             "biomass": 40.0,
@@ -131,7 +131,7 @@ def Page2_Costs_and_Emissions_Input_Default_Update_Fields(self):
             "biomass": "$/metric ton",
             "municipal wastes": "$/metric ton"
         },
-        "Carbon price ($/tCO2)": 20.0,
+        "Carbon price ($/tCO2)": 4.0,
         "Grid CO2 emission intensity (tCO2/MWh)": 0.8,
         "Fuel CO2 intensity (tCO2/TJ)": {
             "coal": 93,
@@ -147,7 +147,7 @@ def Page2_Costs_and_Emissions_Input_Default_Update_Fields(self):
             "biomass": 20.0,
             "municipal wastes": 22.0
         },
-        "Cost of electricity in $/kWh": 0.2,
+        "Cost of electricity in $/kWh": 0.067,
         "Cost of fuel in $/MJ": {
             "coal": 0.03333333333333333,
             "coke": 0.06923076923076923,
