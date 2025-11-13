@@ -5521,17 +5521,7 @@ def Page9_Share_Default_Update_Fields(self):
         direct_carbon_reduction_by_measure_cat["FS-Fuel Switch"] = fs_emission_reduction
         emission_reduction_by_measure_cat["FS-Fuel Switch"] = fs_emission_reduction
         
-        print(new_fuel_share_dict["FS-Fuel Switching"]["coal"])
-        print(new_fuel_share_dict["FS-Fuel Switching"]["coke"])
-        print(new_fuel_share_dict["FS-Fuel Switching"]["natural gas"])
-        print(coal_emission_intensity)
-        print(coke_emission_intensity)
-        print(natural_gas_emission_intensity)
-        print('Fuel emission intensity')
-        print(fuel_emission_intensity)
-        print('New fuel emission intensity')
-        print(new_fuel_emission_intensity)
-        
+       
     FS_measure_direct_emission_reduction = fs_emission_reduction
     new_fuel_share_dict["FS measure direct emission reduction"] = FS_measure_direct_emission_reduction
 
@@ -6211,7 +6201,21 @@ def PageEnd(self):
     IBP_total_primary_energy = detailed_output_dict["IBP total primary energy"]
     IBP_total_fuel = detailed_output_dict["IBP total fuel"]
     IBP_total_electricity = detailed_output_dict["IBP total electricity"]
-
+    
+    # New fuel share loading
+    new_coal_share = new_fuel_share_dict["FS-Fuel Switching"]["coal"] 
+    new_coke_share = new_fuel_share_dict["FS-Fuel Switching"]["coke"] 
+    new_natural_gas_share = new_fuel_share_dict["FS-Fuel Switching"]["natural gas"] 
+    new_biomass_share = new_fuel_share_dict["FS-Fuel Switching"]["biomass"] 
+    new_msw_share = new_fuel_share_dict["FS-Fuel Switching"]["municipal wastes"] 
+    
+    coal_price = cost_and_emissions_dict["Cost of fuel in $/MJ"]['coal']
+    coke_price = cost_and_emissions_dict["Cost of fuel in $/MJ"]['coke']
+    natural_gas_price = cost_and_emissions_dict["Cost of fuel in $/MJ"]['natural gas']
+    biomass_price = cost_and_emissions_dict["Cost of fuel in $/MJ"]['biomass']
+    msw_price = cost_and_emissions_dict["Cost of fuel in $/MJ"]['municipal wastes']
+    
+    new_fuel_price = coal_price*new_coal_share/100 + coke_price*new_coke_share/100 + natural_gas_price*new_natural_gas_share/100 + biomass_price*new_biomass_share/100 + msw_price*new_msw_share/100
     
     exempt_keys_all_measures_dict = ['EE_measure_direct_emission_reduction', 'EE_measure_indirect_emission_reduction']
     
@@ -6235,12 +6239,18 @@ def PageEnd(self):
                         abatement_cost[measure]['Abatement Cost'] = all_DT_measures_dict[measure_cateogry][measure]["Abatement cost"] 
                         abatement_cost[measure]["Total Emissions Reduction"] = all_DT_measures_dict[measure_cateogry][measure]["Total Emissions Reduction"]
                         abatement_cost[measure]["Type"] = "DT"
+        # Note: here, CAPEX of fuel switching is assumed to be zero
+        if new_fuel_emission_intensity != fuel_emission_intensity:
+            abatement_cost['Fuel Switching'] = {}
+            abatement_cost['Fuel Switching']['Abatement Cost'] = (new_fuel_price - fuel_price)/(fuel_emission_intensity - new_fuel_emission_intensity)
+            abatement_cost['Fuel Switching']["Total Emissions Reduction"] = new_fuel_share_dict["FS measure direct emission reduction"]
+            abatement_cost['Fuel Switching']["Type"] = "FS"
     
     if len(abatement_cost) == 0:
-        abatement_cost['No measure selected'] = {}
-        abatement_cost['No measure selected']['Abatement Cost'] = 0
-        abatement_cost['No measure selected']['Total Emissions Reduction'] = 0
-        abatement_cost['No measure selected']['Type'] = 'EE'
+        abatement_cost['No EE and DT measures selected'] = {}
+        abatement_cost['No EE and DT measures selected']['Abatement Cost'] = 0
+        abatement_cost['No EE and DT measures selected']['Total Emissions Reduction'] = 0
+        abatement_cost['No EE and DT measures selected']['Type'] = 'N/A'
     
     df_abatement_cost = pd.DataFrame.from_dict(abatement_cost)
     df_abatement_cost = df_abatement_cost.T
@@ -6277,6 +6287,8 @@ def PageEnd(self):
     color_map = {
         'EE': 'red',
         'DT': 'blue',
+        'FS': 'green',
+        'N/A': 'red'
         }
 
     colors = [color_map[source] for source in sources]
