@@ -486,7 +486,7 @@ def generate_part_2_report(self):
     elements.append(Paragraph("Marginal Abatement Cost Curve", styles['Heading2']))
     elements.append(Paragraph("Red = Energy efficiency measures; Blue = Other measures", styles['Normal']))
     elements.append(Spacer(1, 4))
-    elements.append(Paragraph("EE = Energy Efficiency; DT = Other Technologies", styles['Normal']))
+    elements.append(Paragraph("EE = Energy Efficiency; FS = Fuel Switching; DT = Other Technologies", styles['Normal']))
     elements.append(Image(graph_7, width=usable_width*.75, height=usable_width*.75*0.66))
     elements.append(Spacer(1, 4))
     

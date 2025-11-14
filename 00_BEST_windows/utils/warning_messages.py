@@ -115,12 +115,30 @@ def validate_inputs_electricity_generation_inputs(self):
     
     if convert_string_to_float(self.ui.total_electricity_generated_onsite_input.text()) < convert_string_to_float(self.ui.electricity_generated_input.text()):
         input_errors.append("Electricity generated onsite and sold to the grid cannot be greater than electricity generated onsite.")
-        
+    
+    if convert_string_to_float(self.ui.total_electricity_generated_onsite_input.text()) < (convert_string_to_float(self.ui.waste_heat_input_page5.text()) + convert_string_to_float(self.ui.onsite_renewables_input_page5.text())):
+        input_errors.append("The sum of waste heat electricity generation and onsite renewable generation cannot be greater than electricity generated onsite.")
+    
+    from utils.save_progress import load_progress_json, get_user_data_dir
+    import json
+    
+    data_dir = get_user_data_dir()
+    data_dir.mkdir(parents=True, exist_ok=True)
+    json_folder = data_dir / "Saved Progress"
+    json_folder.mkdir(parents=True, exist_ok=True)
+    filepath = json_folder / "Electricity_Generation_Input.json"
+    
+    with open(filepath, "r") as f:
+        electricity_generation_input_dict = json.load(f)
+    
+    if convert_string_to_float(self.ui.total_electricity_generated_onsite_input.text()) < (electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - waste heat"] + convert_string_to_float(self.ui.onsite_renewables_input_page5.text())):
+        input_errors.append("The sum of waste heat electricity generation and onsite renewable generation cannot be greater than electricity generated onsite.")
+
     if input_errors:
         QMessageBox.critical(
             self,
             "Input Error",
-            "Total electricity purchased and generated must be greater than zero; \nElectricity generated onsite and sold to the grid cannot be greater than electricity generated onsite."
+            "Total electricity purchased and generated must be greater than zero; \nElectricity generated onsite and sold to the grid cannot be greater than electricity generated onsite; \nThe sum of waste heat electricity generation and onsite renewable generation cannot be greater than electricity generated onsite."
         )
         return False
 

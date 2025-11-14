@@ -5539,7 +5539,7 @@ def Page9_Share_Default_Update_Fields(self):
     }
 
     if self.ui.share_electricity_input_page9.text() != '':
-        new_re_share_dict["RE-Renewable Energy"]["share of electricity from purchased or self-generated renewable energy"] = float(self.ui.share_electricity_input_page9.text())
+        new_re_share_dict["RE-Renewable Energy"]["share of electricity from purchased or self-generated renewable energy"] = float(self.ui.share_electricity_input_page9.text())/100
 
     re_emission_reduction_indirect = 0
     re_emission_reduction_direct = 0
