@@ -6012,7 +6012,7 @@ def Page10_AllDTMeasures_Default_Update_Fields(self):
                         if measures_data[measure_cateogry][measure]['Total Investments'] <= 0:
                             measures_data[measure_cateogry][measure]["Payback Period with carbon price"] = "immediate"
                         else: 
-                            measures_data[measure_cateogry][measure]["Payback Period with carbon price"] = measures_data[measure_cateogry][measure]['Total Investments']*CRF / (measures_data[measure_cateogry][measure]["Total Emissions Reduction"]*carbon_price + (measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_price + measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"]*fuel_price)*Total_cement)
+                            measures_data[measure_cateogry][measure]["Payback Period with carbon price"] = measures_data[measure_cateogry][measure]['Total Investments'] / (measures_data[measure_cateogry][measure]["Total Emissions Reduction"]*carbon_price + (measures_data[measure_cateogry][measure]["Energy Impacts (electricity)"]*electricity_price + measures_data[measure_cateogry][measure]["Energy Impacts (thermal)"]*fuel_price)*Total_cement)
                     else:
                         measures_data[measure_cateogry][measure]["Payback Period with carbon price"] = "N/A"
                     
