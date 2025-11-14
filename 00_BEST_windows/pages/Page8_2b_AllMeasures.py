@@ -8,6 +8,9 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+from resources_rc import *
+main_page_image = ":images/BEST_landing_abstract.png"
+side_page_image = ":images/BEST_side_abstract.png"
 
 class Ui_Page8_AllMeasures_2b(object):
     def setupUi(self, Page8_AllMeasures_2b):
@@ -22,7 +25,7 @@ class Ui_Page8_AllMeasures_2b(object):
         self.cement_decor = QtWidgets.QLabel(parent=Page8_AllMeasures_2b)
         self.cement_decor.setGeometry(QtCore.QRect(0, 0, 171, 711))
         self.cement_decor.setText("")
-        self.cement_decor.setPixmap(QtGui.QPixmap("ui_files_latest\\../prototype/images/BEST_side_abstract.png"))
+        self.cement_decor.setPixmap(QtGui.QPixmap(side_page_image))
         self.cement_decor.setObjectName("cement_decor")
         self.layoutWidget = QtWidgets.QWidget(parent=Page8_AllMeasures_2b)
         self.layoutWidget.setGeometry(QtCore.QRect(190, 650, 1051, 35))
@@ -338,7 +341,7 @@ class Ui_Page8_AllMeasures_2b(object):
         self.side_image = QtWidgets.QLabel(parent=Page8_AllMeasures_2b)
         self.side_image.setGeometry(QtCore.QRect(0, -30, 171, 761))
         self.side_image.setText("")
-        self.side_image.setPixmap(QtGui.QPixmap("ui_files_latest\\../images/BEST_side_abstract.png"))
+        self.side_image.setPixmap(QtGui.QPixmap(side_page_image))
         self.side_image.setObjectName("side_image")
         self.progressBar = QtWidgets.QProgressBar(parent=Page8_AllMeasures_2b)
         self.progressBar.setGeometry(QtCore.QRect(200, 20, 1001, 23))

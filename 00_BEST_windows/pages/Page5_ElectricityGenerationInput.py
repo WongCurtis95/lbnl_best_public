@@ -8,6 +8,9 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+from resources_rc import *
+main_page_image = ":images/BEST_landing_abstract.png"
+side_page_image = ":images/BEST_side_abstract.png"
 
 class Ui_Page5_ElectricityGenerationInput(object):
     def setupUi(self, Page5_ElectricityGenerationInput):
@@ -244,7 +247,7 @@ class Ui_Page5_ElectricityGenerationInput(object):
         self.side_image = QtWidgets.QLabel(parent=Page5_ElectricityGenerationInput)
         self.side_image.setGeometry(QtCore.QRect(0, -30, 171, 761))
         self.side_image.setText("")
-        self.side_image.setPixmap(QtGui.QPixmap("ui_files_latest\\../images/BEST_side_abstract.png"))
+        self.side_image.setPixmap(QtGui.QPixmap(side_page_image))
         self.side_image.setObjectName("side_image")
         self.layoutWidget_2 = QtWidgets.QWidget(parent=Page5_ElectricityGenerationInput)
         self.layoutWidget_2.setGeometry(QtCore.QRect(200, 40, 1001, 22))
