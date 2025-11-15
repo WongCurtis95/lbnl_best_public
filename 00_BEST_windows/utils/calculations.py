@@ -149,15 +149,15 @@ def Page2_Costs_and_Emissions_Input_Default_Update_Fields(self):
         },
         "Cost of electricity in $/kWh": 0.067,
         "Cost of fuel in $/MJ": {
-            "coal": 0.03333333333333333,
-            "coke": 0.06923076923076923,
+            "coal": 0.003333333333333333,
+            "coke": 0.006923076923076923,
             "natural gas": 0.00569070991606203,
-            "biomass": 0.02,
-            "municipal wastes": 0.018181818181818184
+            "biomass": 0.002,
+            "municipal wastes": 0.0018181818181818184
         },
         "Process emission per metric ton of clinker (tCO2/t clinker)": 0.507} 
         # Source of alternative fuel CO2 emission intensity: Global Energy Intelligence, Emissions Impacts of Alternative Fuels Combustion in the Cement Industry, https://www.globalefficiencyintel.com/emissions-impacts-of-alternative-fuels-combustion-in-the-cement-industry
-
+        
     # Cost of Electricity
     if self.ui.electricity_input.text() != "":
         cost_and_emissions_dict["Cost of electricity"] = _f(self.ui.electricity_input.text())
@@ -3190,7 +3190,10 @@ def Part_1_Detailed_Output(self):
     "Clinker ratio": 0.5,
     "Overall emission intensity": 0}
 
-    IBP_with_different_fuel_carbon_direct = IBP_carbon_direct * (international_best_practice_intensity_values_dict['Fuel emission intensity']/fuel_emission_intensity)
+    if fuel_emission_intensity != 0:
+        IBP_with_different_fuel_carbon_direct = IBP_carbon_direct * (international_best_practice_intensity_values_dict['Fuel emission intensity']/fuel_emission_intensity)
+    else:
+        IBP_with_different_fuel_carbon_direct = 0
     #IBP_with_different_fuel_and_clinker_ratio_carbon_all = IBP_carbon_indirect + (IBP_with_different_fuel_carbon_direct + Total_clinker*cost_and_emissions_dict["Process emission per metric ton of clinker (tCO2/t clinker)"])*(international_best_practice_intensity_values_dict['Clinker ratio']/production_input_dict["Clinker to cement ratio"]) # this is only approximate, because not all direct energy is for clinker making
     IBP_with_different_fuel_and_process_carbon_all = Total_cement * international_best_practice_intensity_values_dict['Overall emission intensity']
 
@@ -5187,12 +5190,18 @@ def EE_measure(self):
                     # Add abatement cost
                     if measures_data[measure_cateogry][measure]["Energy Type"] == 'Electricity':
                         if measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"] != 0:
-                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF - measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_price)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_emission_intensity) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero # Note: when using CRF, use annual energy savings and emissions avoided only, no need to multiply by project life
+                            if measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_emission_intensity != 0:
+                                measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF - measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_price)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*electricity_emission_intensity) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero # Note: when using CRF, use annual energy savings and emissions avoided only, no need to multiply by project life
+                            else:
+                                measures_data[measure_cateogry][measure]["Abatement cost"] = 'N/A'
                         else:
                             measures_data[measure_cateogry][measure]["Abatement cost"] = 'N/A'
                     elif measures_data[measure_cateogry][measure]["Energy Type"] == 'Fuel':
                         if measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"] != 0:
-                            measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF - measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_price)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_emission_intensity) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero
+                            if measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_emission_intensity != 0:
+                                measures_data[measure_cateogry][measure]["Abatement cost"] = (measures_data[measure_cateogry][measure]["Total Costs"]*CRF - measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_price)/(measures_data[measure_cateogry][measure]["Total Energy Savings - Absolute"]*fuel_emission_intensity) # 20 is assumed to be the project lifetime. Salvage value is assumed to be zero
+                            else:
+                                measures_data[measure_cateogry][measure]["Abatement cost"] = 'N/A'
                         else:
                             measures_data[measure_cateogry][measure]["Abatement cost"] = 'N/A'
                     # Add total emission reduction
@@ -5517,7 +5526,10 @@ def Page9_Share_Default_Update_Fields(self):
         new_fuel_emission_intensity = (coal_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coal"]/100 + coke_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["coke"]/100 + natural_gas_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["natural gas"]/100 + biomass_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["biomass"]/100 + msw_emission_intensity * new_fuel_share_dict["FS-Fuel Switching"]["municipal wastes"]/100)
         cost_and_emissions_dict["New fuel emission intensity"] = new_fuel_emission_intensity
         direct_emission_before_fs = Total_carbon_direct - EE_measure_direct_emission_reduction
-        fs_emission_reduction = direct_emission_before_fs * (1 - new_fuel_emission_intensity/fuel_emission_intensity)
+        if fuel_emission_intensity != 0:
+            fs_emission_reduction = direct_emission_before_fs * (1 - new_fuel_emission_intensity/fuel_emission_intensity)
+        else:
+            fs_emission_reduction = 0
         direct_carbon_reduction_by_measure_cat["FS-Fuel Switch"] = fs_emission_reduction
         emission_reduction_by_measure_cat["FS-Fuel Switch"] = fs_emission_reduction
         
@@ -5550,8 +5562,10 @@ def Page9_Share_Default_Update_Fields(self):
         indirect_emission_before_re = Total_carbon_indirect - EE_measure_indirect_emission_reduction
         
         re_emission_reduction_indirect = indirect_emission_before_re * (new_re_share_dict["RE-Renewable Energy"]["share of electricity from purchased or self-generated renewable energy"] - onsite_RE_electricity_generation / Total_process_electricity)
-        re_emission_reduction_direct = re_emission_reduction_indirect*((Total_process_electricity - purchased_electricity - onsite_RE_electricity_generation - waste_heat_electricity_generation) / purchased_electricity)*((electricity_fuel_emission_intensity*3.6/onsite_electricity_generation_efficiency)/electricity_emission_intensity)
-        
+        if electricity_emission_intensity != 0:
+            re_emission_reduction_direct = re_emission_reduction_indirect*((Total_process_electricity - purchased_electricity - onsite_RE_electricity_generation - waste_heat_electricity_generation) / purchased_electricity)*((electricity_fuel_emission_intensity*3.6/onsite_electricity_generation_efficiency)/electricity_emission_intensity)
+        else:
+            re_emission_reduction_direct = 0
         indirect_carbon_reduction_by_measure_cat["RE-Renewable Energy"] = re_emission_reduction_indirect
         direct_carbon_reduction_by_measure_cat["RE-Renewable Energy"] = re_emission_reduction_direct
         emission_reduction_by_measure_cat["RE-Renewable Energy"] = re_emission_reduction_indirect + re_emission_reduction_direct
@@ -6242,7 +6256,10 @@ def PageEnd(self):
         # Note: here, CAPEX of fuel switching is assumed to be zero
         if new_fuel_emission_intensity != fuel_emission_intensity:
             abatement_cost['Fuel Switching'] = {}
-            abatement_cost['Fuel Switching']['Abatement Cost'] = (new_fuel_price - fuel_price)/(fuel_emission_intensity - new_fuel_emission_intensity)
+            if fuel_emission_intensity - new_fuel_emission_intensity >0:
+                abatement_cost['Fuel Switching']['Abatement Cost'] = (new_fuel_price - fuel_price)/(fuel_emission_intensity - new_fuel_emission_intensity)
+            else:
+                abatement_cost['Fuel Switching']['Abatement Cost'] = 'N/A'
             abatement_cost['Fuel Switching']["Total Emissions Reduction"] = new_fuel_share_dict["FS measure direct emission reduction"]
             abatement_cost['Fuel Switching']["Type"] = "FS"
     
