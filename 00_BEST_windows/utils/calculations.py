@@ -1479,7 +1479,7 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     energy_input_dict["Total Primary Energy Consumption (MJ/year)"] = Total_primary_energy
     energy_input_dict["Total Process Fuel Consumption"] = Total_process_fuel
 
-    with open(json_folder / "Electricity_Generation.json", "w") as f:
+    with open(json_folder / "Electricity_Generation_Input.json", "w") as f:
         json.dump(electricity_generation_input_dict, f, indent=4)
 
     print("energy_input_dict end of Page 6")
@@ -1891,7 +1891,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     energy_input_dict["Total Primary Energy Consumption (MJ/year)"] = Total_primary_energy
     energy_input_dict["Total Process Fuel Consumption"] = Total_process_fuel
 
-    with open(json_folder / "Electricity_Generation.json", "w") as f:
+    with open(json_folder / "Electricity_Generation_Input.json", "w") as f:
         json.dump(electricity_generation_input_dict, f, indent=4)
 
     with open(json_folder / "Energy_Input.json", "w") as f:
@@ -1959,7 +1959,7 @@ def Page7_Target_Default_Update_Fields(self):
     Total_process_msw = energy_input_dict["Totals"]["Total process msw"]
 
     # Electricity Generation Data
-    with open(json_folder / "Electricity_Generation.json", "r") as f:
+    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
         electricity_generation_input_dict = json.load(f)
 
     # Cost and Emissions Data
@@ -2370,7 +2370,7 @@ def Part_1_Detailed_Output(self):
         energy_input_dict = json.load(f)
         
     # Electricity Generation Data
-    with open(json_folder / "Electricity_Generation.json", "r") as f:
+    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
         electricity_generation_input_dict = json.load(f)
 
     for process in detailed_output_dict.keys():
@@ -3144,7 +3144,7 @@ def Part_1_Detailed_Output(self):
     for item in benchmarking_results_co2_dict["International Benchmarking"].keys():
         benchmarking_results_co2_dict["International Benchmarking"][item]["Potential Carbon Cost Reduction (USD/year)"] = benchmarking_results_co2_dict["International Benchmarking"][item]["Potential for CO2 Emission Reduction"] * cost_and_emissions_dict["Carbon price ($/tCO2)"]
 
-    with open(json_folder / "Electricity_Generation.json", "r") as f:
+    with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
         electricity_generation_input_dict = json.load(f)
 
     electricity_generation_emissions =electricity_generation_input_dict["Electricity Generation Emissions"]

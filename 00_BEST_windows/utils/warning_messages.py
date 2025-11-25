@@ -228,12 +228,33 @@ def validate_inputs_energy_quick_inputs(self):
     Total_electricity = convert_string_to_float(self.ui.electricity_quick_input_page6.text())
     if Total_electricity == 0:
         input_errors.append("Electricity input must be greater than zero.")
+    
+    from utils.save_progress import load_progress_json, get_user_data_dir
+    import json
+    
+    data_dir = get_user_data_dir()
+    data_dir.mkdir(parents=True, exist_ok=True)
+    json_folder = data_dir / "Saved Progress"
+    json_folder.mkdir(parents=True, exist_ok=True)
+    filepath = json_folder / "Electricity_Generation_Input.json"
+    
+    with open(filepath, "r") as f:
+        electricity_generation_input_dict = json.load(f)
+        
+    Total_electricity_produced_or_purchased = electricity_generation_input_dict["Total electricity purchased (kWh/year)"] + electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"]
+    
+    difference_total_process_electricity_and_input_electricity = Total_electricity_produced_or_purchased - Total_electricity
+    total_process_electricity_to_input_electricity = abs(difference_total_process_electricity_and_input_electricity) / Total_electricity_produced_or_purchased
+    if difference_total_process_electricity_and_input_electricity < 0:
+        input_errors.append("Total process electricity input is greater than electricity generated and used at cement plant.")
+    elif total_process_electricity_to_input_electricity > 0.05:
+        input_errors.append("Total process electricity input is lower than 95% of total electricity generated & used and purchased at cement plant.")
         
     if input_errors:
         QMessageBox.critical(
             self,
             "Input Error",
-            "Electricity and total fuel input must be greater than zero."
+            "Electricity and total fuel input must both be greater than zero. \nTotal process electricity input should be between 95-100% of electricity generated & used and purchased at cement plant. \nYour total process electricity input is "+str(Total_electricity)+"kWh/year and electricity generated & used and purchased at cement plant is "+str(Total_electricity_produced_or_purchased)+"kWh/year."
         )
         return False
 
@@ -252,6 +273,11 @@ def validate_inputs_energy_detailed_inputs(self):
     
     with open(filepath, "r") as f:
         energy_input_dict = json.load(f)
+        
+    filepath = json_folder / "Electricity_Generation_Input.json"
+    
+    with open(filepath, "r") as f:
+        electricity_generation_input_dict = json.load(f)
     
     Total_fuel = energy_input_dict["Totals"]["Total process fuel"]
     Total_electricity = energy_input_dict["Totals"]["Total process electricity"]
@@ -262,11 +288,20 @@ def validate_inputs_energy_detailed_inputs(self):
     if Total_electricity == 0:
         input_errors.append("Total electricity input must be greater than zero.")
         
+    Total_electricity_produced_or_purchased = electricity_generation_input_dict["Total electricity purchased (kWh/year)"] + electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"]
+    
+    difference_total_process_electricity_and_input_electricity = Total_electricity_produced_or_purchased - Total_electricity
+    total_process_electricity_to_input_electricity = abs(difference_total_process_electricity_and_input_electricity) / Total_electricity_produced_or_purchased
+    if difference_total_process_electricity_and_input_electricity < 0:
+        input_errors.append("Total process electricity input is greater than electricity generated and used at cement plant.")
+    elif total_process_electricity_to_input_electricity > 0.05:
+        input_errors.append("Total process electricity input is lower than 95% of total electricity generated & used and purchased at cement plant.")
+        
     if input_errors:
         QMessageBox.critical(
             self,
             "Input Error",
-            "Total electricity and total fuel input must be greater than zero."
+            "Electricity and total fuel input must both be greater than zero. \nTotal process electricity input should be between 95-100% of electricity generated & used and purchased at cement plant. \nYour total process electricity input is "+str(Total_electricity)+"kWh/year and electricity generated & used and purchased at cement plant is "+str(Total_electricity_produced_or_purchased)+"kWh/year."
         )
         return False
 
