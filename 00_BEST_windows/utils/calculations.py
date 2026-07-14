@@ -2,6 +2,8 @@
 import json
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # Non-interactive backend, required when running inside PyQt6
 import matplotlib.pyplot as plt
 from utils.save_progress import load_progress_json, get_user_data_dir
 import re
@@ -84,6 +86,8 @@ def convert_energy_units(input_unit, input_value, HHV_value, output_unit):
         output_value = input_value/3.6
     elif input_unit == "$/MWh":
         output_value = input_value/(3.6*1000)
+    elif input_unit == "$/TOE":
+        output_value = input_value/41868
     else:
         output_value = np.nan
     

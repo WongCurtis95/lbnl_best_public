@@ -1,4 +1,5 @@
 import sys
+import traceback
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QStackedWidget, QVBoxLayout,
     QPushButton, QMainWindow
@@ -280,6 +281,15 @@ class Page3(QWidget):
         Page3_Production_Input_Default_Update_Fields(self)
         #self.stack.setCurrentWidget(self.parent.page5) # skip page 4: carbon capture # proceed to the next page via the warning message
         self.validate_inputs_production_inputs()
+        
+        from utils.save_progress import get_user_data_dir
+        data_dir = get_user_data_dir()
+        json_folder = data_dir / "Saved Progress"
+        json_folder.mkdir(parents=True, exist_ok=True)
+        carbon_capture_path = json_folder / "Carbon_Capture_Input.json" # this is required, since now the carbon capture input page is skipped, the json file "Carbon_Capture_Input" is never created, which creates errors when the code runs
+        if not carbon_capture_path.exists():
+            with open(carbon_capture_path, "w") as f:
+                json.dump({"name": "Carbon Capture", "CO2 captured (million metric tons/year)": 0.0}, f, indent=4) # creates an empty "Carbon_Capture_Input" to avoid error
 
     def collect_page_data(self):
         data = {}
@@ -843,10 +853,24 @@ class Page7(QWidget):
             self.stack.setCurrentWidget(self.parent.page6_Detailed_2) # Page6_Detailed_2
 
     def next_page(self):
-        Page7_Target_Default_Update_Fields(self)
-        Part_1_Detailed_Output(self)
-        generate_part1_report(self) 
-        self.stack.setCurrentWidget(self.parent.page8_1)
+        try:
+            Page7_Target_Default_Update_Fields(self)
+
+            # Page 4 (Carbon Capture) is skipped, so ensure its JSON exists
+            from utils.save_progress import get_user_data_dir
+            data_dir = get_user_data_dir()
+            json_folder = data_dir / "Saved Progress"
+            json_folder.mkdir(parents=True, exist_ok=True)
+            carbon_capture_path = json_folder / "Carbon_Capture_Input.json"
+            if not carbon_capture_path.exists():
+                with open(carbon_capture_path, "w") as f:
+                    json.dump({"name": "Carbon Capture", "CO2 captured (million metric tons/year)": 0.0}, f, indent=4)
+
+            Part_1_Detailed_Output(self)
+            generate_part1_report(self)
+            self.stack.setCurrentWidget(self.parent.page8_1)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"An error occurred:\n\n{traceback.format_exc()}")
 
     def collect_page_data(self):
         data = {}
@@ -1522,6 +1546,21 @@ class MainApp(QMainWindow):
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
+
+    # --- Global error handler ---
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+        error_msg = "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+        QMessageBox.critical(
+            None,
+            "Unexpected Error",
+            f"An unexpected error occurred:\n\n{error_msg}"
+        )
+
+    sys.excepthook = handle_exception
+    # ----------------------------
 
     if sys.platform.startswith("darwin"):
         dlg = LicenseDialog(LICENSE_HTML_MAC)
