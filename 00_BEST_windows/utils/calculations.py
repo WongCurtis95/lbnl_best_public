@@ -88,6 +88,10 @@ def convert_energy_units(input_unit, input_value, HHV_value, output_unit):
         output_value = input_value/(3.6*1000)
     elif input_unit == "$/TOE":
         output_value = input_value/41868
+    elif input_unit == "$/kcal":
+        output_value = input_value*239.01
+    elif input_unit == "$/BOE":
+        output_value = input_value/6119
     else:
         output_value = np.nan
     

@@ -3,7 +3,26 @@ from PyQt6.QtWidgets import QLineEdit, QComboBox, QMessageBox
 def validate_inputs(self):
     combo_errors = []
     input_errors = []
-
+    
+    def convert_string_to_float(string_input):
+        try:
+            float_output = float(string_input)
+        except ValueError:
+            float_output = 0
+        return float_output
+    
+    list_of_HHV = [
+        self.ui.coal_hhv_input.text(),
+        self.ui.coke_hhv_input.text(),
+        self.ui.natural_gas_hhv_input.text(),
+        self.ui.biomass_hhv_input.text(),
+        self.ui.municipal_wastes_hvv_input.text()
+        ]
+    
+    for i in list_of_HHV:
+        if convert_string_to_float(i) == 0:
+            input_errors.append("HHV values cannot be zero. Apply pre-fill default if necessary")
+    
     invalid_combo_texts = {
         "Select fuel unit here",
         "Select electricity unit here",
@@ -22,7 +41,7 @@ def validate_inputs(self):
         QMessageBox.critical(
             self,
             "Input Error",
-            "Please ensure all required fields are filled out."
+            "Please ensure all required fields are filled out. HHV values cannot be zero. Apply pre-fill default if necessary"
         )
         return False
 
