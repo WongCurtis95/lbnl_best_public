@@ -255,6 +255,7 @@ def generate_part1_report(self):
     # Create PDF with ReportLab
     doc = SimpleDocTemplate(OUTPUT_FILE, pagesize=LETTER)
     styles = getSampleStyleSheet()
+    small_style = ParagraphStyle('small', parent=styles['Normal'], fontSize=8)
 
     page_width, page_height = LETTER
     usable_width = page_width - 2 * 72  # 1-inch margins
@@ -276,39 +277,35 @@ def generate_part1_report(self):
 
     elements.append(Paragraph("Direct Energy CO2 Emissions Benchmark", styles['Heading2']))
     elements.append(Spacer(1, 4))
-    elements.append(Image(graph_2, width=usable_width*0.75, height=usable_width*0.56*0.75)) # *0.75 because the graphs take up too much space
+    elements.append(Image(graph_2, width=usable_width*0.65, height=usable_width*0.56*0.65)) # *0.75 because the graphs take up too much space
     elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note 1: Direct energy emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production. \n Note 2: International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step.", styles['Normal']))
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", styles['Normal']))
+    elements.append(Paragraph("Note 1: Direct energy emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production. \n Note 2: International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step.", small_style))
+    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", small_style))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Indirect Energy CO2 Emissions Benchmark", styles['Heading2']))
     elements.append(Spacer(1, 4))
-    elements.append(Image(graph_3, width=usable_width*0.75, height=usable_width*0.56*0.75))
+    elements.append(Image(graph_3, width=usable_width*0.65, height=usable_width*0.56*0.65))
     elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note: Indirect emissions include carbon dioxide emissions from purchased elctricity only.", styles['Normal']))
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", styles['Normal']))
+    elements.append(Paragraph("Note 1: Indirect emissions include carbon dioxide emissions from purchased elctricity only.", small_style))
+    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", small_style))
     elements.append(Spacer(1, 12))
     elements.append(PageBreak())
 
     elements.append(Paragraph("Total CO2 Emissions Benchmark", styles['Heading2']))
     elements.append(Spacer(1, 4))
-    elements.append(Image(graph_4, width=usable_width*0.75, height=usable_width*0.56*0.75))
+    elements.append(Image(graph_4, width=usable_width*0.7, height=usable_width*0.56*0.7))
     elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note 1: Total emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production, purchased electricity, and process emissions from calcination. It does not include other emissions such as those related to fuel production and transportation. \n Note 2: Process emissions are estimated solely based on the user input on clinker process emission intensity.", styles['Normal']))
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", styles['Normal']))
+    elements.append(Paragraph("Note 1: Total emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production, purchased electricity, and process emissions from calcination. It does not include other emissions such as those related to fuel production and transportation. \n Note 2: Process emissions are estimated solely based on the user input on clinker process emission intensity.", small_style))
+    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", small_style))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Energy Benchmark by Process", styles['Heading2']))
     elements.append(Paragraph("Red = Your Facility; Green = International Best Practice Facility", styles['Normal']))
     elements.append(Spacer(1, 4))
-    elements.append(Image(graph_5, width=usable_width*0.9, height=usable_width*0.56*0.9))
+    elements.append(Image(graph_5, width=usable_width*0.75, height=usable_width*0.56*0.75))
     elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note: Additives preparation include additives crushing & grinding and additives drying; Kiln - machinery use includes preheater and clinker cooler; Kiln - clinker making includes precalciner and kiln.", styles['Normal']))
-    elements.append(Spacer(1, 12))
+    elements.append(Paragraph("Note: Additives preparation include additives crushing & grinding and additives drying; Kiln - machinery use includes preheater and clinker cooler; Kiln - clinker making includes precalciner and kiln.", small_style))
     elements.append(PageBreak())
 
     elements.append(Paragraph("Energy Benchmark by Process Normalized", styles['Heading2']))
@@ -399,7 +396,6 @@ def generate_part_2_report(self):
 
 
     # Load Excel (all sheets)
-    print("Loading Excel files...")
     excel_file_path_1 = json_folder / "key_values_in_excel.xlsx"
     key_values_in_excel = pd.read_excel(excel_file_path_1, sheet_name=None)
     
@@ -412,6 +408,7 @@ def generate_part_2_report(self):
     # Create PDF with ReportLab
     doc = SimpleDocTemplate(OUTPUT_FILE, pagesize=LETTER)
     styles = getSampleStyleSheet()
+    small_style = ParagraphStyle('small', parent=styles['Normal'], fontSize=8)
 
     page_width, page_height = LETTER
     usable_width = page_width - 2 * 72  # 1-inch margins
@@ -450,34 +447,30 @@ def generate_part_2_report(self):
     elements.append(Paragraph("Energy Benchmark", styles['Heading2']))
     elements.append(Image(graph_1, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Note: The international best practice value refers to the energy consumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", styles['Normal']))
+    elements.append(Paragraph("Note: The international best practice value refers to the energy consumption of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", small_style))
     elements.append(Spacer(1, 12))    
 
     elements.append(Paragraph("Direct Energy CO2 Emissions Benchmark", styles['Heading2']))
     elements.append(Image(graph_2, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Note 1: Direct energy emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production. \n Note 2: International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied.", styles['Normal']))
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", styles['Normal']))
-    elements.append(Spacer(1, 12))
+    elements.append(Paragraph("Note 1: Direct energy emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production. \n Note 2: International best practice with different fuel refers to the direct energy emissions from a hypothetical facility with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, and having the same steps as your facility, but using fuels with emission intensity of 0.00004 tCO2/MJ and the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied.", small_style))
+    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", small_style))
     elements.append(PageBreak())
 
     elements.append(Paragraph("Indirect Energy CO2 Emissions Benchmark", styles['Heading2']))
 
     elements.append(Image(graph_3, width=usable_width*.75, height=usable_width*.75*0.55)) # the aspect ratio here is 9 x 5 rather than 7 x 4 in other cases
 
-    elements.append(Paragraph("Note 1: Indirect emissions include carbon dioxide emissions from purchased elctricity only.", styles['Normal']))
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", styles['Normal']))
+    elements.append(Paragraph("Note 1: Indirect emissions include carbon dioxide emissions from purchased elctricity only.", small_style))
+    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", small_style))
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("Total CO2 Emissions Benchmark", styles['Heading2']))
 
     elements.append(Image(graph_4, width=usable_width*.75, height=usable_width*.75*0.56))
 
-    elements.append(Paragraph("Note 1: Total emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production, purchased electricity, and process emissions from calcination. It does not include other emissions such as those related to fuel production and transportation. \n Note 2: Process emissions are estimated solely based on the user input on clinker process emission intensity.", styles['Normal']))
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", styles['Normal']))
+    elements.append(Paragraph("Note 1: Total emissions include carbon dioxide emissions from onsite fuel consumption for electricity generation and ceemnt production, purchased electricity, and process emissions from calcination. It does not include other emissions such as those related to fuel production and transportation. \n Note 2: Process emissions are estimated solely based on the user input on clinker process emission intensity.", small_style))
+    elements.append(Paragraph("Note 2: The international best practice value refers to the carbon dioxide emissions of a hypothetical cement plant with the same quantities of raw material inputs, using the same type of kilns, producing the same type of cement, using the same type of fuel, and having the same steps as your facility, but using the best energy efficiency internationally for each step. It does not include the effects of any carbon dioxide emissions mitigation measures applied", small_style))
     elements.append(Spacer(1, 12))
     elements.append(PageBreak())
 
@@ -515,7 +508,6 @@ def generate_part_2_report(self):
     elements.append(Spacer(1, 12))
 
     try:
-        print("Building PDF...")
         doc.build(elements)
     except Exception as e:
         print("PDF generation failed:", e)
