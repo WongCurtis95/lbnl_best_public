@@ -46,6 +46,7 @@ class Ui_Page3_ProductionInput(object):
         self.clinker_material_group.setGeometry(QtCore.QRect(210, 110, 1001, 191))
         font = QtGui.QFont()
         font.setBold(True)
+        font.setWeight(75)
         self.clinker_material_group.setFont(font)
         self.clinker_material_group.setStyleSheet("QPushButton {\n"
 "    background-color: #26481f;  /* Green */\n"
@@ -183,6 +184,7 @@ class Ui_Page3_ProductionInput(object):
         self.kiln_clinker_production_group.setGeometry(QtCore.QRect(210, 310, 1001, 121))
         font = QtGui.QFont()
         font.setBold(True)
+        font.setWeight(75)
         self.kiln_clinker_production_group.setFont(font)
         self.kiln_clinker_production_group.setStyleSheet("QPushButton {\n"
 "    background-color: #26481f;  /* Green */\n"
@@ -284,6 +286,7 @@ class Ui_Page3_ProductionInput(object):
         self.cement_production_group.setGeometry(QtCore.QRect(210, 440, 1001, 151))
         font = QtGui.QFont()
         font.setBold(True)
+        font.setWeight(75)
         self.cement_production_group.setFont(font)
         self.cement_production_group.setObjectName("cement_production_group")
         self.layoutWidget_4 = QtWidgets.QWidget(parent=self.cement_production_group)
@@ -403,6 +406,7 @@ class Ui_Page3_ProductionInput(object):
         font.setPointSize(11)
         font.setBold(False)
         font.setItalic(True)
+        font.setWeight(50)
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.gridLayout_11.addWidget(self.label, 0, 0, 1, 1)
@@ -411,6 +415,7 @@ class Ui_Page3_ProductionInput(object):
         font.setPointSize(11)
         font.setBold(True)
         font.setItalic(True)
+        font.setWeight(75)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         self.gridLayout_11.addWidget(self.label_2, 0, 1, 1, 1)
@@ -433,6 +438,7 @@ class Ui_Page3_ProductionInput(object):
         font.setPointSize(11)
         font.setBold(False)
         font.setItalic(True)
+        font.setWeight(50)
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
         self.gridLayout_11.addWidget(self.label_6, 0, 4, 1, 1)
@@ -469,7 +475,7 @@ class Ui_Page3_ProductionInput(object):
         self.nextBtn.setText(_translate("Page3_ProductionInput", "Next"))
         self.clinker_material_group.setTitle(_translate("Page3_ProductionInput", "Raw Material Consumption (metric tons/year)"))
         self.gypsum_label.setText(_translate("Page3_ProductionInput", "Gypsum"))
-        self.calcined_clay_label.setText(_translate("Page3_ProductionInput", "Calcined Clay"))
+        self.calcined_clay_label.setText(_translate("Page3_ProductionInput", "Clay Minerals"))
         self.blast_furnace_slag_label.setText(_translate("Page3_ProductionInput", "Blast Furnace Slag"))
         self.limestone_label.setText(_translate("Page3_ProductionInput", "Limestone"))
         self.other_slag_label.setText(_translate("Page3_ProductionInput", "Other Slag"))

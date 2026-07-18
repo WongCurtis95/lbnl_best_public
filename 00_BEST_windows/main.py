@@ -1148,6 +1148,30 @@ class Page8_3(QWidget):
         if evaluate_EE_only != "Yes":
             self.stack.setCurrentWidget(self.parent.page9)
         else:
+            # Pages 9 and 10 are skipped, so create default JSON files
+            if not (json_folder / "new_fuel_share.json").exists():
+                with open(json_folder / "new_fuel_share.json", "w") as f:
+                    json.dump({
+                        "FS-Fuel Switching": {
+                            "coal": 0, "coke": 0, "natural gas": 0,
+                            "biomass": 0, "municipal wastes": 0
+                        },
+                        "FS measure direct emission reduction": 0
+                    }, f, indent=4)
+
+            if not (json_folder / "new_re_share.json").exists():
+                with open(json_folder / "new_re_share.json", "w") as f:
+                    json.dump({
+                        "RE-Renewable Energy": {
+                            "share of electricity from purchased or self-generated renewable energy": 0
+                        },
+                        "RE measure direct emission reduction": 0
+                    }, f, indent=4)
+
+            if not (json_folder / "all_DT_measures.json").exists():
+                with open(json_folder / "all_DT_measures.json", "w") as f:
+                    json.dump({}, f, indent=4)
+
             self.stack.setCurrentWidget(self.parent.page11)
 
     def collect_page_data(self):

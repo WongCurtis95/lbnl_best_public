@@ -15,6 +15,7 @@ import subprocess
 import plotly.graph_objects as go
 import plotly.io as pio
 pio.renderers.default = 'png'
+pio.kaleido.scope.mathjax = None
 
 import textwrap
 from PyQt6.QtWidgets import QMessageBox
@@ -247,7 +248,7 @@ def Page3_Production_Input_Default_Update_Fields(self):
     "name": "Production Input",
     "Amount of limestone used per year (tonnes/year)": 150000.0,
     "Amount of gypsum used per year (tonnes/year)": 0.0,
-    "Amount of calcined clay used per year (tonnes/year)": 0.0,
+    "Amount of clay minerals used per year (tonnes/year)": 0.0,
     "Amount of blast furnace slag used per year (tonnes/year)": 10000.0,
     "Amount of other slag used per year (tonnes/year)": 0.0,
     "Amount of fly ash used per year (tonnes/year)": 100000.0,
@@ -283,7 +284,7 @@ def Page3_Production_Input_Default_Update_Fields(self):
     "name": "Production Input",
     "Amount of limestone used per year (tonnes/year)": 0,
     "Amount of gypsum used per year (tonnes/year)": 0,
-    "Amount of calcined clay used per year (tonnes/year)": 0,
+    "Amount of clay minerals used per year (tonnes/year)": 0,
     "Amount of blast furnace slag used per year (tonnes/year)": 0,
     "Amount of other slag used per year (tonnes/year)": 0,
     "Amount of fly ash used per year (tonnes/year)": 0,
@@ -321,7 +322,7 @@ def Page3_Production_Input_Default_Update_Fields(self):
     if self.ui.gypsum_input.text() != "":
         production_input_dict["Amount of gypsum used per year (tonnes/year)"] = _f(self.ui.gypsum_input.text())
     if self.ui.calcined_clay_input.text() != "":
-        production_input_dict["Amount of calcined clay used per year (tonnes/year)"] = _f(self.ui.calcined_clay_input.text())
+        production_input_dict["Amount of clay minerals used per year (tonnes/year)"] = _f(self.ui.calcined_clay_input.text())
     if self.ui.blast_furnace_slag_input.text() != "":
         production_input_dict["Amount of blast furnace slag used per year (tonnes/year)"] = _f(self.ui.blast_furnace_slag_input.text())
     if self.ui.other_slag_input.text() != "":
@@ -361,7 +362,7 @@ def Page3_Production_Input_Default_Update_Fields(self):
     if self.ui.blended_cement_production_input.text() != "":
         production_input_dict["Cement production"]["Blended cement production (tonnes/year)"] = _f(self.ui.blended_cement_production_input.text())
 
-    Total_raw_material_and_additive = production_input_dict["Amount of limestone used per year (tonnes/year)"] + production_input_dict["Amount of gypsum used per year (tonnes/year)"] + production_input_dict["Amount of calcined clay used per year (tonnes/year)"] + production_input_dict["Amount of blast furnace slag used per year (tonnes/year)"] + production_input_dict["Amount of other slag used per year (tonnes/year)"] + production_input_dict["Amount of fly ash used per year (tonnes/year)"] + production_input_dict["Amount of other natural pozzolans used per year (tonnes/year)"]
+    Total_raw_material_and_additive = production_input_dict["Amount of limestone used per year (tonnes/year)"] + production_input_dict["Amount of gypsum used per year (tonnes/year)"] + production_input_dict["Amount of clay minerals used per year (tonnes/year)"] + production_input_dict["Amount of blast furnace slag used per year (tonnes/year)"] + production_input_dict["Amount of other slag used per year (tonnes/year)"] + production_input_dict["Amount of fly ash used per year (tonnes/year)"] + production_input_dict["Amount of other natural pozzolans used per year (tonnes/year)"]
     
     if Total_raw_material_and_additive <= 0:
         print("Total raw material and additive must be greater than zero")
@@ -1439,7 +1440,7 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     with open(json_folder / "Production_Input.json", "r") as f:
         production_input_dict = json.load(f)
 
-    Total_raw_material_and_additive = production_input_dict["Amount of limestone used per year (tonnes/year)"] + production_input_dict["Amount of gypsum used per year (tonnes/year)"] + production_input_dict["Amount of calcined clay used per year (tonnes/year)"] + production_input_dict["Amount of blast furnace slag used per year (tonnes/year)"] + production_input_dict["Amount of other slag used per year (tonnes/year)"] + production_input_dict["Amount of fly ash used per year (tonnes/year)"] + production_input_dict["Amount of other natural pozzolans used per year (tonnes/year)"]
+    Total_raw_material_and_additive = production_input_dict["Amount of limestone used per year (tonnes/year)"] + production_input_dict["Amount of gypsum used per year (tonnes/year)"] + production_input_dict["Amount of clay minerals used per year (tonnes/year)"] + production_input_dict["Amount of blast furnace slag used per year (tonnes/year)"] + production_input_dict["Amount of other slag used per year (tonnes/year)"] + production_input_dict["Amount of fly ash used per year (tonnes/year)"] + production_input_dict["Amount of other natural pozzolans used per year (tonnes/year)"]
     Total_clinker = production_input_dict["Total clinker production"]
     Total_cement = production_input_dict["Total cement"]
 
@@ -1851,7 +1852,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     with open(json_folder / "Production_Input.json", "r") as f:
         production_input_dict = json.load(f)
 
-    Total_raw_material_and_additive = production_input_dict["Amount of limestone used per year (tonnes/year)"] + production_input_dict["Amount of gypsum used per year (tonnes/year)"] + production_input_dict["Amount of calcined clay used per year (tonnes/year)"] + production_input_dict["Amount of blast furnace slag used per year (tonnes/year)"] + production_input_dict["Amount of other slag used per year (tonnes/year)"] + production_input_dict["Amount of fly ash used per year (tonnes/year)"] + production_input_dict["Amount of other natural pozzolans used per year (tonnes/year)"]
+    Total_raw_material_and_additive = production_input_dict["Amount of limestone used per year (tonnes/year)"] + production_input_dict["Amount of gypsum used per year (tonnes/year)"] + production_input_dict["Amount of clay minerals used per year (tonnes/year)"] + production_input_dict["Amount of blast furnace slag used per year (tonnes/year)"] + production_input_dict["Amount of other slag used per year (tonnes/year)"] + production_input_dict["Amount of fly ash used per year (tonnes/year)"] + production_input_dict["Amount of other natural pozzolans used per year (tonnes/year)"]
     Total_clinker = production_input_dict["Total clinker production"]
     Total_cement = production_input_dict["Total cement"]
 
@@ -6478,9 +6479,9 @@ def PageEnd(self):
             'International Best Practice': round(IBP_total_final_energy/10**6)
             },
         'Cement energy intensity (MJ/tonne cement)': {
-            'Your facility before measures': round(Cement_energy_intensity,2 ),
-            'Your facility after measures': round(Cement_energy_intensity_after_measure, 2),
-            'International Best Practice': round(IBP_cement_energy_intensity, 2)
+            'Your facility before measures': round(Cement_energy_intensity),
+            'Your facility after measures': round(Cement_energy_intensity_after_measure),
+            'International Best Practice': round(IBP_cement_energy_intensity)
             },
         'Direct energy carbon dioxide emissions (tCO2)': {
             'Your facility before measures': round(Total_carbon_direct),
@@ -6497,10 +6498,10 @@ def PageEnd(self):
             'Your facility after measures': round(Total_carbon_all_after_measures),
             'International Best Practice': round(IBP_carbon_all)
             },
-        'Cement emission intensity (tCO2/tonne cement)': {
-            'Your facility before measures': round(Cement_carbon_intensity, 2),
-            'Your facility after measures': round(Cement_carbon_intensity_after_measure, 2),
-            'International Best Practice': round(IBP_cement_carbon_intensity, 2)
+        'Cement emission intensity (kgCO2/tonne cement)': {
+            'Your facility before measures': round(Cement_carbon_intensity*1000),
+            'Your facility after measures': round(Cement_carbon_intensity_after_measure*1000),
+            'International Best Practice': round(IBP_cement_carbon_intensity*1000)
             }
         }
 

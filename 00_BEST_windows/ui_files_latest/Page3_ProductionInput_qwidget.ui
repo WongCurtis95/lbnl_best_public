@@ -84,6 +84,7 @@
    </property>
    <property name="font">
     <font>
+     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -173,7 +174,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
      <item row="2" column="0">
       <widget class="QLabel" name="calcined_clay_label">
        <property name="text">
-        <string>Calcined Clay</string>
+        <string>Clay Minerals</string>
        </property>
       </widget>
      </item>
@@ -303,6 +304,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
    </property>
    <property name="font">
     <font>
+     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -462,6 +464,7 @@ myLineEdit-&gt;setFixedSize(200, 30)</string>
    </property>
    <property name="font">
     <font>
+     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -672,6 +675,7 @@ QProgressBar::chunk {
       <property name="font">
        <font>
         <pointsize>11</pointsize>
+        <weight>50</weight>
         <italic>true</italic>
         <bold>false</bold>
        </font>
@@ -686,6 +690,7 @@ QProgressBar::chunk {
       <property name="font">
        <font>
         <pointsize>11</pointsize>
+        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -726,6 +731,7 @@ QProgressBar::chunk {
       <property name="font">
        <font>
         <pointsize>11</pointsize>
+        <weight>50</weight>
         <italic>true</italic>
         <bold>false</bold>
        </font>
