@@ -100,8 +100,44 @@ def convert_energy_units(input_unit, input_value, HHV_value, output_unit):
         output_value = output_value
     elif output_unit == "$/kWh":
         output_value = output_value*3.6
-    
+
     return output_value
+
+def convert_energy_quantity(input_unit, input_value, HHV_MJ_per_kg=1.0):
+    """
+    Convert an energy quantity from input_unit to MJ.
+    Units match those in convert_energy_units (without the '$/').
+    HHV_MJ_per_kg is only needed for 'kg' and 'metric ton' units.
+    Divide the result by 3.6 to get kWh.
+    """
+    if input_unit == "kgce":
+        return input_value * 29.308
+    elif input_unit == "tce":
+        return input_value * 29308.0
+    elif input_unit == "GJ":
+        return input_value * 1000.0
+    elif input_unit == "MJ":
+        return input_value
+    elif input_unit == "MMBtu":
+        return input_value * 1054.35
+    elif input_unit == "kg":
+        return input_value * HHV_MJ_per_kg
+    elif input_unit == "metric ton":
+        return input_value * 1000.0 * HHV_MJ_per_kg
+    elif input_unit == "Mcf":
+        return input_value * 1094.052
+    elif input_unit == "kWh":
+        return input_value * 3.6
+    elif input_unit == "MWh":
+        return input_value * 3600.0
+    elif input_unit == "TOE":
+        return input_value * 41868.0
+    elif input_unit == "kcal":
+        return input_value / 239.006
+    elif input_unit == "BOE":
+        return input_value * 6119.0
+    else:
+        return input_value  # fallback: assume MJ
 
 def _f(x, d=0.0):
     sci_pattern = re.compile(r'^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$')
@@ -470,7 +506,9 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
     "Energy used for electricity generation (kWh/year) - onsite renewables": 0.0,
     "Energy used for electricity generation (kWh/year) - waste heat": 0,
     "Use default waste heat": False,
-    "Subtotal final energy (MJ/year)": 0.0
+    "Subtotal final energy (MJ/year)": 0.0,
+    "electricity unit": "kWh",
+    "fuel unit": "MJ"
     }
     
     # Electricity Generation Input
@@ -506,13 +544,37 @@ def Page5_ElectricityGeneration_Input_Default_Update_Fields(self):
         electricity_generation_input_dict["Energy used for electricity generation (kWh/year) - waste heat"] = _f(self.ui.waste_heat_input_page5.text())
 
     electricity_generation_input_dict["Use default waste heat"] = self.ui.checkBox.isChecked()
-        
+
     print("Checkbox")
     print(self.ui.checkBox.isChecked())
-    
+
+    # Read unit selections
+    elec_unit_p5 = self.ui.electricity_unit_combo_page5.currentText()
+    fuel_unit_p5 = self.ui.fuel_unit_combo_page5.currentText()
+    electricity_generation_input_dict["electricity unit"] = elec_unit_p5
+    electricity_generation_input_dict["fuel unit"] = fuel_unit_p5
+
     # Cost and Emissions Data
     with open(json_folder / "Cost_and_Emission_Input.json", 'r') as f:
         cost_and_emissions_dict = json.load(f)
+
+    # Load HHV for fuel unit conversion
+    HHV_p5 = cost_and_emissions_dict.get("Fuel high heating value (MJ/kg fuel)", {
+        "coal": 26.3, "coke": 28.2, "natural gas": 48.0, "biomass": 15.0, "municipal wastes": 9.0
+    })
+
+    # Convert electricity quantities to kWh
+    for _ekey in ["Total electricity purchased (kWh/year)",
+                  "Total electricity generated onsite (kWh/year)",
+                  "Electricity generated and sold to the grid or offsite (kWh/year)",
+                  "Energy used for electricity generation (kWh/year) - onsite renewables",
+                  "Energy used for electricity generation (kWh/year) - waste heat"]:
+        electricity_generation_input_dict[_ekey] = convert_energy_quantity(elec_unit_p5, electricity_generation_input_dict[_ekey]) / 3.6
+
+    # Convert fuel quantities to MJ
+    for _fuel in electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"]:
+        electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"][_fuel] = \
+            convert_energy_quantity(fuel_unit_p5, electricity_generation_input_dict["Energy used for electricity generation (MJ/year)"][_fuel], HHV_p5.get(_fuel, 1.0))
 
     electricity_emission_intensity = cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000 # convert to kWh # need to add emissions from electricity generation fuel, so do it later # decided to use this variable only for purchased electricity to aid indirect emissions calculations
     coal_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['coal']/10**6 # convert to MJ
@@ -897,6 +959,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
     "Energy input": {
         "Raw material conveying and quarraying": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -904,6 +967,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0.0,
             "% Electricity Consumption at production stage": 0.0,
             "Final Electricity Consumption by Process (kWh/year)": 0.0,
@@ -913,6 +977,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Preblending": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -920,6 +985,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -929,6 +995,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Crushing": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -936,6 +1003,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -945,6 +1013,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Grinding": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -952,6 +1021,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -961,6 +1031,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Additive prepration": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -968,6 +1039,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -977,6 +1049,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Additive drying": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0,
                 "coke": 0.0,
@@ -984,6 +1057,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0.0,
             "% Electricity Consumption at production stage": 0.0,
             "Final Electricity Consumption by Process (kWh/year)": 0.0,
@@ -993,6 +1067,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Fuel preparation": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -1000,6 +1075,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -1009,6 +1085,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Homogenization": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -1016,6 +1093,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -1025,6 +1103,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Kiln system - preheater": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -1032,6 +1111,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -1041,6 +1121,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Kiln system - precalciner": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0,
                 "coke": 0.0,
@@ -1048,6 +1129,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0.0,
             "% Electricity Consumption at production stage": 0.0,
             "Final Electricity Consumption by Process (kWh/year)": 0.0,
@@ -1057,6 +1139,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Kiln system - kiln": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0,
                 "coke": 0.0,
@@ -1064,6 +1147,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0.0,
             "% Electricity Consumption at production stage": 0.0,
             "Final Electricity Consumption by Process (kWh/year)": 0.0,
@@ -1073,6 +1157,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Kiln system - cooler": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -1080,6 +1165,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -1089,6 +1175,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Cement grinding": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -1096,6 +1183,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -1105,6 +1193,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Other conveying, auxilaries": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -1112,6 +1201,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -1121,6 +1211,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Non-production energy use": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -1128,6 +1219,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0,
             "% Electricity Consumption at production stage": 0,
             "Final Electricity Consumption by Process (kWh/year)": 0,
@@ -1137,6 +1229,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "Air pollution flue-gas mitigation": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -1144,6 +1237,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0.0,
             "% Electricity Consumption at production stage": 0.0,
             "Final Electricity Consumption by Process (kWh/year)": 0.0,
@@ -1153,6 +1247,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
         },
         "CCUS": {
             "Production Per Process (tonnes/year)": 0,
+            "fuel unit": "MJ",
             "fuel": {
                 "coal": 0.0,
                 "coke": 0.0,
@@ -1160,6 +1255,7 @@ def Page6_Energy_Input_Default_Update_Fields(self):
                 "biomass": 0.0,
                 "municipal wastes": 0.0
             },
+            "electricity unit": "kWh",
             "electricity": 0.0,
             "% Electricity Consumption at production stage": 0.0,
             "Final Electricity Consumption by Process (kWh/year)": 0.0,
@@ -1339,26 +1435,50 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
         energy_input_quick_dict["Energy input"]["fuel"]["municipal wastes"] = _f(self.ui.msw_quick_input_page6.text())
     if self.ui.electricity_quick_input_page6.text() != "":
         energy_input_quick_dict["Energy input"]["electricity"] = _f(self.ui.electricity_quick_input_page6.text())
-    
-    
+
+    # Read unit selections from quick page comboboxes
+    fuel_unit_q = self.ui.fuel_unit_combo_page6_q.currentText()
+    elec_unit_q = self.ui.electricity_unit_combo_page6_q.currentText()
+    energy_input_quick_dict["fuel unit"] = fuel_unit_q
+    energy_input_quick_dict["electricity unit"] = elec_unit_q
+
+    # Cost and Emissions Data — load early to get HHV values for unit conversion
+    with open(json_folder / "Cost_and_Emission_Input.json", "r") as f:
+        cost_and_emissions_dict = json.load(f)
+
+    HHV = cost_and_emissions_dict.get("Fuel high heating value (MJ/kg fuel)", {
+        "coal": 26.3, "coke": 28.2, "natural gas": 48.0,
+        "biomass": 15.0, "municipal wastes": 9.0
+    })
+
     # Electricity Generation Data
     with open(json_folder / "Electricity_Generation_Input.json", "r") as f:
         electricity_generation_input_dict = json.load(f)
-    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
-    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]    
-    
-    # Calculate energy input by process
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"]
+    share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]
+
+    # Convert quick totals to MJ / kWh for internal calculations
+    coal_MJ = convert_energy_quantity(fuel_unit_q, energy_input_quick_dict["Energy input"]["fuel"]["coal"], HHV.get("coal", 26.3))
+    coke_MJ = convert_energy_quantity(fuel_unit_q, energy_input_quick_dict["Energy input"]["fuel"]["coke"], HHV.get("coke", 28.2))
+    natural_gas_MJ = convert_energy_quantity(fuel_unit_q, energy_input_quick_dict["Energy input"]["fuel"]["natural gas"], HHV.get("natural gas", 48.0))
+    biomass_MJ = convert_energy_quantity(fuel_unit_q, energy_input_quick_dict["Energy input"]["fuel"]["biomass"], HHV.get("biomass", 15.0))
+    msw_MJ = convert_energy_quantity(fuel_unit_q, energy_input_quick_dict["Energy input"]["fuel"]["municipal wastes"], HHV.get("municipal wastes", 9.0))
+    elec_kWh = convert_energy_quantity(elec_unit_q, energy_input_quick_dict["Energy input"]["electricity"]) / 3.6
+
+    total_fuel_MJ = coal_MJ + coke_MJ + natural_gas_MJ + biomass_MJ + msw_MJ
+
+    energy_input_quick_dict["Total Final Energy Consumption (MJ/year)"] = total_fuel_MJ + elec_kWh * 3.6
+    energy_input_quick_dict["Total Primary Energy Consumption (MJ/year)"] = total_fuel_MJ + elec_kWh * 3.6 * (share_of_electricity_from_purchase/0.305 + (1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency)
+
+    # Distribute to per-process Energy_Input.json and store unit selections
     for process in energy_input_dict["Energy input"].keys():
+        energy_input_dict["Energy input"][process]["fuel unit"] = fuel_unit_q
+        energy_input_dict["Energy input"][process]["electricity unit"] = elec_unit_q
         for fuel in energy_input_dict["Energy input"][process]["fuel"].keys():
             energy_input_dict["Energy input"][process]["fuel"][fuel] = energy_input_quick_dict["Energy input"]["fuel"][fuel] * energy_share_default_dict[process]["fuel"]
         energy_input_dict["Energy input"][process]["electricity"] = energy_input_quick_dict["Energy input"]["electricity"] * energy_share_default_dict[process]["electricity"]
 
-    energy_input_quick_dict["Total Final Energy Consumption (MJ/year)"] = sum(energy_input_quick_dict["Energy input"]["fuel"].values()) + energy_input_quick_dict["Energy input"]["electricity"] * 3.6
-    energy_input_quick_dict["Total Primary Energy Consumption (MJ/year)"] = sum(energy_input_quick_dict["Energy input"]["fuel"].values()) + energy_input_quick_dict["Energy input"]["electricity"] * 3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency)
-
-
-    # Energy Input
-    ## Fuel and electricity consumption for each step
+    # Energy Input — accumulate totals in MJ (fuel) and kWh (electricity) after unit conversion
     Total_process_coal = 0
     Total_process_coke = 0
     Total_process_natural_gas = 0
@@ -1367,20 +1487,15 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     Total_process_electricity = 0
 
     for process in energy_input_dict["Energy input"].keys():
-        Total_process_coal += energy_input_dict["Energy input"][process]["fuel"]["coal"]
-        Total_process_coke += energy_input_dict["Energy input"][process]["fuel"]["coke"]
-        Total_process_natural_gas += energy_input_dict["Energy input"][process]["fuel"]["natural gas"]
-        Total_process_biomass += energy_input_dict["Energy input"][process]["fuel"]["biomass"]
-        Total_process_msw += energy_input_dict["Energy input"][process]["fuel"]["municipal wastes"]
-        Total_process_electricity += energy_input_dict["Energy input"][process]["electricity"]
+        Total_process_coal += convert_energy_quantity(fuel_unit_q, energy_input_dict["Energy input"][process]["fuel"]["coal"], HHV.get("coal", 26.3))
+        Total_process_coke += convert_energy_quantity(fuel_unit_q, energy_input_dict["Energy input"][process]["fuel"]["coke"], HHV.get("coke", 28.2))
+        Total_process_natural_gas += convert_energy_quantity(fuel_unit_q, energy_input_dict["Energy input"][process]["fuel"]["natural gas"], HHV.get("natural gas", 48.0))
+        Total_process_biomass += convert_energy_quantity(fuel_unit_q, energy_input_dict["Energy input"][process]["fuel"]["biomass"], HHV.get("biomass", 15.0))
+        Total_process_msw += convert_energy_quantity(fuel_unit_q, energy_input_dict["Energy input"][process]["fuel"]["municipal wastes"], HHV.get("municipal wastes", 9.0))
+        Total_process_electricity += convert_energy_quantity(elec_unit_q, energy_input_dict["Energy input"][process]["electricity"]) / 3.6
 
-    # if Total_process_electricity != electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"] + electricity_generation_input_dict["Total electricity purchased (kWh/year)"]:
-    #     print('total electricity consumption does not match')
-    #     energy_input_dict["message"] = 'total electricity consumption does not match'
-    # else:
-    #     energy_input_dict["message"] = 'N/A'
     Total_process_fuel = Total_process_coal + Total_process_coke + Total_process_natural_gas + Total_process_biomass + Total_process_msw
-    
+
     energy_input_dict["Totals"] = {
         "Total process fuel": Total_process_fuel,
         "Total process electricity": Total_process_electricity,
@@ -1390,10 +1505,6 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
         "Total process biomass": Total_process_biomass,
         "Total process msw": Total_process_msw
     }
-
-    # Cost and Emissions Data
-    with open(json_folder / "Cost_and_Emission_Input.json", "r") as f:
-        cost_and_emissions_dict = json.load(f)
 
     electricity_price = cost_and_emissions_dict["Cost of electricity in $/kWh"]
     coal_price = cost_and_emissions_dict["Cost of fuel in $/MJ"]['coal']
@@ -1405,19 +1516,18 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     electricity_emission_intensity = cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000 # convert to kWh # need to add emissions from electricity generation fuel, so do it later # decided to use this variable only for purchased electricity to aid indirect emissions calculations
     coal_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['coal']/10**6 # convert to MJ
     coke_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['coke']/10**6
-    natural_gas_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['natural gas']/10**6 
-    biomass_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['biomass']/10**6 
-    msw_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['municipal wastes']/10**6 
+    natural_gas_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['natural gas']/10**6
+    biomass_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['biomass']/10**6
+    msw_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['municipal wastes']/10**6
     carbon_price = cost_and_emissions_dict["Carbon price ($/tCO2)"]
-    
+
     if Total_process_fuel != 0:
         fuel_price = (Total_process_coal*coal_price + Total_process_coke*coke_price + Total_process_natural_gas*natural_gas_price + Total_process_biomass*biomass_price + Total_process_msw*msw_price) / Total_process_fuel
         fuel_emission_intensity = (Total_process_coal*coal_emission_intensity + Total_process_coke*coke_emission_intensity + Total_process_natural_gas*natural_gas_emission_intensity + Total_process_biomass*biomass_emission_intensity + Total_process_msw*msw_emission_intensity) / Total_process_fuel
-        
     else:
         fuel_price = coal_price
         fuel_emission_intensity = coal_emission_intensity
-        
+
     cost_and_emissions_dict["Fuel Emission Intensity"] = fuel_emission_intensity
     cost_and_emissions_dict["Fuel Price"] = fuel_price
     # Save the updated dictionary
@@ -1460,20 +1570,24 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     energy_input_dict["Energy input"]["Cement grinding"]["Production Per Process (tonnes/year)"] = Total_cement
     energy_input_dict["Energy input"]["Other conveying, auxilaries"]["Production Per Process (tonnes/year)"] = Total_cement
     energy_input_dict["Energy input"]["Non-production energy use"]["Production Per Process (tonnes/year)"] = Total_cement
-    
-    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
+
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"]
     share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]
-    
-    
+
     for process in energy_input_dict["Energy input"].keys():
+        final_elec_kWh = convert_energy_quantity(elec_unit_q, energy_input_dict["Energy input"][process]["electricity"]) / 3.6
+        final_fuel_MJ = sum(
+            convert_energy_quantity(fuel_unit_q, v, HHV.get(fuel_type, 1.0))
+            for fuel_type, v in energy_input_dict["Energy input"][process]["fuel"].items()
+        )
         if Total_process_electricity != 0:
-            energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = energy_input_dict["Energy input"][process]["electricity"] / Total_process_electricity
+            energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = final_elec_kWh / Total_process_electricity
         else:
             energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = 1
-        energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"] = energy_input_dict["Energy input"][process]["electricity"]
-        energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"] = sum(energy_input_dict["Energy input"][process]["fuel"].values())
-        energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6 + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
-        energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency) + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
+        energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"] = final_elec_kWh
+        energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"] = final_fuel_MJ
+        energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"] = final_elec_kWh*3.6 + final_fuel_MJ
+        energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"] = final_elec_kWh*3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency) + final_fuel_MJ
 
     Total_final_energy = 0
     Total_primary_energy = 0
@@ -1481,7 +1595,7 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     for process in energy_input_dict["Energy input"].keys():
         Total_final_energy += energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"]
         Total_primary_energy += energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"]
-    # Note: (ignore this comment, the latest version is that it is not included) for primary energy, no need to add back the fuel used for electricity generation, because that is already included when process electricity is calculated. The same conversion efficiency is assumed for converting electricity's primary energy consumption for both onsite and offsite generation 
+    # Note: (ignore this comment, the latest version is that it is not included) for primary energy, no need to add back the fuel used for electricity generation, because that is already included when process electricity is calculated. The same conversion efficiency is assumed for converting electricity's primary energy consumption for both onsite and offsite generation
     # Note: in this iteration, for primary energy from electriciuty, we treat the primary energy from final electricity the same whether they are generated onsite or purchased
 
     energy_input_dict["Total Final Energy Consumption (MJ/year)"] = Total_final_energy
@@ -1503,7 +1617,7 @@ def Page6_Energy_Input_Quick_Default_Update_Fields(self):
     with open(json_folder / "Energy_Share_Default.json", "w") as f:
         json.dump(energy_share_default_dict, f, indent=4)
 
-    return energy_input_quick_dict 
+    return energy_input_quick_dict
 
 def Page6_Energy_Input_Detailed_Default_Update_Fields(self):
     data_dir = get_user_data_dir()
@@ -1653,6 +1767,14 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields(self):
     if self.ui.natural_gas_kiln_precalciner_input_page6.text() != "":
         energy_input_dict["Energy input"]["Kiln system - precalciner"]["fuel"]["natural gas"] = _f(self.ui.natural_gas_kiln_precalciner_input_page6.text())
 
+    # Store unit selections from this page's comboboxes
+    fuel_unit_p1 = self.ui.fuel_unit_combo_page6.currentText()
+    elec_unit_p1 = self.ui.electricity_unit_combo_page6.currentText()
+    for proc in ["Additive drying", "Kiln system - precalciner"]:
+        energy_input_dict["Energy input"][proc]["fuel unit"] = fuel_unit_p1
+    for proc in ["Raw material conveying and quarraying", "Preblending", "Crushing", "Grinding",
+                 "Additive prepration", "Fuel preparation", "Homogenization", "Kiln system - preheater"]:
+        energy_input_dict["Energy input"][proc]["electricity unit"] = elec_unit_p1
 
     with open(energy_input_filepath, "w") as f:
         json.dump(energy_input_dict, f, indent=4)
@@ -1752,7 +1874,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         energy_input_dict["Energy input"]["Air pollution flue-gas mitigation"]["fuel"]["municipal wastes"] = _f(self.ui.msw_air_pollution_page6_b.text())
     if self.ui.msw_ccus_page6_b.text() != "":
         energy_input_dict["Energy input"]["CCUS"]["fuel"]["municipal wastes"] = _f(self.ui.msw_ccus_page6_b.text())
-    
+
         """
     if self.ui.electricity_kiln_kiln_page6_b.text() != "":
         energy_input_dict["Energy input"]["Kiln system - kiln"]["electricity"] = _f(self.ui.electricity_kiln_kiln_page6_b.text())
@@ -1769,9 +1891,26 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         energy_input_dict["Energy input"]["Air pollution flue-gas mitigation"]["electricity"] = _f(self.ui.electricity_air_pollution_page6_b.text())
     if self.ui.electricity_ccus_page6_b.text() != "":
         energy_input_dict["Energy input"]["CCUS"]["electricity"] = _f(self.ui.electricity_ccus_page6_b.text())
-        
-    # Energy Input
-    ## Fuel and electricity consumption for each step
+
+    # Store unit selections from this page's comboboxes
+    fuel_unit_p2 = self.ui.fuel_unit_combo_page6_b.currentText()
+    elec_unit_p2 = self.ui.electricity_unit_combo_page6_b.currentText()
+    for proc in ["Kiln system - kiln", "Air pollution flue-gas mitigation", "CCUS"]:
+        energy_input_dict["Energy input"][proc]["fuel unit"] = fuel_unit_p2
+    for proc in ["Kiln system - cooler", "Cement grinding", "Other conveying, auxilaries",
+                 "Non-production energy use", "Air pollution flue-gas mitigation", "CCUS"]:
+        energy_input_dict["Energy input"][proc]["electricity unit"] = elec_unit_p2
+
+    # Cost and Emissions Data — load early to get HHV values for unit conversion
+    with open(json_folder / "Cost_and_Emission_Input.json", "r") as f:
+        cost_and_emissions_dict = json.load(f)
+
+    HHV = cost_and_emissions_dict.get("Fuel high heating value (MJ/kg fuel)", {
+        "coal": 26.3, "coke": 28.2, "natural gas": 48.0,
+        "biomass": 15.0, "municipal wastes": 9.0
+    })
+
+    # Energy Input — accumulate totals in MJ (fuel) and kWh (electricity) after unit conversion
     Total_process_coal = 0
     Total_process_coke = 0
     Total_process_natural_gas = 0
@@ -1780,20 +1919,17 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     Total_process_electricity = 0
 
     for process in energy_input_dict["Energy input"].keys():
-        Total_process_coal += energy_input_dict["Energy input"][process]["fuel"]["coal"]
-        Total_process_coke += energy_input_dict["Energy input"][process]["fuel"]["coke"]
-        Total_process_natural_gas += energy_input_dict["Energy input"][process]["fuel"]["natural gas"]
-        Total_process_biomass += energy_input_dict["Energy input"][process]["fuel"]["biomass"]
-        Total_process_msw += energy_input_dict["Energy input"][process]["fuel"]["municipal wastes"]
-        Total_process_electricity += energy_input_dict["Energy input"][process]["electricity"]
+        fuel_unit = energy_input_dict["Energy input"][process].get("fuel unit", "MJ")
+        elec_unit = energy_input_dict["Energy input"][process].get("electricity unit", "kWh")
+        Total_process_coal += convert_energy_quantity(fuel_unit, energy_input_dict["Energy input"][process]["fuel"]["coal"], HHV.get("coal", 26.3))
+        Total_process_coke += convert_energy_quantity(fuel_unit, energy_input_dict["Energy input"][process]["fuel"]["coke"], HHV.get("coke", 28.2))
+        Total_process_natural_gas += convert_energy_quantity(fuel_unit, energy_input_dict["Energy input"][process]["fuel"]["natural gas"], HHV.get("natural gas", 48.0))
+        Total_process_biomass += convert_energy_quantity(fuel_unit, energy_input_dict["Energy input"][process]["fuel"]["biomass"], HHV.get("biomass", 15.0))
+        Total_process_msw += convert_energy_quantity(fuel_unit, energy_input_dict["Energy input"][process]["fuel"]["municipal wastes"], HHV.get("municipal wastes", 9.0))
+        Total_process_electricity += convert_energy_quantity(elec_unit, energy_input_dict["Energy input"][process]["electricity"]) / 3.6
 
-    # if Total_process_electricity != electricity_generation_input_dict["Electricity generated and used at cement plant (kWh/year)"] + electricity_generation_input_dict["Total electricity purchased (kWh/year)"]:
-    #     print('total electricity consumption does not match')
-    #     energy_input_dict["message"] = 'total electricity consumption does not match'
-    # else:
-    #     energy_input_dict["message"] = 'N/A'
     Total_process_fuel = Total_process_coal + Total_process_coke + Total_process_natural_gas + Total_process_biomass + Total_process_msw
-    
+
     energy_input_dict["Totals"] = {
         "Total process fuel": Total_process_fuel,
         "Total process electricity": Total_process_electricity,
@@ -1803,10 +1939,6 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
         "Total process biomass": Total_process_biomass,
         "Total process msw": Total_process_msw
     }
-
-    # Cost and Emissions Data
-    with open(json_folder / "Cost_and_Emission_Input.json", "r") as f:
-        cost_and_emissions_dict = json.load(f)
 
     electricity_price = cost_and_emissions_dict["Cost of electricity in $/kWh"]
     coal_price = cost_and_emissions_dict["Cost of fuel in $/MJ"]['coal']
@@ -1818,18 +1950,18 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     electricity_emission_intensity = cost_and_emissions_dict["Grid CO2 emission intensity (tCO2/MWh)"]/1000 # convert to kWh # need to add emissions from electricity generation fuel, so do it later # decided to use this variable only for purchased electricity to aid indirect emissions calculations
     coal_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['coal']/10**6 # convert to MJ
     coke_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['coke']/10**6
-    natural_gas_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['natural gas']/10**6 
-    biomass_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['biomass']/10**6 
-    msw_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['municipal wastes']/10**6 
+    natural_gas_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['natural gas']/10**6
+    biomass_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['biomass']/10**6
+    msw_emission_intensity = cost_and_emissions_dict["Fuel CO2 intensity (tCO2/TJ)"]['municipal wastes']/10**6
     carbon_price = cost_and_emissions_dict["Carbon price ($/tCO2)"]
-    
+
     if Total_process_fuel != 0:
         fuel_price = (Total_process_coal*coal_price + Total_process_coke*coke_price + Total_process_natural_gas*natural_gas_price + Total_process_biomass*biomass_price + Total_process_msw*msw_price) / Total_process_fuel
         fuel_emission_intensity = (Total_process_coal*coal_emission_intensity + Total_process_coke*coke_emission_intensity + Total_process_natural_gas*natural_gas_emission_intensity + Total_process_biomass*biomass_emission_intensity + Total_process_msw*msw_emission_intensity) / Total_process_fuel
     else:
         fuel_price = coal_price
         fuel_emission_intensity = coal_emission_intensity
-        
+
     cost_and_emissions_dict["Fuel Emission Intensity"] = fuel_emission_intensity
     cost_and_emissions_dict["Fuel Price"] = fuel_price
     # Save the updated dictionary
@@ -1872,19 +2004,27 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     energy_input_dict["Energy input"]["Cement grinding"]["Production Per Process (tonnes/year)"] = Total_cement
     energy_input_dict["Energy input"]["Other conveying, auxilaries"]["Production Per Process (tonnes/year)"] = Total_cement
     energy_input_dict["Energy input"]["Non-production energy use"]["Production Per Process (tonnes/year)"] = Total_cement
-    
-    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"] 
+
+    onsite_electricity_generation_efficiency = electricity_generation_input_dict["Onsite Electricity Generation Efficiency"]
     share_of_electricity_from_purchase = electricity_generation_input_dict["Share of electricity from electricity purchase"]
-    
+
     for process in energy_input_dict["Energy input"].keys():
+        fuel_unit = energy_input_dict["Energy input"][process].get("fuel unit", "MJ")
+        elec_unit = energy_input_dict["Energy input"][process].get("electricity unit", "kWh")
+        # Convert user-entered values to MJ (fuel) and kWh (electricity) for all Final* fields
+        final_elec_kWh = convert_energy_quantity(elec_unit, energy_input_dict["Energy input"][process]["electricity"]) / 3.6
+        final_fuel_MJ = sum(
+            convert_energy_quantity(fuel_unit, v, HHV.get(fuel_type, 1.0))
+            for fuel_type, v in energy_input_dict["Energy input"][process]["fuel"].items()
+        )
         if Total_process_electricity != 0:
-            energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = energy_input_dict["Energy input"][process]["electricity"] / Total_process_electricity
+            energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = final_elec_kWh / Total_process_electricity
         else:
             energy_input_dict["Energy input"][process]["% Electricity Consumption at production stage"] = 1
-        energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"] = energy_input_dict["Energy input"][process]["electricity"]
-        energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"] = sum(energy_input_dict["Energy input"][process]["fuel"].values())
-        energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6 + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
-        energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"] = energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"]*3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency) + energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"]
+        energy_input_dict["Energy input"][process]["Final Electricity Consumption by Process (kWh/year)"] = final_elec_kWh
+        energy_input_dict["Energy input"][process]["Final Fuel Consumption by Process (MJ/year)"] = final_fuel_MJ
+        energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"] = final_elec_kWh*3.6 + final_fuel_MJ
+        energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"] = final_elec_kWh*3.6*(share_of_electricity_from_purchase/0.305+(1-share_of_electricity_from_purchase)/onsite_electricity_generation_efficiency) + final_fuel_MJ
 
     Total_final_energy = 0
     Total_primary_energy = 0
@@ -1892,7 +2032,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     for process in energy_input_dict["Energy input"].keys():
         Total_final_energy += energy_input_dict["Energy input"][process]["Total Final Energy Consumption (MJ/year)"]
         Total_primary_energy += energy_input_dict["Energy input"][process]["Total Primary Energy Consumption (MJ/year)"]
-    # Note: (ignore this comment, the latest version is that it is not included) for primary energy, no need to add back the fuel used for electricity generation, because that is already included when process electricity is calculated. The same conversion efficiency is assumed for converting electricity's primary energy consumption for both onsite and offsite generation 
+    # Note: (ignore this comment, the latest version is that it is not included) for primary energy, no need to add back the fuel used for electricity generation, because that is already included when process electricity is calculated. The same conversion efficiency is assumed for converting electricity's primary energy consumption for both onsite and offsite generation
     # Note: in this iteration, for primary energy from electriciuty, we treat the primary energy from final electricity the same whether they are generated onsite or purchased
 
 
@@ -1910,7 +2050,7 @@ def Page6_Energy_Input_Detailed_Default_Update_Fields_2(self):
     print("energy_input_dict end of Page 6")
     print(energy_input_dict["Totals"].keys())
 
-    return energy_input_dict 
+    return energy_input_dict
 
 def Page7_Target_Default_Update_Fields(self):
     data_dir = get_user_data_dir()
